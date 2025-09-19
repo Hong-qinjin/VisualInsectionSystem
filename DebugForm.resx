@@ -117,10 +117,323 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.TrayHeight" type="System.Int32, mscorlib">
     <value>76</value>
-  </metadata>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>DebugForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>DebugForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonChineseOREnglish.Name" xml:space="preserve">
+    <value>buttonChineseOREnglish</value>
+  </data>
+  <data name="&gt;&gt;buttonChineseOREnglish.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonChineseOREnglish.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonChineseOREnglish.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;buttonConfig.Name" xml:space="preserve">
+    <value>buttonConfig</value>
+  </data>
+  <data name="&gt;&gt;buttonConfig.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonConfig.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonConfig.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;buttonContiRun.Name" xml:space="preserve">
+    <value>buttonContiRun</value>
+  </data>
+  <data name="&gt;&gt;buttonContiRun.Parent" xml:space="preserve">
+    <value>groupBoxProcedure</value>
+  </data>
+  <data name="&gt;&gt;buttonContiRun.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonContiRun.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;buttonLoadSolu.Name" xml:space="preserve">
+    <value>buttonLoadSolu</value>
+  </data>
+  <data name="&gt;&gt;buttonLoadSolu.Parent" xml:space="preserve">
+    <value>groupBoxSolution</value>
+  </data>
+  <data name="&gt;&gt;buttonLoadSolu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonLoadSolu.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;buttonRender.Name" xml:space="preserve">
+    <value>buttonRender</value>
+  </data>
+  <data name="&gt;&gt;buttonRender.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;buttonRender.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonRender.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;buttonRunOnce.Name" xml:space="preserve">
+    <value>buttonRunOnce</value>
+  </data>
+  <data name="&gt;&gt;buttonRunOnce.Parent" xml:space="preserve">
+    <value>groupBoxProcedure</value>
+  </data>
+  <data name="&gt;&gt;buttonRunOnce.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonRunOnce.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveSolu.Name" xml:space="preserve">
+    <value>buttonSaveSolu</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveSolu.Parent" xml:space="preserve">
+    <value>groupBoxSolution</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveSolu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveSolu.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;buttonSelectSolu.Name" xml:space="preserve">
+    <value>buttonSelectSolu</value>
+  </data>
+  <data name="&gt;&gt;buttonSelectSolu.Parent" xml:space="preserve">
+    <value>groupBoxSolution</value>
+  </data>
+  <data name="&gt;&gt;buttonSelectSolu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonSelectSolu.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;comboProcedure.Name" xml:space="preserve">
+    <value>comboProcedure</value>
+  </data>
+  <data name="&gt;&gt;comboProcedure.Parent" xml:space="preserve">
+    <value>groupBoxProcedure</value>
+  </data>
+  <data name="&gt;&gt;comboProcedure.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboProcedure.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;contextMenuStrip1.Name" xml:space="preserve">
+    <value>contextMenuStrip1</value>
+  </data>
+  <data name="&gt;&gt;contextMenuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Name" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;groupBoxProcedure.Name" xml:space="preserve">
+    <value>groupBoxProcedure</value>
+  </data>
+  <data name="&gt;&gt;groupBoxProcedure.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBoxProcedure.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxProcedure.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;groupBoxResult.Name" xml:space="preserve">
+    <value>groupBoxResult</value>
+  </data>
+  <data name="&gt;&gt;groupBoxResult.Parent" xml:space="preserve">
+    <value>resultPanel</value>
+  </data>
+  <data name="&gt;&gt;groupBoxResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxResult.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;groupBoxSolution.Name" xml:space="preserve">
+    <value>groupBoxSolution</value>
+  </data>
+  <data name="&gt;&gt;groupBoxSolution.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;groupBoxSolution.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;groupBoxSolution.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;infoHeader.Name" xml:space="preserve">
+    <value>infoHeader</value>
+  </data>
+  <data name="&gt;&gt;infoHeader.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>groupBoxProcedure</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;labelResultState.Name" xml:space="preserve">
+    <value>labelResultState</value>
+  </data>
+  <data name="&gt;&gt;labelResultState.Parent" xml:space="preserve">
+    <value>groupBoxResult</value>
+  </data>
+  <data name="&gt;&gt;labelResultState.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labelResultState.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;listBoxResult.Name" xml:space="preserve">
+    <value>listBoxResult</value>
+  </data>
+  <data name="&gt;&gt;listBoxResult.Parent" xml:space="preserve">
+    <value>groupBoxResult</value>
+  </data>
+  <data name="&gt;&gt;listBoxResult.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;listBoxResult.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;listViewLog.Name" xml:space="preserve">
+    <value>listViewLog</value>
+  </data>
+  <data name="&gt;&gt;listViewLog.Parent" xml:space="preserve">
+    <value>groupBox2</value>
+  </data>
+  <data name="&gt;&gt;listViewLog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;listViewLog.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;renderPanel.Name" xml:space="preserve">
+    <value>renderPanel</value>
+  </data>
+  <data name="&gt;&gt;renderPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;renderPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;renderPanel.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;resultPanel.Name" xml:space="preserve">
+    <value>resultPanel</value>
+  </data>
+  <data name="&gt;&gt;resultPanel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;resultPanel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;resultPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;timeStampHeader.Name" xml:space="preserve">
+    <value>timeStampHeader</value>
+  </data>
+  <data name="&gt;&gt;timeStampHeader.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ToolStripMenuItemClearMsg.Name" xml:space="preserve">
+    <value>ToolStripMenuItemClearMsg</value>
+  </data>
+  <data name="&gt;&gt;ToolStripMenuItemClearMsg.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="buttonChineseOREnglish.Text" xml:space="preserve">
+    <value>中文/英文</value>
+  </data>
+  <data name="buttonConfig.Text" xml:space="preserve">
+    <value>参数配置</value>
+  </data>
+  <data name="buttonContiRun.Text" xml:space="preserve">
+    <value>连续运行</value>
+  </data>
+  <data name="buttonContiStop.Text" xml:space="preserve">
+    <value>停止运行</value>
+  </data>
+  <data name="buttonLoadSolu.Text" xml:space="preserve">
+    <value>加载方案</value>
+  </data>
+  <data name="buttonRender.Text" xml:space="preserve">
+    <value>图像显示</value>
+  </data>
+  <data name="buttonRunOnce.Text" xml:space="preserve">
+    <value>运行一次</value>
+  </data>
+  <data name="buttonSaveSolu.Text" xml:space="preserve">
+    <value>保存方案</value>
+  </data>
+  <data name="buttonSelectSolu.Text" xml:space="preserve">
+    <value>选择方案</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>日志消息</value>
+  </data>
+  <data name="groupBoxProcedure.Text" xml:space="preserve">
+    <value>流程操作</value>
+  </data>
+  <data name="groupBoxResult.Text" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="groupBoxSolution.Text" xml:space="preserve">
+    <value>方案操作</value>
+  </data>
+  <data name="infoHeader.Text" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>选择流程</value>
+  </data>
+  <data name="labelResultState.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="timeStampHeader.Text" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="ToolStripMenuItemClearMsg.Text" xml:space="preserve">
+    <value>清除</value>
+  </data>
 </root>

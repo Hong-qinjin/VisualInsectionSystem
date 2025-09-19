@@ -111,34 +111,42 @@ namespace VisualInsectionSystem
         /// <param name="statusInfo"></param>
         private void VmSolution_OnProcessStatusStopEvent(ImvsSdkDefine.IMVS_STATUS_PROCESS_STOP_INFO statusInfo)
         {
-            this.Invoke(new Action(() =>
+            if (this.IsHandleCreated)
             {
-                if (statusInfo.nStopAction == 1)
+                this.Invoke(new Action(() =>
                 {
-                    string strMessage = null;
-
-                    if ("zh-CN" == cultureName)
+                    if (statusInfo.nStopAction == 1)
                     {
-                        var resourceManager = new ResourceManager("Demo.DebugForm", typeof(DebugForm).Assembly);
-                        buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("zh-CN"));
-                    }
-                    else
-                    {
-                        var resourceManager = new ResourceManager("Demo.DebugForm", typeof(DebugForm).Assembly);
-                        buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("en-US"));
-                    }
+                        string strMessage = null;
 
-                    //Enable button
-                    buttonSelectSolu.Enabled = true;
-                    buttonRunOnce.Enabled = true;
-                    buttonLoadSolu.Enabled = true;
-                    buttonSaveSolu.Enabled = true;
-                    comboProcedure.Enabled = true;
+                        if ("zh-CN" == cultureName)
+                        {
+                            var resourceManager = new ResourceManager("Form1.DebugForm", typeof(DebugForm).Assembly);  //resource`
+                            buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("zh-CN"));
+                        }
+                        else
+                        {
+                            var resourceManager = new ResourceManager("Form1.DebugForm", typeof(DebugForm).Assembly);
+                            buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("en-US"));
+                        }
 
-                    strMessage = "End Run!";
-                    AppendLog(strMessage);
-                }
-            }));
+                        //Enable button
+                        buttonSelectSolu.Enabled = true;
+                        buttonRunOnce.Enabled = true;
+                        buttonLoadSolu.Enabled = true;
+                        buttonSaveSolu.Enabled = true;
+                        comboProcedure.Enabled = true;
+
+                        strMessage = "End continuous run!";
+                        AppendLog(strMessage);
+                    }
+                }));
+            }
+            else
+            {
+                AppendLog("Window handle not created yet. Unable to update UI.");
+            }
+               
         }
 
         /// <summary>
