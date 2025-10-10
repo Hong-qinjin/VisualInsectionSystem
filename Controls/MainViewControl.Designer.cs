@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.vmMainViewConfigControl1 = new VMControls.Winform.Release.VmMainViewConfigControl();
             this.vmGlobalToolControl1 = new VMControls.Winform.Release.VmGlobalToolControl();
+            this.vmMainViewConfigControl1 = new VMControls.Winform.Release.VmMainViewConfigControl();
             this.SuspendLayout();
             // 
             // vmGlobalToolControl1
             // 
-            this.vmGlobalToolControl1.BackColor = System.Drawing.SystemColors.Control;
+            this.vmGlobalToolControl1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.vmGlobalToolControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.vmGlobalToolControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.vmGlobalToolControl1.Location = new System.Drawing.Point(0, 0);
             this.vmGlobalToolControl1.Name = "vmGlobalToolControl1";
@@ -44,25 +45,23 @@
             // 
             // vmMainViewConfigControl1
             // 
-            this.vmMainViewConfigControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.vmMainViewConfigControl1.Location = new System.Drawing.Point(0, 44);
+            this.vmMainViewConfigControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.vmMainViewConfigControl1.Location = new System.Drawing.Point(0, 39);
             this.vmMainViewConfigControl1.Margin = new System.Windows.Forms.Padding(2);
             this.vmMainViewConfigControl1.Name = "vmMainViewConfigControl1";
-            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(754, 494);
+            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(754, 501);
             this.vmMainViewConfigControl1.TabIndex = 1;
-            // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。
-            // 请考虑使用 CodeObjectCreateExpression。”。
-            this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);            
+// TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
+            this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);
             // 
             // MainViewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.Controls.Add(this.vmMainViewConfigControl1);
             this.Controls.Add(this.vmGlobalToolControl1);
+            this.Cursor = System.Windows.Forms.Cursors.SizeNESW;
             this.Name = "MainViewControl";
             this.Size = new System.Drawing.Size(754, 540);
             this.Load += new System.EventHandler(this.MainViewControl_Load);
@@ -74,6 +73,5 @@
 
         private VMControls.Winform.Release.VmGlobalToolControl vmGlobalToolControl1;
         private VMControls.Winform.Release.VmMainViewConfigControl vmMainViewConfigControl1;
-        
     }
 }

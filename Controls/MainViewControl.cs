@@ -16,10 +16,6 @@ namespace VisualInsectionSystem
         {
             InitializeComponent();
         }
-        private void MainViewControl_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void vmGlobalToolControl1_Load(object sender, EventArgs e)
         {
@@ -27,6 +23,11 @@ namespace VisualInsectionSystem
         }
 
         private void vmMainViewConfigControl1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainViewControl_Load(object sender, EventArgs e)
         {
 
         }

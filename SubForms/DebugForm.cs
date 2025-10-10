@@ -9,16 +9,16 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Controls;
 using System.Windows.Forms;
 using VM.Core;
 using VM.PlatformSDKCS;
 using VMControls.Interface;
 using VMControls.Winform.Release;
+using VMControls.WPF.Release;
 
 namespace VisualInsectionSystem
 {
-    public partial class DebugForm : Form    /// Debug form
+    public partial class DebugForm : Form    // Debug form
     {
         /// <summary>
         /// 图片显示面板
@@ -26,127 +26,140 @@ namespace VisualInsectionSystem
         private RenderControl renderControl;
 
         /// <summary>
-        /// 参数面板
+        /// 参数面板config parameter
         /// </summary>
         private MainViewControl mainViewControl;
 
         /// <summary>
         /// Solution Path
         /// </summary>
-        private string currentSolutionPath = String.Empty;
+        private string currentSolutionPath = null;
 
         /// <summary>
         /// Process List
-        /// </summary>
+        /// </summary>    
         private List<VmProcedure> processList;
+        // private ProcessInfoList processInfoList = new ProcessInfoList();
 
         /// <summary>
         /// isSolutionLoad = false, indicates that the solution is not loaded
         /// 默认方案不加载
         /// </summary>
-        private bool SolutionIsLoaded = false;
+        private bool SolutionIsLoaded = false;        
+
+        private string logPath = Application.StartupPath + "/Log/Message";
 
         private Timer LoadSolutionIndicateTimer = new Timer();
         private string cultureName = "zh-CN";
 
         public DebugForm()
-        {           
+        {
             InitializeComponent();
             renderControl = new RenderControl();        //实例化渲染面板
             mainViewControl = new MainViewControl();    //参数设置
             renderControl.Dock = DockStyle.Fill;        //填充
             mainViewControl.Dock = DockStyle.Fill;
 
-            buttonRender.BackColor = Color.Blue;
-            buttonConfig.BackColor = Color.Blue;
-
             LoadSolutionIndicateTimer.Interval = 300;                           //设置定时器
-            LoadSolutionIndicateTimer.Tick += LoadSolutionIndicateTimer_Tick;   //设置定时器事件
-
-            VmSolution.OnProcessStatusStartEvent += VmSolution_OnProcessStatusStartEvent;   // Registration callback for the start of the procedure continuous run
-            VmSolution.OnProcessStatusStopEvent += VmSolution_OnProcessStatusStopEvent;     // Registration callback for the stop of the procedure continuous run
+            LoadSolutionIndicateTimer.Tick += LoadSolutionIndicateTimer_Tick;   //指示方案是否加载
+            
+            //VmSolution.OnProcessStatusStartEvent += VmSolution_OnProcessStatusStartEvent;   // Registration callback for the start of the procedure continuous run
+            //VmSolution.OnProcessStatusStopEvent += VmSolution_OnProcessStatusStopEvent;     // Registration callback for the stop of the procedure continuous run
 
             cultureName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
         }
+    
 
         /// <summary>
-        /// callback function for the 开始 of the procedure continuous run
+        /// 开始the start of the procedure continuous run
         /// </summary>
         /// <param name="statusInfo"></param>
         private void VmSolution_OnProcessStatusStartEvent(ImvsSdkDefine.IMVS_STATUS_PROCESS_START_CONTINUOUSLY_INFO statusInfo)
         {
-            this.Invoke(new Action(() =>
+            if (!this.IsHandleCreated || this.IsDisposed)
             {
-                if (statusInfo.nStatus == 0)
-                {
-                    string strMessage = null;
-
-                    if ("zh-CN" == cultureName)
-                    {
-                        var resourceManager = new ResourceManager("Demo.DebugForm", typeof(DebugForm).Assembly);
-                        buttonContiRun.Text = resourceManager.GetString("buttonContiStop.Text", new CultureInfo("zh-CN"));
-                    }
-                    else
-                    {
-                        var resourceManager = new ResourceManager("Demo.DebugForm", typeof(DebugForm).Assembly);
-                        buttonContiRun.Text = resourceManager.GetString("buttonContiStop.Text", new CultureInfo("en-US"));
-                    }
-
-                    //Disable button
-                    buttonSelectSolu.Enabled = false;
-                    buttonRunOnce.Enabled = false;
-                    buttonLoadSolu.Enabled = false;
-                    buttonSaveSolu.Enabled = false;
-                    comboProcedure.Enabled = false;
-
-                    strMessage = "Start continuous run!";
-                    AppendLog(strMessage);
-                }
-            }));
+                // 输出调试日志，跟踪句柄状态
+                System.Diagnostics.Debug.WriteLine($"StartEvent: Handle未创建（{this.IsHandleCreated}）或已释放（{this.IsDisposed}）");
+                return;
+            }
+            //error，在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => UpdateStartStatusUI(statusInfo)));
+            }
+            else
+            {
+                UpdateStartStatusUI(statusInfo);
+            }
         }
 
         /// <summary>
-        /// Callback function for the 停止 of the procedure continuous run
+        ///  停止 the stop of the procedure continuous run
         /// </summary>
         /// <param name="statusInfo"></param>
         private void VmSolution_OnProcessStatusStopEvent(ImvsSdkDefine.IMVS_STATUS_PROCESS_STOP_INFO statusInfo)
         {
-            if (this.IsHandleCreated)
+
+            if (!this.IsHandleCreated || this.IsDisposed)
             {
-                this.Invoke(new Action(() =>
-                {
-                    if (statusInfo.nStopAction == 1)
-                    {
-                        string strMessage = null;
-
-                        if ("zh-CN" == cultureName)
-                        {
-                            var resourceManager = new ResourceManager("Form1.DebugForm", typeof(DebugForm).Assembly);  //resource`
-                            buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("zh-CN"));
-                        }
-                        else
-                        {
-                            var resourceManager = new ResourceManager("Form1.DebugForm", typeof(DebugForm).Assembly);
-                            buttonContiRun.Text = resourceManager.GetString("buttonContiRun.Text", new CultureInfo("en-US"));
-                        }
-
-                        //Enable button
-                        buttonSelectSolu.Enabled = true;
-                        buttonRunOnce.Enabled = true;
-                        buttonLoadSolu.Enabled = true;
-                        buttonSaveSolu.Enabled = true;
-                        comboProcedure.Enabled = true;
-
-                        strMessage = "End continuous run!";
-                        AppendLog(strMessage);
-                    }
-                }));
+                System.Diagnostics.Debug.WriteLine($"StopEvent: Handle未创建（{this.IsHandleCreated}）或已释放（{this.IsDisposed}）");
+                return;
+            }
+            //句柄error：在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
+            // 确保在UI线程执行
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => UpdateStopStatusUI(statusInfo)));
             }
             else
             {
-                AppendLog("Window handle not created yet. Unable to update UI.");
+                UpdateStopStatusUI(statusInfo);
+            }          
+        }
+
+        // 拆分UI更新逻辑为独立方法（提高可读性）
+        private void UpdateStartStatusUI(ImvsSdkDefine.IMVS_STATUS_PROCESS_START_CONTINUOUSLY_INFO statusInfo)
+        {
+            if (statusInfo.nStatus == 0)
+            {
+                string strMessage = null;
+                var resourceManager = new ResourceManager("VisualInsectionSystem.DebugForm", typeof(DebugForm).Assembly);
+                buttonContiRun.Text = "zh-CN" == cultureName
+                    ? resourceManager.GetString("buttonContiStop.Text", new CultureInfo("zh-CN"))
+                    : resourceManager.GetString("buttonContiStop.Text", new CultureInfo("en-US"));
+
+                // 禁用按钮
+                buttonSelectSolu.Enabled = false;
+                buttonRunOnce.Enabled = false;
+                buttonLoadSolu.Enabled = false;
+                buttonSaveSolu.Enabled = false;
+                comboProcedure.Enabled = false;
+
+                strMessage = "Start continuous run!";
+                AppendLog(strMessage);
             }
-               
+        }
+
+        private void UpdateStopStatusUI(ImvsSdkDefine.IMVS_STATUS_PROCESS_STOP_INFO statusInfo)
+        {
+            if (statusInfo.nStopAction == 1)
+            {
+                string strMessage = null;
+                var resourceManager = new ResourceManager("VisualInsectionSystem.DebugForm", typeof(DebugForm).Assembly);
+                buttonContiRun.Text = "zh-CN" == cultureName
+                    ? resourceManager.GetString("buttonContiRun.Text", new CultureInfo("zh-CN"))
+                    : resourceManager.GetString("buttonContiRun.Text", new CultureInfo("en-US"));
+
+                // 启用按钮
+                buttonSelectSolu.Enabled = true;
+                buttonRunOnce.Enabled = true;
+                buttonLoadSolu.Enabled = true;
+                buttonSaveSolu.Enabled = true;
+                comboProcedure.Enabled = true;
+
+                strMessage = "End Run!";
+                AppendLog(strMessage);
+            }
         }
 
         /// <summary>
@@ -172,17 +185,33 @@ namespace VisualInsectionSystem
         }
 
         /// <summary>
-        ///  Lform
+        ///  Load Form 加载组件
         /// </summary>     
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DebugForm_Load(object sender, EventArgs e)
         {
-            renderPanel.Controls.Clear();
-            renderPanel.Controls.Add(mainViewControl);
-            renderPanel.Controls.Add(renderControl);
-            renderPanel.Controls.Remove(mainViewControl);
-            
+            try
+            {
+                renderPanel.Controls.Clear();
+                renderPanel.Controls.Add(mainViewControl);
+                renderPanel.Controls.Add(renderControl);
+                renderPanel.Controls.Remove(mainViewControl);               
+
+                // 句柄创建后注册事件（关键修复）
+                VmSolution.OnProcessStatusStartEvent += VmSolution_OnProcessStatusStartEvent;
+                VmSolution.OnProcessStatusStopEvent += VmSolution_OnProcessStatusStopEvent;
+
+                // 输出句柄状态日志（调试用）
+                System.Diagnostics.Debug.WriteLine($"DebugForm_Load: 句柄创建状态 - {this.IsHandleCreated}");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+
         }
         /// <summary>
         /// 
@@ -194,19 +223,25 @@ namespace VisualInsectionSystem
             try
             {
                 string timeStamp = DateTime.Now.ToString("yy-MM-dd HH:mm:ss-fff");
-                if (listViewLog.Items.Count > 10)
+                if (listViewLog.Items.Count > 1000)
                     listViewLog.Items.Clear();
-                if (listViewLog.InvokeRequired)
+                if (listViewLog.InvokeRequired && listViewLog.IsHandleCreated && !listViewLog.IsDisposed)
                 {
                     listViewLog.BeginInvoke(new Action(() =>
                     {
                         listViewLog.Items.Insert(0, new ListViewItem(new string[] { timeStamp, message }));
                     }));
                 }
-                else
+                else if (!listViewLog.InvokeRequired)
                 {
                     listViewLog.Items.Insert(0, new ListViewItem(new string[] { timeStamp, message }));
                 }
+                else
+                {
+                    // 句柄未就绪时记录到文件，避免丢失日志
+                    System.Diagnostics.Debug.WriteLine($"AppendLog: listViewLog句柄未就绪，消息：{message}");
+                }
+
 
                 if (!Directory.Exists("./log"))
                 {
@@ -226,28 +261,34 @@ namespace VisualInsectionSystem
             }
         }
         /// <summary>
-        /// 更新列表框
+        /// 更新listbox,显示结果
         /// </summary>
         /// <param name="result"></param>
         private void UpdateResultListBox(string result)
         {
-            if (listBoxResult.Items.Count > 100)
+            if (listBoxResult.Items.Count > 1000)
                 listBoxResult.Items.Clear();
             string timeStamp = DateTime.Now.ToString("yy-MM-dd HH:mm:ss-fff");
-            if (listBoxResult.InvokeRequired)
+
+            //if (listBoxResult.InvokeRequired)
+            if (listBoxResult.InvokeRequired && listBoxResult.IsHandleCreated && !listBoxResult.IsDisposed)
             {
                 listBoxResult.BeginInvoke(new Action(() =>
                 {
                     listBoxResult.Items.Insert(0, timeStamp + result);
                 }));
             }
-            else
+            else if (!listBoxResult.InvokeRequired)
             {
                 listBoxResult.Items.Insert(0, timeStamp + result);
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateResultListBox: listBoxResult句柄未就绪，结果：{result}");
+            }            
         }
         /// <summary>
-        /// 更新结果标签
+        /// 更新结果标签ok
         /// </summary>
         /// <param name="result"></param>        
         private void UpdateLableState(string result)
@@ -255,7 +296,7 @@ namespace VisualInsectionSystem
             try
             {
                 string[] strArray = result.Split(',');
-                if(labelResultState.InvokeRequired)
+                if (labelResultState.InvokeRequired)
                 {
                     labelResultState.BeginInvoke(new Action(() =>
                     {
@@ -273,7 +314,7 @@ namespace VisualInsectionSystem
                 }
                 else  //
                 {
-                    if (strArray[0] == "1")  
+                    if (strArray[0] == "1")
                     {
                         labelResultState.BackColor = Color.FromArgb(0, 192, 0);
                         labelResultState.Text = "OK";
@@ -302,7 +343,7 @@ namespace VisualInsectionSystem
         {
             renderPanel.Controls.Clear();
             renderPanel.Controls.Add(renderControl);
-            
+
         }
 
         /// <summary>
@@ -322,14 +363,13 @@ namespace VisualInsectionSystem
                     AppendLog("The main view control is not loaded!");
                     //MessageBox.Show("The main view control is not loaded!");
                 }
-
             }
             catch (Exception ex)
             {
                 AppendLog(ex.Message);
                 //MessageBox.Show(ex.Message);
-            }  
-                                                        
+            }
+
         }
 
         /// <summary>
@@ -341,35 +381,32 @@ namespace VisualInsectionSystem
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();  //文件夹路径                
-                openFileDialog.Filter = "VM Sol File(*.sol)|*.sol";                
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    //openFileDialog.InitialDirectory =
+                    Filter = "VM Sol File(*.sol)|*.sol"
+                };  // 文件夹路径
                 DialogResult oFresult = openFileDialog.ShowDialog();
-                // 调试输出对话框结果
-                System.Diagnostics.Debug.WriteLine($"对话框结果: {oFresult}");
-                if ( DialogResult.OK == oFresult)
+
+                //System.Diagnostics.Debug.WriteLine($"对话框结果: {oFresult}");   // 调试输出对话框结果
+                if (oFresult == DialogResult.OK)
                 {
                     SolutionIsLoaded = false;
                     currentSolutionPath = openFileDialog.FileName;
-
-                    // 调试输出获取的路径
-                    System.Diagnostics.Debug.WriteLine($"选中的文件路径: {currentSolutionPath}");
-
-                    LoadSolutionIndicateTimer.Enabled = true;                    
+                    //System.Diagnostics.Debug.WriteLine($"选中的文件路径: {currentSolutionPath}");  // 调试输出获取的路径
+                    LoadSolutionIndicateTimer.Enabled = true;
                     AppendLog("The solution path is: " + currentSolutionPath);
-                    MessageBox.Show("The solution path is: " + currentSolutionPath + "\nNext click the Load solution button!",
-                        "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                  
                     listBoxResult.Items.Add("The solution loaded");
                     listBoxResult.TopIndex = listBoxResult.Items.Count - 1;
-                }                
+                }
                 else
                 {
                     currentSolutionPath = String.Empty;
                 }
-                
             }
             catch (Exception ex)
-            {                
+            {
                 AppendLog(ex.Message);  //MessageBox.Show(ex.Message);
             }
         }
@@ -386,9 +423,10 @@ namespace VisualInsectionSystem
 
             // Disable button
             buttonSelectSolu.Enabled = false;
+            buttonSaveSolu.Enabled = false;
             buttonRunOnce.Enabled = false;
             buttonContiRun.Enabled = false;
-            buttonSaveSolu.Enabled = false;
+
             comboProcedure.Enabled = false;
             buttonRender.Enabled = false;
             buttonConfig.Enabled = false;
@@ -397,13 +435,13 @@ namespace VisualInsectionSystem
                 if (currentSolutionPath != String.Empty)
                 {
                     VmSolution.Load(currentSolutionPath);           //加载方案
+                    SolutionIsLoaded = true;
+
                     processList = GetCurrentSolProcedureList();     //列举
                     UpdateProcessComboBox(processList);             //更新combobox                    
-                    RegisterProcedureWorkEndCallback(processList);  //Registration callback for the end of the procedure run
-                    SolutionIsLoaded = true;    
+                    RegisterProcedureWorkEndCallback(processList);  //Registration callback for the end of the procedure run                    
                     renderControl.ModuleSource = processList[0];    //绑定渲染面板
-
-                    AppendLog("Loading Solution succeeded!");       
+                    AppendLog("Loading Solution succeeded!");
                     MessageBox.Show("Loading Solution succeeded!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 }
@@ -473,7 +511,7 @@ namespace VisualInsectionSystem
                 if (SolutionIsLoaded)
                 {
                     VmSolution.Save();
-                    AppendLog("Save Solution succeeded!");                    
+                    AppendLog("Save Solution succeeded!");
                 }
             }
             catch (Exception ex)
@@ -495,7 +533,6 @@ namespace VisualInsectionSystem
                 if (SolutionIsLoaded && comboProcedure.SelectedIndex != -1)
                 {
                     string processName = comboProcedure.SelectedItem.ToString();
-                    //VmProcedure procedure = (VmProcedure)VmSolution.Instance[processName];  //
                     VmProcedure procedure = VmSolution.Instance[processName] as VmProcedure;  //***Get the selected process
                     if (procedure != null)
                     {
@@ -511,7 +548,7 @@ namespace VisualInsectionSystem
             }
         }
         /// <summary>
-        /// 持续yun
+        /// 持续运行
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -522,10 +559,10 @@ namespace VisualInsectionSystem
                 if (SolutionIsLoaded && comboProcedure.SelectedIndex != -1)
                 {
                     string processName = comboProcedure.SelectedItem.ToString();
-                    //VmProcedure procedure = (VmProcedure)VmSolution.Instance[processName];  //
                     VmProcedure procedure = VmSolution.Instance[processName] as VmProcedure;
                     if (procedure != null)
                     {
+                        //procedure.ContinuousRunEnable = true;
                         procedure.ContinuousRunEnable = procedure.ContinuousRunEnable ^ true;  //Toggle the continuous run status                        
                     }
                 }
@@ -538,7 +575,7 @@ namespace VisualInsectionSystem
         }
 
 
-        #region 回调函数   
+        #region 
         /// <summary>
         /// Registration callback for the end of the procedure run
         /// </summary>
@@ -570,7 +607,7 @@ namespace VisualInsectionSystem
                 VmProcedure procedure = sender as VmProcedure;
                 if (procedure != null)
                 {
-                    var outputList = procedure.ModuResult.GetAllOutputNameInfo();
+                    var outputList = procedure.ModuResult.GetAllOutputNameInfo();  //输出信息
                     bool outputConfigIsWrong = true;
                     foreach (var ioNameInfo in outputList)
                     {
@@ -602,14 +639,14 @@ namespace VisualInsectionSystem
 
 
         /// <summary>
-        /// RenderControl bingding
+        /// RenderControl bingding procedure绑定流程
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void comboProcedure_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
-            {                
+            {
                 renderControl.ModuleSource = (VmProcedure)VmSolution.Instance[comboProcedure.SelectedItem.ToString()];  //***Get the selected process
             }
             catch (Exception ex)
@@ -634,6 +671,10 @@ namespace VisualInsectionSystem
         /// <param name="e"></param>
         private void DebugForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // 关闭窗口后，移除事件订阅
+            VmSolution.OnProcessStatusStartEvent -= VmSolution_OnProcessStatusStartEvent;
+            VmSolution.OnProcessStatusStopEvent -= VmSolution_OnProcessStatusStopEvent;
+
             if (null != currentSolutionPath && true == SolutionIsLoaded)
             {
                 if (MessageBox.Show("Save solution or not? ", "Information", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -641,7 +682,7 @@ namespace VisualInsectionSystem
                     try
                     {
                         if (currentSolutionPath != String.Empty)
-                        {
+                        {                          
                             VmSolution.Save();
                         }
                     }
@@ -652,6 +693,7 @@ namespace VisualInsectionSystem
                 }
             }
         }
+
 
         /// <summary>
         /// Switch between Chinese and English 需要确保资源文件存在并且正确配置。
@@ -672,7 +714,6 @@ namespace VisualInsectionSystem
             }
             cultureName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
         }
-
         /// <summary>
         /// Load language
         /// </summary>
@@ -739,10 +780,12 @@ namespace VisualInsectionSystem
 
         }
 
-        
+
         private void labelResultState_Click(object sender, EventArgs e)
         {
 
         }
+
+
     }
 }

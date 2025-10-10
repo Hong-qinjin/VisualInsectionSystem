@@ -17,18 +17,16 @@ namespace VisualInsectionSystem
         {
             InitializeComponent();
         }
-
         private IVmModule _moduleSoure;
         public IVmModule ModuleSource
         {
             get { return _moduleSoure; }
             set
             {
-                vmRenderControl1.ModuleSource = value;
                 _moduleSoure = value;
+                vmRenderControl1.ModuleSource = _moduleSoure;
             }
         }
-
         private void RenderControl_Load(object sender, EventArgs e)
         {
 

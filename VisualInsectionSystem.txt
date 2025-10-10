@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>VisualInsectionSystem.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IMVSBlobFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fe8bad26cdedb7b, processorArchitecture=MSIL">
@@ -609,6 +613,13 @@
     <Reference Include="IMVSCnnHPRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="VM.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48472957e1d7b05f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\VisionMaster4.4.0\Development\V4.x\ComControls\Assembly\VM.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Apps.UIHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=74fbc55729e22a3e" />
     <Reference Include="FrontendUI.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=eccf82445a4321cb" />
     <Reference Include="PresentationCore" />
@@ -627,16 +638,33 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm\Form1.Designer.cs" />
+    <Compile Include="MainViewControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainViewControl.Designer.cs">
+      <DependentUpon>MainViewControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="RenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RenderControl.Designer.cs">
+      <DependentUpon>RenderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubForms\DebugForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubForms\DebugForm.Designer.cs">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="MainForm\Form1.resx" />
+    <EmbeddedResource Include="MainViewControl.resx">
+      <DependentUpon>MainViewControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -647,6 +675,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RenderControl.resx">
+      <DependentUpon>RenderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubForms\DebugForm.en-us.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubForms\DebugForm.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubForms\DebugForm.zh-cn.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -660,20 +700,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
