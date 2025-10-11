@@ -41,9 +41,9 @@ namespace Systemdemo01
             //vmRenderControl = new VmRenderControl();   
             //vmRenderControl1 = vmRenderControl;  //全局渲染控件
 
-            // 注册回调函数
-            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;
-          
+            // 注册回调函数，推荐回调函数获取结果
+            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  //所有流程运行状态回调
+
         }
         /// <summary>
         /// 回调事件函数
@@ -59,9 +59,9 @@ namespace Systemdemo01
                     //通过流程获取结果
                     VmProcedure vmProcess1 = (VmProcedure)VmSolution.Instance["OCRDemo"];   //流程对象                    
                     string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //   获取识别结果  
-                    this.BeginInvoke(new Action(() =>  //在回调中对控件使用委托
+                    this.BeginInvoke(new Action(() =>  //在回调中对控件操作，需要使用委托
                     {
-                        vmRenderControl1.ModuleSource = vmProcess1;
+                        vmRenderControl1.ModuleSource = vmProcess1; //渲染结果
 
                         listBox1.Items.Add("字符识别结果:" + ocrResult);
                         listBox1.TopIndex = listBox1.Items.Count - 1;
@@ -197,6 +197,7 @@ namespace Systemdemo01
 
             try
             {
+                //VmSolution.Instance.SyncRun();  //单次运行
                 VmSolution.Instance.SyncRun();   //同步执行一次方案中所有流程1.2_2:07                
             }
             catch (VmException ex)
@@ -242,8 +243,8 @@ namespace Systemdemo01
         {
             
             VmSolution.Instance.SetRunInterval(1000);
-
             VmSolution.Instance.ContinuousRunEnable = true;
+
             listBox1.Items.Add("连续执行中");
             listBox1.TopIndex = listBox1.Items.Count - 1;
 
@@ -519,7 +520,7 @@ namespace Systemdemo01
             {
                 VmProcedure vmProcess = (VmProcedure)VmSolution.Instance[comboBox1.Text];  //绑定下拉框中选中的流程名称
                 vmProcess.Run();
-                //vmProcess.ContinuousRunEnable = true;
+                //vmProcess.ContinuousRunEnable = true;  //连续运行标志
                 listBox1.Items.Add("执行一次" + comboBox1.Text + "成功");
                 listBox1.TopIndex = listBox1.Items.Count - 1;
             }
@@ -532,10 +533,10 @@ namespace Systemdemo01
             ////回调获取结果，渲染结果和数据结果
             //VmProcedure vmProcess1 = (VmProcedure)VmSolution.Instance["OCRDemo"];   //流程对象
             //vmRenderControl1.ModuleSource = vmProcess1;
-
-            //string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //   获取识别结果  
+            //string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //获取识别结果  
             //listBox1.Items.Add("字符识别结果:" + ocrResult);
-            //listBox1.TopIndex = listBox1.Items.Count - 1;
+            //listBox1.TopIndex = listBox1.Items.Count - 1;            
+
 
             //使用通讯或硬件通讯进行外部触发时：调用回调函数进行结果获取
 
