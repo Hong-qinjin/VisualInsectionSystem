@@ -40,10 +40,6 @@ namespace Systemdemo01
 
             //vmRenderControl = new VmRenderControl();   
             //vmRenderControl1 = vmRenderControl;  //全局渲染控件
-
-            // 注册回调函数，推荐回调函数获取结果
-            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  //所有流程运行状态回调
-
         }
         /// <summary>
         /// 回调事件函数
@@ -82,6 +78,8 @@ namespace Systemdemo01
 
         private void Form1_Load(object sender, EventArgs e)
         {
+             // 注册回调函数，推荐回调函数获取结果
+            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  //所有流程运行状态回调
 
         }
         private void groupBox1_Enter(object sender, EventArgs e)

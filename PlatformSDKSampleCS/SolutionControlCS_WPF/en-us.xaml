@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SolutionControlCs_WPF"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <s:String x:Key="Procedure Config">Procedure Config</s:String>
+    <s:String x:Key="Solution Operation">Solution Operation</s:String>
+    <s:String x:Key="Path">Path:</s:String>
+    <s:String x:Key="Password">Password:</s:String>
+    <s:String x:Key="Select Path">Select Path</s:String>
+    <s:String x:Key="Load Solution">Load Solution</s:String>
+    <s:String x:Key="Save Solution">Save Solution</s:String>
+    <s:String x:Key="Get Version">Get Version</s:String>
+    <s:String x:Key="Close Solution">Close Solution</s:String>
+    <s:String x:Key="Get Path">Get Path</s:String>
+    <s:String x:Key="Check Password">Check Password</s:String>
+    <s:String x:Key="Message Display">Message Display</s:String>
+    <s:String x:Key="Clear Msg">Clear Msg</s:String>
+</ResourceDictionary>

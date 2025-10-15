@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SolutionControlCs_WPF"
+                    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <s:String x:Key="Procedure Config">流程配置区</s:String>
+    <s:String x:Key="Solution Operation">方案操作接口</s:String>
+    <s:String x:Key="Path">方案路径:</s:String>
+    <s:String x:Key="Password">方案密码:</s:String>
+    <s:String x:Key="Select Path">选择方案</s:String>
+    <s:String x:Key="Load Solution">加载方案</s:String>
+    <s:String x:Key="Save Solution">保存方案</s:String>
+    <s:String x:Key="Get Version">获取方案版本</s:String>
+    <s:String x:Key="Close Solution">关闭方案</s:String>
+    <s:String x:Key="Get Path">获取方案路径</s:String>
+    <s:String x:Key="Check Password">检查方案密码</s:String>
+    <s:String x:Key="Message Display">消息显示</s:String>
+    <s:String x:Key="Clear Msg">清空消息</s:String>
+</ResourceDictionary>
