@@ -23,12 +23,12 @@ namespace VisualInsectionSystem
         /// <summary>
         /// 图片显示面板
         /// </summary>
-        private RenderControl renderControl;
+        private readonly RenderControl renderControl;
 
         /// <summary>
         /// 参数面板config parameter
         /// </summary>
-        private MainViewControl mainViewControl;
+        private readonly MainViewControl mainViewControl;
 
         /// <summary>
         /// Solution Path
@@ -47,9 +47,9 @@ namespace VisualInsectionSystem
         /// </summary>
         private bool SolutionIsLoaded = false;        
 
-        private string logPath = Application.StartupPath + "/Log/Message";
+        private readonly string logPath = Application.StartupPath + "/Log/Message";
 
-        private Timer LoadSolutionIndicateTimer = new Timer();
+        private readonly Timer LoadSolutionIndicateTimer = new Timer();
         private string cultureName = "zh-CN";
 
         public DebugForm()
@@ -122,7 +122,7 @@ namespace VisualInsectionSystem
         {
             if (statusInfo.nStatus == 0)
             {
-                string strMessage = null;
+                string strMessage;
                 var resourceManager = new ResourceManager("VisualInsectionSystem.DebugForm", typeof(DebugForm).Assembly);
                 buttonContiRun.Text = "zh-CN" == cultureName
                     ? resourceManager.GetString("buttonContiStop.Text", new CultureInfo("zh-CN"))
@@ -144,7 +144,7 @@ namespace VisualInsectionSystem
         {
             if (statusInfo.nStopAction == 1)
             {
-                string strMessage = null;
+                string strMessage;
                 var resourceManager = new ResourceManager("VisualInsectionSystem.DebugForm", typeof(DebugForm).Assembly);
                 buttonContiRun.Text = "zh-CN" == cultureName
                     ? resourceManager.GetString("buttonContiRun.Text", new CultureInfo("zh-CN"))
@@ -210,8 +210,6 @@ namespace VisualInsectionSystem
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
         /// <summary>
         /// 
@@ -390,8 +388,7 @@ namespace VisualInsectionSystem
 
                 //System.Diagnostics.Debug.WriteLine($"对话框结果: {oFresult}");   // 调试输出对话框结果
                 if (oFresult == DialogResult.OK)
-                {
-                    SolutionIsLoaded = false;
+                {                    
                     currentSolutionPath = openFileDialog.FileName;
                     //System.Diagnostics.Debug.WriteLine($"选中的文件路径: {currentSolutionPath}");  // 调试输出获取的路径
                     LoadSolutionIndicateTimer.Enabled = true;
@@ -399,6 +396,7 @@ namespace VisualInsectionSystem
                   
                     listBoxResult.Items.Add("The solution loaded");
                     listBoxResult.TopIndex = listBoxResult.Items.Count - 1;
+                    SolutionIsLoaded = true;
                 }
                 else
                 {
@@ -473,7 +471,7 @@ namespace VisualInsectionSystem
         private List<VmProcedure> GetCurrentSolProcedureList()  //获取当前方案的所有流程
         {
             List<VmProcedure> procedureList = new List<VmProcedure>();
-            string processName = "";
+            string processName;
             var processInfoList = VmSolution.Instance.GetAllProcedureList();
             for (int i = 0; i < processInfoList.nNum; i++)
             {
@@ -533,8 +531,8 @@ namespace VisualInsectionSystem
                 if (SolutionIsLoaded && comboProcedure.SelectedIndex != -1)
                 {
                     string processName = comboProcedure.SelectedItem.ToString();
-                    VmProcedure procedure = VmSolution.Instance[processName] as VmProcedure;  //***Get the selected process
-                    if (procedure != null)
+                    //***Get the selected process
+                    if (VmSolution.Instance[processName] is VmProcedure procedure)
                     {
                         procedure.Run();
                         AppendLog("Succeeded to run procedure once!");
@@ -559,11 +557,10 @@ namespace VisualInsectionSystem
                 if (SolutionIsLoaded && comboProcedure.SelectedIndex != -1)
                 {
                     string processName = comboProcedure.SelectedItem.ToString();
-                    VmProcedure procedure = VmSolution.Instance[processName] as VmProcedure;
-                    if (procedure != null)
+                    if (VmSolution.Instance[processName] is VmProcedure procedure)
                     {
                         //procedure.ContinuousRunEnable = true;
-                        procedure.ContinuousRunEnable = procedure.ContinuousRunEnable ^ true;  //Toggle the continuous run status                        
+                        procedure.ContinuousRunEnable ^= true;  //Toggle the continuous run status                        
                     }
                 }
             }
@@ -582,6 +579,11 @@ namespace VisualInsectionSystem
         /// <param name="lst"></param>
         public void RegisterProcedureWorkEndCallback(List<VmProcedure> lst)
         {
+            if (lst is null)
+            {
+                throw new ArgumentNullException(nameof(lst));
+            }
+
             try
             {
                 foreach (var vmProcedure in processList)
@@ -604,8 +606,7 @@ namespace VisualInsectionSystem
         {
             try
             {
-                VmProcedure procedure = sender as VmProcedure;
-                if (procedure != null)
+                if (sender is VmProcedure procedure)
                 {
                     var outputList = procedure.ModuResult.GetAllOutputNameInfo();  //输出信息
                     bool outputConfigIsWrong = true;
@@ -692,6 +693,9 @@ namespace VisualInsectionSystem
                     }
                 }
             }
+
+            // Dispose VmSolution instance to release resources
+            VmSolution.Instance.Dispose();
         }
 
 
@@ -729,10 +733,10 @@ namespace VisualInsectionSystem
         }
         private static void Loading(Control control, ComponentResourceManager resources)
         {
-            if (control is ListView)
+            if (control is ListView view)
             {
                 resources.ApplyResources(control, control.Name);
-                ListView ts = (ListView)control;
+                ListView ts = view;
                 resources.ApplyResources(ts.Columns[0], "timeStampHeader");
                 resources.ApplyResources(ts.Columns[1], "infoHeader");
                 //foreach (ColumnHeader c in ts.Columns)
