@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +17,6 @@ using VMControls.Winform.Release;
 /// <summary>
 /// 系统Demos
 /// </summary>  
-
 namespace Systemdemo01
 {
     /// <summary>
@@ -32,14 +31,11 @@ namespace Systemdemo01
         public Form1()
         {
             //VM 资源管理1.5__2:00
-            //KillProcess("VisionMasterServerApp");
-            //KillProcess("VisionMaster");
-            //KillProcess("VmModuleProxy.exe");
+            KillProcess("visionmasterserverapp");
+            KillProcess("visionmaster");
+            KillProcess("vmmoduleproxy.exe");
 
             InitializeComponent();
-
-            //vmRenderControl = new VmRenderControl();   
-            //vmRenderControl1 = vmRenderControl;  //全局渲染控件
         }
         /// <summary>
         /// 回调事件函数
@@ -82,26 +78,6 @@ namespace Systemdemo01
             VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  //所有流程运行状态回调
 
         }
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-        private void vmProcedureConfigControl1_Load_1(object sender, EventArgs e)
-        {
-
-        }
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-        private void groupBox1_Enter_1(object sender, EventArgs e)
-        {
-
-        }
-        private void groupBox2_Enter_1(object sender, EventArgs e)
-        {
-
-        }
 
         /// <summary>
         /// 选择路径按钮功能，打开一个文件夹
@@ -110,15 +86,17 @@ namespace Systemdemo01
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            string message = null;
+            string message;
             try
             {
                 // 调试输出按钮点击
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\";
-                //openFileDialog.Title = "选择VM Sol文件";
-                //openFileDialog.Filter = "All files (*.*)|*.*";  //设置文件类型
-                openFileDialog.Filter = "VM Sol File|*.sol";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\",
+                    //openFileDialog.Title = "选择VM Sol文件";
+                    //openFileDialog.Filter = "All files (*.*)|*.*";  //设置文件类型
+                    Filter = "VM Sol File|*.sol"
+                };
                 DialogResult openFileRes = openFileDialog.ShowDialog(); //显示打开文件对话框
 
                 System.Diagnostics.Debug.WriteLine($"对话框结果: {openFileRes}");     // 调试输出对话框结果
@@ -212,7 +190,7 @@ namespace Systemdemo01
             #region 
 
             // 1.3获取结果,分为渲染结果以及数据结果
-            VMControls.Winform.Release.VmRenderControl vmRenderControl = new VMControls.Winform.Release.VmRenderControl();          
+            /*VMControls.Winform.Release.*/VmRenderControl vmRenderControl = new /*VMControls.Winform.Release.*/VmRenderControl();          
             VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];   //流程对象            
             vmRenderControl1.ModuleSource = vmProcedure;  //设置全局渲染控件的显示源与流程绑定
 
@@ -281,90 +259,36 @@ namespace Systemdemo01
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 //MessageBox.Show("VM SDK ERROR." + Convert.ToString(ex.errorCode, 16));
             }
-            ////检测硬盘大小是否足够保存文件
-            ///VmSolution.Instance.SaveFailed = false;   //假设硬盘空间足够保存文件 
-            //if (VmSolution.Instance.SaveFailed)
-            //{
-            //    MessageBox.Show("硬盘空间保存失败！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //}
-            //else
-            //{
-            //    //文件保存成功提示
-            //    MessageBox.Show("文件保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //}
             listBox1.Items.Add("保存成功.");
             listBox1.TopIndex = listBox1.Items.Count - 1;
         }
         /// <summary>
         /// KillProcess
         /// </summary>       
-        /// //void KillProcess(string strKillName)
-        //{
-        //    foreach(System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
-        //    {
-        //        if (p.ProcessName.Contains(strKillName))
-        //        {
-        //            try
-        //            {
-        //                p.Kill();
-        //                p.WaitForExit();
-
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                Console.WriteLine(e.Message.ToString());
-        //            }
-        //        }
-        //    }
-        //}
-
-
-
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        void KillProcess(string strKillName)
         {
+            foreach(System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
+            {
+                if (p.ProcessName.Contains(strKillName))
+                {
+                    try
+                    {
+                        p.Kill();
+                        p.WaitForExit();
 
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message.ToString());
+                    }
+                }
+            }
         }
-
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void vmRenderControl1_Load(object sender, EventArgs e)
         {
             //VMControls.Winform.Release.VmRenderControl vmRenderControl = new VMControls.Winform.Release.VmRenderControl();
         }
 
-        private void groupBox5_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox6_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void vmParamsConfigWithRenderControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void vmParamsConfigControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
         /// <summary>
         /// 单
         /// </summary>
@@ -427,18 +351,15 @@ namespace Systemdemo01
 
         }
 
-        private void groupBox7_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void button9_Click(object sender, EventArgs e)
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.InitialDirectory = "E:\\VisualSoftware\\";
-                openFileDialog.Filter = "VM Sol File|*.prc";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = "E:\\VisualSoftware\\",
+                    Filter = "VM Sol File|*.prc"
+                };
                 DialogResult openFileRes = openFileDialog.ShowDialog();
 
                 //System.Diagnostics.Debug.WriteLine($"对话框结果: {openFileRes}");
@@ -500,6 +421,8 @@ namespace Systemdemo01
         /// <param name="e"></param>
         private void button12_Click(object sender, EventArgs e)
         {
+
+            //question：combobox中的流程
             try
             {
                 VmSolution.Instance.DeleteOneProcedure(comboBox1.Text);
@@ -541,5 +464,7 @@ namespace Systemdemo01
             #endregion
 
         }
+
+
     }
 }

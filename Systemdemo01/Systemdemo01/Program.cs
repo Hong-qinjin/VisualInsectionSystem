@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,18 +20,16 @@ namespace Systemdemo01
             //Application.ThreadException += Application_ThreadException;
             //// 处理非UI线程异常
             //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
-            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;  //程序集解析事件处理
+            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-
-           //VmSolution.Instance.Dispose();  //释放VM资源
         }
 
+        #region
         /*
-       private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
        {
            try
            {
@@ -68,5 +66,6 @@ namespace Systemdemo01
 
        }
        */
+        #endregion
     }
 }
