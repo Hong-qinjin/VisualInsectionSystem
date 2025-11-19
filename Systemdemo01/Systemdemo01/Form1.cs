@@ -1,3 +1,4 @@
+using IMVSOcrModuCs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using VisualInsectionSystem.SubForms;
 using VM.Core;
 using VM.PlatformSDKCS;
 using VMControls.BaseInterface;
@@ -47,10 +48,9 @@ namespace Systemdemo01
             {
                 //为0表示执行完毕，为1表示正在执行   10000表示流程1,流程结束后返回回调函数
                 if (workStatusInfo.nWorkStatus == 0 && workStatusInfo.nProcessID == 10000)
-                {
-                    //通过流程获取结果
-                    VmProcedure vmProcess1 = (VmProcedure)VmSolution.Instance["OCRDemo"];   //流程对象                    
-                    string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //   获取识别结果  
+                {                    
+                    VmProcedure vmProcess1 = (VmProcedure)VmSolution.Instance["Flow1"];                       //绑定方案中流程                    
+                    string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;   //模块中获取识别结果  
                     this.BeginInvoke(new Action(() =>  //在回调中对控件操作，需要使用委托
                     {
                         vmRenderControl1.ModuleSource = vmProcess1; //渲染结果
@@ -60,8 +60,11 @@ namespace Systemdemo01
                     }));
 
                     //通过模块获取：IMVS获取，实例化模块对象，获取结果
-                    IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];
-                    string ocrScore1 = ocrTool.ModuResult.CharNum.ToString(); //获取的字符数量
+                    //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];
+                    IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"]; 
+
+                    IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
+                   
                 }
             }
             catch(VmException ex)
@@ -74,9 +77,7 @@ namespace Systemdemo01
 
         private void Form1_Load(object sender, EventArgs e)
         {
-             // 注册回调函数，推荐回调函数获取结果
-            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  //所有流程运行状态回调
-
+            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  // 注册回调函数，推荐回调函数获取结果
         }
 
         /// <summary>
@@ -88,23 +89,22 @@ namespace Systemdemo01
         {
             string message;
             try
-            {
-                // 调试输出按钮点击
+            {                
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\",
+                    //InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\",
+                    InitialDirectory = "D:\\AutoBox Camera\\ABVisualSystem\\",
                     //openFileDialog.Title = "选择VM Sol文件";
-                    //openFileDialog.Filter = "All files (*.*)|*.*";  //设置文件类型
+                    //openFileDialog.Filter = "All files (*.*)|*.*";
                     Filter = "VM Sol File|*.sol"
                 };
-                DialogResult openFileRes = openFileDialog.ShowDialog(); //显示打开文件对话框
-
-                System.Diagnostics.Debug.WriteLine($"对话框结果: {openFileRes}");     // 调试输出对话框结果
+                DialogResult openFileRes = openFileDialog.ShowDialog();     //显示打开文件对话框
+                //System.Diagnostics.Debug.WriteLine($"对话框结果: {openFileRes}");     // 调试输出对话框结果
 
                 if (openFileRes == DialogResult.OK)
                 {
                     textBox1.Text = openFileDialog.FileName;
-                    System.Diagnostics.Debug.WriteLine($"选中的文件路径: {textBox1.Text}");    // 调试输出获取的路径
+                    //System.Diagnostics.Debug.WriteLine($"选中的文件路径: {textBox1.Text}");    // 调试输出获取的路径
                 }
 
                 listBox1.Items.Add("选择路径成功");
@@ -127,7 +127,7 @@ namespace Systemdemo01
         {
             try
             {
-                VmSolution.Load(textBox1.Text);   //// 引用VM.Solution.load方法选中路径的sol文件,1.2_1:54
+                VmSolution.Load(textBox1.Text);   // 引用VM.Solution.load方法选中路径的sol文件,1.2_1:54
                 listBox1.Items.Add("方案加载成功" + textBox1.Text);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 comboBox1.Enabled = true;
@@ -158,11 +158,18 @@ namespace Systemdemo01
             try
             {
                 //1.4模块的参数配置
-                //IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance[""];
-                IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];  //获取方案中的模块对象1.4_1:20  
-                vmParamsConfigWithRenderControl1.ModuleSource = ocrTool;  //带渲染的参数控件与模块绑定1.4_1:24
+                //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];  //获取方案中的模块对象1.4_1:20  
+                IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"];
+                IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
 
+
+
+                vmParamsConfigWithRenderControl1.ModuleSource = ocrTool;  //带渲染的参数控件与模块绑定1.4_1:24
                 vmParamsConfigControl1.ModuleSource = ocrTool;  //参数控件与模块绑定1.4_2:39
+
+                vmParamsConfigWithRenderControl1.ModuleSource = cfdTool;
+                vmParamsConfigControl1.ModuleSource = cfdTool;
+
             }
             catch (VmException ex)
             {
@@ -173,7 +180,6 @@ namespace Systemdemo01
 
             try
             {
-                //VmSolution.Instance.SyncRun();  //单次运行
                 VmSolution.Instance.SyncRun();   //同步执行一次方案中所有流程1.2_2:07                
             }
             catch (VmException ex)
@@ -191,20 +197,26 @@ namespace Systemdemo01
 
             // 1.3获取结果,分为渲染结果以及数据结果
             /*VMControls.Winform.Release.*/VmRenderControl vmRenderControl = new /*VMControls.Winform.Release.*/VmRenderControl();          
-            VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];   //流程对象            
+            //VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];   //从方案中绑定流程对象
+            VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["Flow1"];
+            
             vmRenderControl1.ModuleSource = vmProcedure;  //设置全局渲染控件的显示源与流程绑定
+            vmRenderControl1.Show();  //显示渲染控件
 
-            vmRenderControl1.Show();  //显示渲染控件                                       
+
             string ocrResult = vmProcedure.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //   获取识别结果
             string ocrConfidence = vmProcedure.ModuResult.GetOutputString("out0").astStringVal[0].strValue;  //  获取置信度
             string ocrNum = vmProcedure.ModuResult.GetOutputInt("out1").pIntVal[0].ToString();  //  数量
-
             listBox1.Items.Add("字符识别结果:" + ocrResult);
             listBox1.TopIndex = listBox1.Items.Count - 1;
             listBox1.Items.Add("字符置信度:" + ocrConfidence);
             listBox1.TopIndex = listBox1.Items.Count - 1;
             listBox1.Items.Add("字符数量:" + ocrNum);
             listBox1.TopIndex = listBox1.Items.Count - 1;
+
+            //string cfdImgPath = cfdTool.ModuleFilePath.ToString();
+            //string cfdImgName = cfdTool.StrModuleName.ToString();
+            //int cfdPointNum = cfdTool.
 
 
             #endregion
@@ -215,7 +227,7 @@ namespace Systemdemo01
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button4_Click(object sender, EventArgs e)
+        public void button4_Click(object sender, EventArgs e)
         {
             
             VmSolution.Instance.SetRunInterval(1000);
@@ -231,7 +243,7 @@ namespace Systemdemo01
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button5_Click(object sender, EventArgs e)
+        public void button5_Click(object sender, EventArgs e)
         {
             
             VmSolution.Instance.ContinuousRunEnable = false;
@@ -248,9 +260,10 @@ namespace Systemdemo01
         private void button6_Click(object sender, EventArgs e)
         {
             try
-            {
-                VmSolution.Save();   // 保存方案到原始路径并替换原有文件1.2_2:16
-                //VmSolution.SaveAs("path");   //保存方案到自定义路径
+            {                
+                string path = "D:\\AutoBox Camera\\ABVisualSystem\\";
+                //VmSolution.Save();   // 保存方案到原始路径并替换原有文件1.2_2:16
+                VmSolution.SaveAs(path);   //保存方案到自定义路径
             }
             catch (VmException ex)
             {
@@ -328,14 +341,14 @@ namespace Systemdemo01
         {
             try
             {
-                ProcessInfoList vmProcessInfoList = VmSolution.Instance.GetAllProcedureList();      //获取所有流程信息
-                VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];
-                if (vmProcessInfoList.nNum == 0)  //判断是否获取到流程列表
+                ProcessInfoList vmProcessInfoList = VmSolution.Instance.GetAllProcedureList();  //获取所有流程信息
+                VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["Flow1"];
+                if (vmProcessInfoList.nNum == 0)    //判断是否获取到流程列表
                 {
                     MessageBox.Show("未获取到流程列表.");
                     return;
                 }
-                comboBox1.Items.Clear();  //清除原有列表
+                comboBox1.Items.Clear();            //清除原有列表
                 comboBox1.Items.Add("OCRDemo");
                 for (int item = 0; item < vmProcessInfoList.nNum; item++)
                 {
@@ -357,7 +370,8 @@ namespace Systemdemo01
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    InitialDirectory = "E:\\VisualSoftware\\",
+                    //InitialDirectory = "E:\\VisualSoftware\\",
+                    InitialDirectory = "D:\\AutoBox Camera\\ABVisualSystem\\",
                     Filter = "VM Sol File|*.prc"
                 };
                 DialogResult openFileRes = openFileDialog.ShowDialog();
@@ -405,8 +419,10 @@ namespace Systemdemo01
             try
             {
                 VmProcedure vmProcess = (VmProcedure)VmSolution.Instance[comboBox1.Text];   //绑定下拉框中选中的流程名称
-                vmProcess.SaveAs("E:\\" + comboBox1.Text + ".prc");   //保存方案到自定义路径
-                listBox1.Items.Add("流程导出成功" + "E:\\" + comboBox1.Text + ".prc");
+                vmProcess.SaveAs("D:\\" + comboBox1.Text + ".prc");   //保存方案到自定义路径
+                //vmProcess.SaveAs("E:\\" + comboBox1.Text + ".prc");   //保存方案到自定义路径
+                //listBox1.Items.Add("流程导出成功" + "E:\\" + comboBox1.Text + ".prc");
+                listBox1.Items.Add("流程导出成功" + "D:\\" + comboBox1.Text + ".prc");
                 listBox1.TopIndex = listBox1.Items.Count - 1;
             }
             catch (VmException ex)
@@ -439,11 +455,18 @@ namespace Systemdemo01
         {
             try
             {
-                VmProcedure vmProcess = (VmProcedure)VmSolution.Instance[comboBox1.Text];  //绑定下拉框中选中的流程名称
-                vmProcess.Run();
-                //vmProcess.ContinuousRunEnable = true;  //连续运行标志
-                listBox1.Items.Add("执行一次" + comboBox1.Text + "成功");
-                listBox1.TopIndex = listBox1.Items.Count - 1;
+                //VmProcedure vmProcess = (VmProcedure)VmSolution.Instance[comboBox1.Text];  //绑定下拉框中选中的流程名称
+                //vmProcess.Run();
+                //vmProcess.ContinuousRunEnable = true;  //连续运行标志   
+                if (!string.IsNullOrEmpty(comboBox1.Text))
+                {
+                    ExecuteProcedure(comboBox1.Text);
+                }
+                else
+                {
+                    listBox1.Items.Add("请选择要执行的流程");
+                    listBox1.TopIndex = listBox1.Items.Count - 1;
+                }                           
             }
             catch (VmException ex)
             {
@@ -465,6 +488,71 @@ namespace Systemdemo01
 
         }
 
+        private void button14_Click(object sender, EventArgs e)
+        {
+            // 打开TCP页面
+            OpenTcpConnectionForm();
+        }
+   
+        // 在Form1中添加打开TCP连接窗口的方法
+        private void OpenTcpConnectionForm()
+        {
+            // 传递当前Form1实例给TCPConnect
+            VisualInsectionSystem.SubForms.TCPConnect tcpForm = new VisualInsectionSystem.SubForms.TCPConnect(this);
+            tcpForm.Show();
+        }
 
+        //执行指令流程并返回结果
+        public string ExecuteProcedure(string procedureNmae)
+        {
+            try
+            {
+                var procedure = VmSolution.Instance[procedureNmae];
+                if (procedure == null)
+                {
+                    return $"流程 {procedureNmae} not exist!";
+                }
+
+                //zhi xing liu cheng
+                VmProcedure vmProcess = (VmProcedure)procedure;
+                vmProcess.Run();
+
+                // wait act
+                System.Threading.Thread.Sleep(1000);
+
+                // 获取识别结果
+                string ocrResult = vmProcess.ModuResult.GetOutputString("out").astStringVal[0].strValue;
+                string ocrConfidence = vmProcess.ModuResult.GetOutputString("out0").astStringVal[0].strValue;
+                string ocrNum = vmProcess.ModuResult.GetOutputInt("out1").pIntVal[0].ToString();
+
+                // 更新UI
+                listBox1.Items.Add($"执行流程 {procedureNmae} 成功");
+                listBox1.Items.Add("result1:" + ocrResult);
+                listBox1.Items.Add("result2:" + ocrConfidence);
+                listBox1.Items.Add("result3:" + ocrNum);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+
+                //更新渲染
+                vmRenderControl1.ModuleSource = vmProcess;
+
+                //返回结果
+                return $"执行流程 {procedureNmae} 成功:result1={ocrResult}, result2={ocrConfidence}, result3={ocrNum}";
+
+            }
+            catch (VmException ex)
+            {
+                string errorMsg = $"流程 {procedureNmae} 执行失败: {Convert.ToString(ex.errorCode, 16)}";
+                listBox1.Items.Add(errorMsg);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                return errorMsg;
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = $"流程 {procedureNmae} 执行异常: {ex.Message}";
+                listBox1.Items.Add(errorMsg);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                return errorMsg;
+            }
+        }
     }
 }

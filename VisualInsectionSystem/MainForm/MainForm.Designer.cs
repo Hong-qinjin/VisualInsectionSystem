@@ -71,15 +71,13 @@ namespace VisualInsectionSystem
             this.buttonSetTimeInterval = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBoxControl.SuspendLayout();
             this.groupBoxTimeInterval.SuspendLayout();
-            this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -205,7 +203,7 @@ namespace VisualInsectionSystem
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(870, 508);
+            this.groupBox1.Size = new System.Drawing.Size(870, 522);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -217,7 +215,7 @@ namespace VisualInsectionSystem
             this.vmMainViewConfigControl1.Location = new System.Drawing.Point(3, 16);
             this.vmMainViewConfigControl1.Margin = new System.Windows.Forms.Padding(2);
             this.vmMainViewConfigControl1.Name = "vmMainViewConfigControl1";
-            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(864, 490);
+            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(864, 504);
             this.vmMainViewConfigControl1.TabIndex = 0;
 // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
             this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);
@@ -401,7 +399,7 @@ namespace VisualInsectionSystem
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(3, 17);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(444, 110);
+            this.listBox1.Size = new System.Drawing.Size(444, 101);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -496,6 +494,7 @@ namespace VisualInsectionSystem
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.listBox1);
             this.groupBox4.Location = new System.Drawing.Point(12, 277);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(450, 121);
@@ -505,39 +504,18 @@ namespace VisualInsectionSystem
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.listBox1);
             this.groupBox5.Location = new System.Drawing.Point(12, 404);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(450, 130);
+            this.groupBox5.Size = new System.Drawing.Size(450, 144);
             this.groupBox5.TabIndex = 64;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "groupBox5";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Location = new System.Drawing.Point(12, 539);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(450, 121);
-            this.groupBox6.TabIndex = 65;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "groupBox6";
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Location = new System.Drawing.Point(468, 539);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(867, 121);
-            this.groupBox7.TabIndex = 66;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "groupBox7";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1350, 672);
-            this.Controls.Add(this.groupBox7);
-            this.Controls.Add(this.groupBox6);
+            this.ClientSize = new System.Drawing.Size(1350, 568);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -559,7 +537,7 @@ namespace VisualInsectionSystem
             this.groupBoxControl.ResumeLayout(false);
             this.groupBoxTimeInterval.ResumeLayout(false);
             this.groupBoxTimeInterval.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -607,8 +585,6 @@ namespace VisualInsectionSystem
         private System.Windows.Forms.Button buttonExecuteOnce;
         private System.Windows.Forms.Button buttonContinuExecute;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button buttonPathLoad;
         private VMControls.Winform.Release.VmMainViewConfigControl vmMainViewConfigControl1;

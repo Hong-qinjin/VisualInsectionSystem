@@ -56,6 +56,7 @@ namespace Systemdemo01
             this.button11 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -69,11 +70,11 @@ namespace Systemdemo01
             // 
             this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.vmProcedureConfigControl1);
-            this.groupBox1.Location = new System.Drawing.Point(9, 25);
+            this.groupBox1.Location = new System.Drawing.Point(11, 11);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(362, 262);
+            this.groupBox1.Size = new System.Drawing.Size(488, 324);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -84,7 +85,7 @@ namespace Systemdemo01
             this.vmProcedureConfigControl1.Location = new System.Drawing.Point(2, 16);
             this.vmProcedureConfigControl1.Margin = new System.Windows.Forms.Padding(2);
             this.vmProcedureConfigControl1.Name = "vmProcedureConfigControl1";
-            this.vmProcedureConfigControl1.Size = new System.Drawing.Size(358, 244);
+            this.vmProcedureConfigControl1.Size = new System.Drawing.Size(484, 306);
             this.vmProcedureConfigControl1.TabIndex = 0;
 // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
             // 
@@ -98,11 +99,11 @@ namespace Systemdemo01
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Location = new System.Drawing.Point(9, 300);
+            this.groupBox2.Location = new System.Drawing.Point(11, 339);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(360, 120);
+            this.groupBox2.Size = new System.Drawing.Size(488, 105);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "方案区";
@@ -222,11 +223,11 @@ namespace Systemdemo01
             // 
             this.groupBox3.AutoSize = true;
             this.groupBox3.Controls.Add(this.listBox1);
-            this.groupBox3.Location = new System.Drawing.Point(11, 427);
+            this.groupBox3.Location = new System.Drawing.Point(11, 574);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(727, 138);
+            this.groupBox3.Size = new System.Drawing.Size(486, 120);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
@@ -241,7 +242,7 @@ namespace Systemdemo01
             this.listBox1.Location = new System.Drawing.Point(2, 16);
             this.listBox1.Margin = new System.Windows.Forms.Padding(2);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(723, 120);
+            this.listBox1.Size = new System.Drawing.Size(482, 102);
             this.listBox1.TabIndex = 0;
             // 
             // vmRenderControl1
@@ -253,7 +254,7 @@ namespace Systemdemo01
             this.vmRenderControl1.Location = new System.Drawing.Point(3, 17);
             this.vmRenderControl1.ModuleSource = null;
             this.vmRenderControl1.Name = "vmRenderControl1";
-            this.vmRenderControl1.Size = new System.Drawing.Size(356, 242);
+            this.vmRenderControl1.Size = new System.Drawing.Size(515, 350);
             this.vmRenderControl1.TabIndex = 3;
             this.vmRenderControl1.Load += new System.EventHandler(this.vmRenderControl1_Load);
             // 
@@ -261,9 +262,9 @@ namespace Systemdemo01
             // 
             this.groupBox4.AutoSize = true;
             this.groupBox4.Controls.Add(this.vmRenderControl1);
-            this.groupBox4.Location = new System.Drawing.Point(376, 25);
+            this.groupBox4.Location = new System.Drawing.Point(502, 11);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(362, 262);
+            this.groupBox4.Size = new System.Drawing.Size(521, 370);
             this.groupBox4.TabIndex = 3;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "groupBox4";
@@ -272,9 +273,9 @@ namespace Systemdemo01
             // 
             this.groupBox5.AutoSize = true;
             this.groupBox5.Controls.Add(this.vmParamsConfigWithRenderControl1);
-            this.groupBox5.Location = new System.Drawing.Point(744, 25);
+            this.groupBox5.Location = new System.Drawing.Point(505, 384);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(279, 262);
+            this.groupBox5.Size = new System.Drawing.Size(518, 308);
             this.groupBox5.TabIndex = 4;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "groupBox5";
@@ -291,16 +292,16 @@ namespace Systemdemo01
             this.vmParamsConfigWithRenderControl1.Name = "vmParamsConfigWithRenderControl1";
             this.vmParamsConfigWithRenderControl1.ParamsConfig = null;
             this.vmParamsConfigWithRenderControl1.ROIVisible = true;
-            this.vmParamsConfigWithRenderControl1.Size = new System.Drawing.Size(273, 242);
+            this.vmParamsConfigWithRenderControl1.Size = new System.Drawing.Size(512, 288);
             this.vmParamsConfigWithRenderControl1.TabIndex = 0;
             // 
             // groupBox6
             // 
             this.groupBox6.AutoSize = true;
             this.groupBox6.Controls.Add(this.vmParamsConfigControl1);
-            this.groupBox6.Location = new System.Drawing.Point(744, 300);
+            this.groupBox6.Location = new System.Drawing.Point(1029, 384);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(279, 262);
+            this.groupBox6.Size = new System.Drawing.Size(461, 308);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "groupBox6";
@@ -313,7 +314,7 @@ namespace Systemdemo01
             this.vmParamsConfigControl1.ModuleSource = null;
             this.vmParamsConfigControl1.Name = "vmParamsConfigControl1";
             this.vmParamsConfigControl1.ParamsConfig = null;
-            this.vmParamsConfigControl1.Size = new System.Drawing.Size(273, 242);
+            this.vmParamsConfigControl1.Size = new System.Drawing.Size(455, 288);
             this.vmParamsConfigControl1.TabIndex = 0;
             // 
             // groupBox7
@@ -327,9 +328,9 @@ namespace Systemdemo01
             this.groupBox7.Controls.Add(this.button7);
             this.groupBox7.Controls.Add(this.comboBox1);
             this.groupBox7.Controls.Add(this.button8);
-            this.groupBox7.Location = new System.Drawing.Point(379, 300);
+            this.groupBox7.Location = new System.Drawing.Point(11, 449);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(359, 120);
+            this.groupBox7.Size = new System.Drawing.Size(488, 120);
             this.groupBox7.TabIndex = 10;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "流程区";
@@ -391,12 +392,23 @@ namespace Systemdemo01
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(1412, 27);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 23);
+            this.button14.TabIndex = 7;
+            this.button14.Text = "连接";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1460, 705);
+            this.ClientSize = new System.Drawing.Size(1502, 705);
+            this.Controls.Add(this.button14);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
@@ -452,6 +464,7 @@ namespace Systemdemo01
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
     }
 }
 

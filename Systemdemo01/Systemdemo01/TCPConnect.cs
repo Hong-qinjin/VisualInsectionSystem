@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Systemdemo01;
 
 
 namespace VisualInsectionSystem.SubForms
@@ -18,7 +19,6 @@ namespace VisualInsectionSystem.SubForms
     public partial class TCPConnect : Form
     {
         private Form1 mainForm;                 //主界面应用update_1117
-        //private MainForm mainForm;
 
         // 网络通信相关变量
         private TcpListener tcpServer;          // TCP服务端

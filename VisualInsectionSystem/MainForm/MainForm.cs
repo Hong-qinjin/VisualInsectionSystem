@@ -606,9 +606,5 @@ using VM.PlatformSDKCS;  namespace VisualInsectionSystem {     public pa
             vmMainViewConfigControl1.BindMultiProcedure(); //绑定多流程
         } 
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
      } 
