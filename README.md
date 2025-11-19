@@ -1,43 +1,44 @@
 # Systemdemo01
+  本教程基于VisionMaster 4.4.0和Visual Studio 2022封装视觉软件，框架基于.NETFrame work 4.6.1，涵盖基本组件和方法。以下是详细内容，包括工程设置、功能模块和调试指南。
 
 # VisualInsectionSystem
+  VmGlobaltoolbar加载：集成全局工具栏组件，支持快捷操作。
+  1.环境配置：设置系统路径、依赖库和运行时参数。
+  2. 界面方案管理
+    方案选择与加载：支持多方案切换，通过配置文件导入。
+    方案保存：实现自动或手动保存机制，确保数据持久化。
+  3. 相机操作与调试
+    拍照功能：封装相机控制接口，支持单次和连续拍照。
+    参数界面：提供实时调试面板，调整曝光、增益等参数。
+  4. 外部通信设置
+    PLC集成：详见PLC通讯部分。TCP/IP通信，通用协议支持：适配TCP/IP、串口等通信方式。
+  5. 用户权限系统
+    登录管理：实现用户认证界面，支持多角色登录。
+    权限控制：基于角色限制功能访问，如管理员和操作员权限分级。
+  6. 日志输出
+  Tab格式化：日志信息结构化输出，支持分类（如调试、错误、警告）。
+  实时监控：日志窗口动态更新，便于故障排查。
 
-使用VM4.4+VS2022封装的视觉软件
-<<<<<<< HEAD
-解决方法：首先查看工程中时候存在Resources.resx相关的文件， 找到它在工程中的位置（不如说一般都是在：工程名.Properties 命名空间下）， 最后更改配置为new System.Resources.ResourceManager("工程名.Properties.Resources", typeof(Resources).Assembly);
-
-启动程序，打开调试窗口，观察输出窗口的调试日志：
-确认 DebugForm_Load: 句柄创建状态 - True 表示句柄正常创建
-若事件在句柄创建前意外触发，会输出 StartEvent: Handle未创建 等日志，便于追踪
-模拟连续运行 / 停止：
-点击 buttonContiRun 启动连续运行，触发 OnProcessStatusStartEvent
-再次点击停止，触发 OnProcessStatusStopEvent
-检查是否有异常抛出，UI 是否正常更新
-=======
-
-
+    
 1. VmGlobaltoolbar加载，环境配置信息
 2. 界面方案的选择，加载，保存
 3. 相机的拍照，参数界面调试
 4. 外部通信的设置，PLC--
 5. 用户登录信息，权限设置
 6. 日志tab格式化输出
-7. 
->>>>>>> refs/remotes/origin/master
+
+ 解决方法：首先查看工程中时候存在Resources.resx相关的文件， 找到它在工程中的位置（不如说一般都是在：工程名.Properties 命名空间下）， 最后更改配置为new System.Resources.ResourceManager("工程名.Properties.Resources", typeof(Resources).Assembly);
+
 #region  plc备注
 /* 配置PLC通讯
  * 确认PC网络设置
  * 安装必要S7.Net库 
  * 创建连接实例
  * 对话通信管理：会话验证，心跳机制，超时处理，连接恢复
- * 
  * 链接策略：创建连接池实例，请求连接，连接复用，关闭·释放连接
- * 
  * 断线重连策略：定期检测连接状态，设置重连机制，日志记录，用户通知
- * 
  * 数据读写操作：读写基本数据类型，读取单个和多个，读取DB块数据的技术，
  * 写入单个和多个，功能块数据写入技术，
- * 
  * 错误处理异常分类：数据读取异常，连接异常，超时异常
  *                    通信异常，网络异常，PLC响应异常
  * 
