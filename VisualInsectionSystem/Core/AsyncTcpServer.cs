@@ -76,6 +76,7 @@ public class AsyncTcpServer
             isRunning = false;
             throw;      // 允许外部捕获启动异常
         }
+        await Task.CompletedTask;  // match async signature,date:2025-11-28
     }
 
     // 停止TCP服务器

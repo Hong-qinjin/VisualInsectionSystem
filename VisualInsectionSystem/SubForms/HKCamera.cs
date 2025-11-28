@@ -818,10 +818,9 @@ namespace VisualInsectionSystem.SubForms
 
         ///<summary> 停止采集 </summary>
         private void button6_Click(object sender, EventArgs e)
-        {
-            //ch:停止预览 | en:Stop Grab
+        {           
             m_bGrabbing = false;
-            m_hReceiveThread.Join(); //取流线程退出
+            m_hReceiveThread.Join(); //取流退出({"未将对象引用设置到对象的实例。"})
             // ch:停止取流 | en:Stop Grab
             int nRet = m_MyCamera.MV_CC_StopGrabbing_NET();
 

@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using VisualInsectionSystem.SubForms;
 
@@ -36,14 +37,15 @@ public class PLCCommunicator
     private     int rack;               // PLC的机架号
     private     int _slot;              // PLC的插槽号
     private     List<PLCAddress> addressList;
+        
+    private bool isConnected;           // 连接状态
+    private Thread _monitorThread;
+    private bool _isMonitoring;
+    private bool _lastCameraReadyState; // 上升沿检测
     
-    // 原私有字段（假设原本是 private 或 protected）
-    private bool isConnected;
-
-    // 新增公开属性，供外部访问连接状态
     public bool IsConnected
     {
-        get { return isConnected; } // 只暴露读取权限，不允许外部修改
+        get { return isConnected; } // 不允许外部修改，供外部访问连接状态
     }
 
     // 连接状态变更事件（供UI层订阅）
@@ -51,6 +53,8 @@ public class PLCCommunicator
 
     // 数据读写异常事件（仅传递硬件相关错误）
     public event Action<string> HardwareErrorOccurred;
+
+    public event Action CameraReadyTriggered;   // PLC load
 
     // 与HKcamera交互的事件
     public event Action<bool> CameraStatusChanged;
@@ -62,8 +66,8 @@ public class PLCCommunicator
     public PLCCommunicator(CpuType cpuType,string ipAddress,int rack=0,int slot=1 )
     {
         // 参数校验（避免非硬件错误）
-        if (!IPAddress.TryParse(ipAddress, out _))
-            throw new ArgumentException("无效的IP地址格式", nameof(ipAddress));
+        if (!System.Net.IPAddress.TryParse(ipAddress, out _))     //
+            throw new ArgumentException("无效的地址", nameof(ipAddress));             
         if (rack < 0)
             throw new ArgumentException("机架号不能为负数", nameof(rack));
         if (slot < 0)
@@ -73,11 +77,22 @@ public class PLCCommunicator
         _ipAddress = ipAddress;
         _rack = rack;
         _slot = slot;
+        addressList = new List<PLCAddress>();
         _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
-        InitializePLC();               // 初始化PLC连接
-        //BuildDefaultAddresses();        // 构建默认地址列表
+        InitializePLC();                // 初始化PLC连接
+        BuildDefaultAddresses();        // 构建默认地址列表
     }
-    
+
+    // init()
+    private void InitializePLC()
+    {
+        if (_plc == null)
+        {
+            _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
+        }
+        _plc.ReadTimeout = 5000;
+        _plc.WriteTimeout = 5000;
+    }
 
     // 从app.config读取IP
     private void LoadConfiguration()
@@ -99,6 +114,132 @@ public class PLCCommunicator
         }
     }
 
+    // 构建默认地址列表
+    private void BuildDefaultAddresses()
+    {
+        AddAddress("CameraReady", PLCDataType.Bit, 45, 0, 4);       // 触发拍照
+        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);       //相机存活
+        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);    //拍照结束
+        AddAddress("DataOK", PLCDataType.Bit, 45, 0, 1);
+        AddAddress("DataNG", PLCDataType.Bit, 45, 0, 0);
+
+    }
+
+    // 添加地址
+    public void AddAddress(string name, PLCDataType dataType, int dbNumber, int start, int index = 0)
+    {
+        addressList.Add(new PLCAddress
+        {
+            Name = name,
+            DataType = dataType,
+            DBNumber = dbNumber,
+            Start = start,
+            Index = index
+        });
+    }
+
+    // 获取地址
+    public PLCAddress GetAddress(string name)
+    {
+        return addressList.Find(addr => addr.Name == name);
+    }
+
+    // 连接PLC
+    public bool ConnectPLC()
+    {
+        try
+        {
+            if (isConnected) return true;  // 已连接则直接返回
+            if (_plc == null) InitializePLC();
+
+            // 执行连接（S7NetPlus的Open方法返回连接状态）
+            _plc.Open();
+            isConnected = _plc.IsConnected;
+            ConnectionStatusChanged?.Invoke(true); // 通知连接成功
+            if (isConnected)
+            {
+                StartMonitoring();  //监听线程               
+            }
+            return isConnected;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"连接异常: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            isConnected = false;
+            return false;
+        }
+        // return false; // 保证所有路径都有返回值
+    }
+
+    // 断开连接plc
+    public void DisconnectPLC()
+    {
+        try
+        {
+            StopMonitoring();
+            if (!isConnected && _plc != null)
+            {
+                _plc.Close();
+                return;
+            }
+            isConnected = false;
+            CameraStatusChanged?.Invoke(false);     // 断开连接时通知相机状态为假
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"断开连接异常: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    // 启动监控线程，检测cameraReady上升沿
+    private void StartMonitoring()
+    {
+        _isMonitoring = true;
+        _monitorThread = new Thread(MonitorCameraReady)
+        {
+            IsBackground = true,
+            Name = "PLC_Monitor"
+        };
+        _monitorThread.Start();
+    }
+
+    // 停止
+    private void StopMonitoring()
+    {
+        _isMonitoring= false;
+        _monitorThread?.Join(1000);
+    }
+
+    // 监控CameraReady信号（上升沿触发）
+    private void MonitorCameraReady()
+    {
+        while (_isMonitoring)
+        {
+            try
+            {
+                if(Read("CameraReady", out object value) && value is bool currrentState)
+                {
+                    //
+                    if (currrentState && !_lastCameraReadyState)
+                    {
+                        CameraReadyTriggered?.Invoke(); //触发拍照事件
+                    }
+                    _lastCameraReadyState = currrentState;
+                }
+                
+                // 监控相机状态
+                if(Read("CameraAlive", out object aliveValue) && aliveValue is bool isAlive)
+                {
+                    CameraStatusChanged?.Invoke(isAlive);
+                }
+            }
+            catch(Exception)
+            {
+                HardwareErrorOccurred?.DynamicInvoke();     // question
+            }
+            Thread.Sleep(500);
+        }
+    }
     // 更新连接信息
     public void UpdateConnection(string ip, int rack = 0, int slot = 1)
     {
@@ -121,61 +262,7 @@ public class PLCCommunicator
         {
             MessageBox.Show($"连接更新错误: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-    }
-
-    private void InitializePLC()
-    {
-        if(_plc == null)
-        {
-            _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
-        }
-        
-        _plc.ReadTimeout = 5000;
-        _plc.WriteTimeout = 5000;
-    }
-
-    // 连接PLC
-    public bool ConnectPLC()
-    {
-        try
-        {
-            if (isConnected) return true;  // 已连接则直接返回
-            if (_plc == null) InitializePLC();
-            
-            // 执行连接（S7NetPlus的Open方法返回连接状态）
-            _plc.Open();
-            isConnected = _plc.IsConnected;
-            if (isConnected)
-            {
-                ConnectionStatusChanged?.Invoke(true); // 通知连接成功
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"连接异常: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            isConnected = false;
-            return false;
-        }
-        return false; // 保证所有路径都有返回值
-    }
-
-    public void DisconnectPLC()
-    {
-        try
-        {
-            if (!isConnected || _plc == null) return;
-            _plc.Close();
-            isConnected = false;
-            CameraStatusChanged?.Invoke(false);     // 断开连接时通知相机状态为假
-
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"断开连接异常: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
-
+    }   
 
     // 检查相机状态
     private void CheckCameraStatus()
@@ -190,35 +277,6 @@ public class PLCCommunicator
         }
     }
 
-    // 构建默认地址列表
-    private void BuildDefaultAddresses()
-    {
-        AddAddress("CameraReady", PLCDataType.Bit, 45, 0, 4);   // 触发拍照
-        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);       //相机存活
-        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);    //拍照结束
-        AddAddress("DataOK", PLCDataType.Bit, 45, 0, 1);
-        AddAddress("DataNG", PLCDataType.Bit, 45, 0, 0);
-
-    }
-    // 添加地址
-    public void AddAddress(string name, PLCDataType dataType, int dbNumber, int start, int index = 0)
-    {
-        addressList.Add(new PLCAddress
-        {
-            Name = name,
-            DataType = dataType,
-            DBNumber = dbNumber,
-            Start = start,
-            Index = index
-        });
-    }
-
-    // 获取地址
-    public PLCAddress GetAddress(string name)
-    {
-        return addressList.Find(addr => addr.Name == name);
-    }
-
     // 
     public PLCAddress GetAddress(int index)
     {
@@ -229,12 +287,12 @@ public class PLCCommunicator
 
     #region Read Methods读取方法
 
+    // 读取plc数据
     public bool Read(string name, out object value)
     {
         value = null;
         var address = GetAddress(name);
         if (address == null || !isConnected) return false;
-
         return ReadAddress(address, out value);
     }
 
@@ -246,6 +304,7 @@ public class PLCCommunicator
 
         return ReadAddress(address, out value);
     }
+
 
     private bool ReadAddress(PLCAddress address, out object value)
     {
@@ -353,6 +412,7 @@ public class PLCCommunicator
 
     #region Write Methods 写入方法
 
+    // 写入plc数据
     public bool Write(string name, object value)
     {
         var address = GetAddress(name);
@@ -457,11 +517,4 @@ public class PLCCommunicator
     }
 
     #endregion
-
-    public void Dispose()
-    {
-        DisconnectPLC();
-        // 先转换为IDisposable接口，再调用Dispose（空条件运算符确保安全）
-        (_plc as IDisposable)?.Dispose();
-    }
 }
