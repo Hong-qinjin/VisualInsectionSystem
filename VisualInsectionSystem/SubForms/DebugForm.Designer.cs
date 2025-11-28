@@ -71,7 +71,6 @@
             this.groupBoxResult.TabIndex = 9;
             this.groupBoxResult.TabStop = false;
             this.groupBoxResult.Text = "结果";
-            this.groupBoxResult.Enter += new System.EventHandler(this.groupBoxResult_Enter);
             // 
             // listBoxResult
             // 
@@ -87,7 +86,6 @@
             this.listBoxResult.Name = "listBoxResult";
             this.listBoxResult.Size = new System.Drawing.Size(706, 96);
             this.listBoxResult.TabIndex = 8;
-            this.listBoxResult.SelectedIndexChanged += new System.EventHandler(this.listBoxResult_SelectedIndexChanged);
             // 
             // labelResultState
             // 
@@ -101,7 +99,6 @@
             this.labelResultState.TabIndex = 7;
             this.labelResultState.Text = "OK";
             this.labelResultState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelResultState.Click += new System.EventHandler(this.labelResultState_Click);
             // 
             // resultPanel
             // 
@@ -241,8 +238,8 @@
             this.listViewLog.BackColor = System.Drawing.SystemColors.Control;
             this.listViewLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.infoHeader,
-            this.timeStampHeader});
+            this.timeStampHeader,
+            this.infoHeader});
             this.listViewLog.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewLog.ForeColor = System.Drawing.Color.Black;
             this.listViewLog.HideSelection = false;
@@ -253,7 +250,6 @@
             this.listViewLog.TabIndex = 0;
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;
-            this.listViewLog.SelectedIndexChanged += new System.EventHandler(this.listViewLog_SelectedIndexChanged);
             // 
             // groupBox2
             // 
@@ -267,7 +263,6 @@
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "日志消息";
-            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
             // buttonSaveSolu
             // 
@@ -325,7 +320,6 @@
             this.groupBoxSolution.TabIndex = 2;
             this.groupBoxSolution.TabStop = false;
             this.groupBoxSolution.Text = "方案操作";
-            this.groupBoxSolution.Enter += new System.EventHandler(this.groupBoxSolution_Enter);
             // 
             // renderPanel
             // 
@@ -337,7 +331,6 @@
             this.renderPanel.Name = "renderPanel";
             this.renderPanel.Size = new System.Drawing.Size(868, 598);
             this.renderPanel.TabIndex = 0;
-            this.renderPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.renderPanel_Paint);
             // 
             // buttonChineseOREnglish
             // 

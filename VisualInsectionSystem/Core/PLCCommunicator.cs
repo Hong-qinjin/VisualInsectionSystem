@@ -10,12 +10,12 @@ using VisualInsectionSystem.SubForms;
 
 public enum PLCDataType
 {
-    DWord = 0,
-    Bit = 1,
-    Word = 2,
-    Byte = 3,
-    Real = 4,
-    String = 5
+    DWord   = 0,
+    Bit     = 1,
+    Word    = 2,
+    Byte    = 3,
+    Real    = 4,
+    String  = 5
 }
 
 public class PLCAddress
@@ -30,12 +30,12 @@ public class PLCAddress
 public class PLCCommunicator
 {
 
-    private Plc _plc;              // 通信实例
-    private  CpuType _cpuType;     //= CpuType.S71200; // PLC的CPU类型
-    private string _ipAddress;     // PLC的IP地址
-    private  int rack;            // PLC的机架号
-    private  int _slot;            // PLC的插槽号
-    private List<PLCAddress> addressList;
+    private     Plc _plc;               // 通信实例
+    private     CpuType _cpuType;       // PLC的CPU类型 CpuType.S71200,1515
+    private     string _ipAddress;      // PLC的IP地址
+    private     int rack;               // PLC的机架号
+    private     int _slot;              // PLC的插槽号
+    private     List<PLCAddress> addressList;
     
     // 原私有字段（假设原本是 private 或 protected）
     private bool isConnected;
@@ -180,6 +180,7 @@ public class PLCCommunicator
     // 检查相机状态
     private void CheckCameraStatus()
     {
+        
         if (!isConnected) return;
         if (Read("CameraAlive", out object cameraAlive))
         {
@@ -192,8 +193,9 @@ public class PLCCommunicator
     // 构建默认地址列表
     private void BuildDefaultAddresses()
     {
-        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);  
-        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);
+        AddAddress("CameraReady", PLCDataType.Bit, 45, 0, 4);   // 触发拍照
+        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);       //相机存活
+        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);    //拍照结束
         AddAddress("DataOK", PLCDataType.Bit, 45, 0, 1);
         AddAddress("DataNG", PLCDataType.Bit, 45, 0, 0);
 

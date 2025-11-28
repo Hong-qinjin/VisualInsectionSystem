@@ -754,42 +754,5 @@ namespace VisualInsectionSystem
             }
         }
 
-        private void listBoxResult_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void renderPanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void listViewLog_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBoxResult_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBoxSolution_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void labelResultState_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
     }
 }

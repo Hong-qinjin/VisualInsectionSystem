@@ -478,11 +478,11 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>关闭相机</summary>
         private void button4_Click(object sender, EventArgs e)
         {
-            if (m_bGrabbing == true)//清除取流标志
+            if (m_bGrabbing == true)            //清除取流标志
             {
                 m_bGrabbing = false;
-                m_hReceiveThread.Join(); //等待取流线程退出
-                //Thread.Sleep(50); //等待取流线程退出
+                m_hReceiveThread.Join();        //等待取流线程退出
+                //Thread.Sleep(50);             //等待取流线程退出
             }
             if (m_pBufForDriver != IntPtr.Zero)
             {
@@ -815,20 +815,6 @@ namespace VisualInsectionSystem.SubForms
                 button8.Enabled = false;
             }
         }
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         ///<summary> 停止采集 </summary>
         private void button6_Click(object sender, EventArgs e)
@@ -864,13 +850,13 @@ namespace VisualInsectionSystem.SubForms
         //plc触发取图线程,自动循环拍照, // 修改LoopCaptureByPLC方法，使用PlcCommunicator属性
         private void LoopCaptureByPLC()
         {
-            //int stateValue = 0; // PLC状态值,变为1时触发拍照
+            int stateValue = 0; // PLC状态值,变为1时触发拍照
            
             while (m_bGrabbing)
             {
                 //todo 拍照，PLC触发信号CameraAlive
                 if (PlcCommunicator != null && PlcCommunicator.IsConnected && 
-                    PlcCommunicator.Read("CameraAlive", out object triggerValue) && 
+                    PlcCommunicator.Read("CameraReady", out object triggerValue) && 
                    triggerValue is bool isTriggered && isTriggered)
                 {
                     // run cmd
@@ -887,6 +873,24 @@ namespace VisualInsectionSystem.SubForms
             }
         }
 
+        // 触发
+        public void TriggerCapture()
+        {
+            if (m_bGrabbing && IsConnect)
+            {
+                // 确保在UI线程执行
+                this.Invoke(new Action(() =>
+                {
+                    CaptureImage();
+                }));
+            }
+            else
+            {
+                ShowErrorMsg("相机未连接或未开始取流", -1);
+            }
+        }
+
+        // 拍照
         private void CaptureImage()
         {
             try
@@ -906,25 +910,93 @@ namespace VisualInsectionSystem.SubForms
                 if (nRet != MyCamera.MV_OK)
                 {
                     ShowErrorMsg("获取图像失败!", nRet);
+                    return;
                 }
-                // 处理图像数据
-                string imagePath = SaveCapturedImage(stFrameInfo);
-
-                // 释放图像缓冲区
-                m_MyCamera.MV_CC_FreeImageBuffer_NET(ref stFrameInfo);
+                // 处理图像数据并显示
+                ProcessAndDisplayImage(stFrameInfo);
 
                 // 保存图像路径用于后续检测
-                LastCapturedImagePath = imagePath;
+                string imagePath = SaveCapturedImage(stFrameInfo);
+                LastCapturedImagePath = imagePath;                
+
+                // 释放图像缓冲区
+                m_MyCamera.MV_CC_FreeImageBuffer_NET(ref stFrameInfo);               
                 
             }
             catch (Exception ex)
             {
-                ShowErrorMsg("Capture Image Exception: " + ex.Message, -1);
-                
+                ShowErrorMsg("Capture Image Exception: " + ex.Message, -1);                
             }
         }
+        
+        // 显示
+        private void ProcessAndDisplayImage(MyCamera.MV_FRAME_OUT  frameInfo)
+        {
+            try
+            {
+                m_bGrabbing = true;
+                int width = frameInfo.stFrameInfo.nWidth;
+                int height = frameInfo.stFrameInfo.nHeight;
+                IntPtr pData = frameInfo.pBufAddr;
 
+                // 根据像素格式创建对应的Bitmap
+                if (IsMonoData((MyCamera.MvGvspPixelType)frameInfo.stFrameInfo.enPixelType))
+                {
+                    // 处理黑白图像
+                    using (Bitmap bmp = new Bitmap(width, height, PixelFormat.Format8bppIndexed))
+                    {
+                        // 创建灰度调色板
+                        ColorPalette palette = bmp.Palette;
+                        for (int i = 0; i < 256; i++)
+                        {
+                            palette.Entries[i] = Color.FromArgb(i, i, i);
+                        }
+                        bmp.Palette = palette;
 
+                        // 锁定位图数据
+                        Rectangle rect = new Rectangle(0, 0, width, height);
+                        BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.WriteOnly, bmp.PixelFormat);
+
+                        // 复制数据
+                        CopyMemory(bmpData.Scan0, pData, (uint)(width * height));
+
+                        // 解锁并显示
+                        bmp.UnlockBits(bmpData);
+                        pictureBox1.Image = new Bitmap(bmp); // 创建副本，避免后续释放问题
+                    }
+                }
+                else
+                {
+                    // 处理彩色图像（根据实际像素格式扩展）
+                    // 这里以RGB888为例，实际应根据相机支持的格式处理
+                    int bufferSize = width * height * 3;
+                    byte[] rgbData = new byte[bufferSize];
+                    Marshal.Copy(pData, rgbData, 0, bufferSize);
+
+                    using (Bitmap bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb))
+                    {
+                        Rectangle rect = new Rectangle(0, 0, width, height);
+                        BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.WriteOnly, bmp.PixelFormat);
+
+                        // 复制数据（注意BGR到RGB的转换）
+                        for (int i = 0; i < rgbData.Length; i += 3)
+                        {
+                            byte temp = rgbData[i];
+                            rgbData[i] = rgbData[i + 2];
+                            rgbData[i + 2] = temp;
+                        }
+                        Marshal.Copy(rgbData, 0, bmpData.Scan0, bufferSize);
+
+                        bmp.UnlockBits(bmpData);
+                        pictureBox1.Image = new Bitmap(bmp);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMsg("图像处理失败: " + ex.Message, -1);
+            }
+        }      
 
         /// <summary>
         /// 方法一：将相机帧数据转换为JPG格式并保存，返回保存路径
@@ -969,8 +1041,6 @@ namespace VisualInsectionSystem.SubForms
         // 保存拍摄的图像并返回保存路径
         public string LastCapturedImagePath { get; private set; }
 
-
-
         ///<summary> 软触发一次 </summary>
         private void button8_Click(object sender, EventArgs e)
         {
@@ -981,6 +1051,12 @@ namespace VisualInsectionSystem.SubForms
                 return;
             }
         }
+
+        /// <summary>
+        /// 相机参数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button9_Click(object sender, EventArgs e)
         {
             MyCamera.MVCC_FLOATVALUE stParam = new MyCamera.MVCC_FLOATVALUE();
@@ -1147,8 +1223,6 @@ namespace VisualInsectionSystem.SubForms
             // 保存成功提示
             ShowErrorMsg("Save Succeed!", 0);
         }
-
-
     }
 
   

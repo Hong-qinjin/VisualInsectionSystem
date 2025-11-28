@@ -16,6 +16,9 @@ using Systemdemo01;
 
 namespace VisualInsectionSystem.SubForms
 {
+    /// <summary>
+    /// tcp_connect
+    /// </summary>
     public partial class TCPConnect : Form
     {
         private Form1 mainForm;                 //主界面应用update_1117
@@ -46,7 +49,10 @@ namespace VisualInsectionSystem.SubForms
         private int repeatInterval = 1000;      // 默认重复发送间隔1秒      
 
 
-        // 添加构造函数重载，接收主窗体引用update_1117
+        /// <summary>
+        /// 添加构造函数重载，接收主窗体引用update_1117
+        /// </summary>
+        /// <param name="form"></param>
         public TCPConnect(Form1 form)
         {
             mainForm = form;    //
@@ -557,28 +563,43 @@ namespace VisualInsectionSystem.SubForms
                             // 获取第一个客户端
                             var firstClient = connectedClients.First();
                             tcpClient = firstClient.Value;
-                            stream = tcpClient.GetStream();     //client断开，异常
-                            isConnected = true;
-                            AddMessage($"已切换客户端: {firstClient.Key}");
 
-                            // 启动接收线程
-                            if (receiveThread == null || !receiveThread.IsAlive)
+                            //add if_1120
+                            if (tcpClient != null && tcpClient.Connected)
                             {
-                                receiveThread = new Thread(ReceiveData);
-                                receiveThread.IsBackground = true;
-                                receiveThread.Start();
+                                stream = tcpClient.GetStream();     //client断开，异常
+                                isConnected = true;
+                                AddMessage($"已切换客户端: {firstClient.Key}");
+
+                                // 启动接收线程
+                                if (receiveThread == null || !receiveThread.IsAlive)
+                                {
+                                    receiveThread = new Thread(ReceiveData);
+                                    receiveThread.IsBackground = true;
+                                    receiveThread.Start();
+                                }
+                            }
+                            else
+                            {
+                                //连接断开时
+                                connectedClients.Remove(firstClient.Key);
+                                tcpClient = null;
+                                stream = null;
+                                isConnected = false;
+
+                                AddMessage("等待新连接的客户端...");
                             }
                         }
                         else
                         {
+                            //无客户端时
                             tcpClient = null;
                             stream = null;
                             isConnected = false;
 
                             AddMessage("等待新连接的客户端...");
-
-                            // 如果没有客户端连接但仍在监听，持续运行
-                            if(isListening && (listenThread==null || !listenThread.IsAlive))
+                            // 如果没有客户端连接但需要持续监听，并重启
+                            if (isListening && (listenThread == null || !listenThread.IsAlive))
                             {
                                 listenThread = new Thread(ListenForClients);
                                 listenThread.IsBackground = true;
@@ -990,7 +1011,10 @@ namespace VisualInsectionSystem.SubForms
             radioButton2.CheckedChanged += radioButton2_CheckedChanged;
         }
 
-        // 窗体关闭时确保断开连接
+        /// <summary>
+        /// 窗体关闭时确保断开连接
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             if (isConnected)

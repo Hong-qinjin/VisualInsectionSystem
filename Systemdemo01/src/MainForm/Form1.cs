@@ -15,9 +15,7 @@ using VM.PlatformSDKCS;
 using VMControls.BaseInterface;
 using VMControls.Winform.Release;
 
-/// <summary>
-/// 系统Demos
-/// </summary>  
+
 namespace Systemdemo01
 {
     /// <summary>
@@ -502,7 +500,11 @@ namespace Systemdemo01
             tcpForm.Show();
         }
 
-        //执行指令流程并返回结果
+        /// <summary>
+        /// 执行指令流程并返回结果
+        /// </summary>
+        /// <param name="procedureNmae"></param>
+        /// <returns></returns>
         public string ExecuteProcedure(string procedureNmae)
         {
             try
