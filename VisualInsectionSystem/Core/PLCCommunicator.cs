@@ -31,34 +31,31 @@ public class PLCAddress
 public class PLCCommunicator
 {
 
-    private     Plc _plc;               // 通信实例
-    private     CpuType _cpuType;       // PLC的CPU类型 CpuType.S71200,1515
-    private     string _ipAddress;      // PLC的IP地址
-    private     int rack;               // PLC的机架号
-    private     int _slot;              // PLC的插槽号
-    private     List<PLCAddress> addressList;
+    private Plc     _plc;                   // 通信实例
+    private CpuType _cpuType;               // CPU类型 CpuType.S71200,1515
+    private string  _ipAddress;             // PLC的IP地址
+    private int     rack;                   // PLC的机架号
+    private int     _slot;                  // PLC的插槽号
+    private List<PLCAddress> addressList;
         
-    private bool isConnected;           // 连接状态
-    private Thread _monitorThread;
-    private bool _isMonitoring;
-    private bool _lastCameraReadyState; // 上升沿检测
+    private bool    isConnected;            // 连接状态
+    private Thread  _monitorThread;
+    private bool    _isMonitoring;
+    private bool    _lastCameraReadyState;  // 上升沿检测
     
+
+    public event Action<bool> ConnectionStatusChanged;  // 连接状态变更事件（供UI层订阅）
+
+    public event Action<string> HardwareErrorOccurred;  // 数据读写异常事件（仅传递硬件相关错误）
+
+    public event Action CameraReadyTriggered;   // PLC load
+
+    public event Action<bool> CameraStatusChanged;  // 与HKcamera交互的事件
+
     public bool IsConnected
     {
         get { return isConnected; } // 不允许外部修改，供外部访问连接状态
     }
-
-    // 连接状态变更事件（供UI层订阅）
-    public event Action<bool> ConnectionStatusChanged;
-
-    // 数据读写异常事件（仅传递硬件相关错误）
-    public event Action<string> HardwareErrorOccurred;
-
-    public event Action CameraReadyTriggered;   // PLC load
-
-    // 与HKcamera交互的事件
-    public event Action<bool> CameraStatusChanged;
-
     public string PlcIPAddress { get; private set; }
 
     private int _rack;
@@ -66,7 +63,7 @@ public class PLCCommunicator
     public PLCCommunicator(CpuType cpuType,string ipAddress,int rack=0,int slot=1 )
     {
         // 参数校验（避免非硬件错误）
-        if (!System.Net.IPAddress.TryParse(ipAddress, out _))     //
+        if (!System.Net.IPAddress.TryParse(ipAddress, out _))
             throw new ArgumentException("无效的地址", nameof(ipAddress));             
         if (rack < 0)
             throw new ArgumentException("机架号不能为负数", nameof(rack));
@@ -78,6 +75,10 @@ public class PLCCommunicator
         _rack = rack;
         _slot = slot;
         addressList = new List<PLCAddress>();
+        //if (_plc == null)
+        //{
+        //    _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
+        //}
         _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
         InitializePLC();                // 初始化PLC连接
         BuildDefaultAddresses();        // 构建默认地址列表
@@ -86,10 +87,6 @@ public class PLCCommunicator
     // init()
     private void InitializePLC()
     {
-        if (_plc == null)
-        {
-            _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
-        }
         _plc.ReadTimeout = 5000;
         _plc.WriteTimeout = 5000;
     }
@@ -118,8 +115,8 @@ public class PLCCommunicator
     private void BuildDefaultAddresses()
     {
         AddAddress("CameraReady", PLCDataType.Bit, 45, 0, 4);       // 触发拍照
-        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);       //相机存活
-        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);    //拍照结束
+        AddAddress("CameraAlive", PLCDataType.Bit, 45, 0, 3);       // 相机存活
+        AddAddress("Cameracomplete", PLCDataType.Bit, 45, 0, 2);    // 拍照结束
         AddAddress("DataOK", PLCDataType.Bit, 45, 0, 1);
         AddAddress("DataNG", PLCDataType.Bit, 45, 0, 0);
 
@@ -149,13 +146,13 @@ public class PLCCommunicator
     {
         try
         {
-            if (isConnected) return true;  // 已连接则直接返回
-            if (_plc == null) InitializePLC();
+            if (isConnected) return true;  // 已连接则直接返回            
 
             // 执行连接（S7NetPlus的Open方法返回连接状态）
             _plc.Open();
             isConnected = _plc.IsConnected;
-            ConnectionStatusChanged?.Invoke(true); // 通知连接成功
+            // 通知连接成功,（修改为DB块来检测通讯）
+            ConnectionStatusChanged?.Invoke(isConnected); 
             if (isConnected)
             {
                 StartMonitoring();  //监听线程               
@@ -168,7 +165,6 @@ public class PLCCommunicator
             isConnected = false;
             return false;
         }
-        // return false; // 保证所有路径都有返回值
     }
 
     // 断开连接plc
@@ -219,7 +215,7 @@ public class PLCCommunicator
             {
                 if(Read("CameraReady", out object value) && value is bool currrentState)
                 {
-                    //
+                    //检测上升沿（false->true）
                     if (currrentState && !_lastCameraReadyState)
                     {
                         CameraReadyTriggered?.Invoke(); //触发拍照事件

@@ -71,6 +71,7 @@ namespace VisualInsectionSystem
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxControl.SuspendLayout();
@@ -79,6 +80,7 @@ namespace VisualInsectionSystem
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -97,47 +99,47 @@ namespace VisualInsectionSystem
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 37);
+            this.groupBox1.Location = new System.Drawing.Point(12, 26);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(387, 183);
+            this.groupBox1.Size = new System.Drawing.Size(314, 245);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
             // buttonPathLoad
             // 
-            this.buttonPathLoad.Location = new System.Drawing.Point(6, 94);
+            this.buttonPathLoad.Location = new System.Drawing.Point(8, 131);
             this.buttonPathLoad.Name = "buttonPathLoad";
-            this.buttonPathLoad.Size = new System.Drawing.Size(50, 21);
+            this.buttonPathLoad.Size = new System.Drawing.Size(54, 21);
             this.buttonPathLoad.TabIndex = 29;
-            this.buttonPathLoad.Text = "流程：";
+            this.buttonPathLoad.Text = "流程";
             this.buttonPathLoad.UseVisualStyleBackColor = true;
             this.buttonPathLoad.Click += new System.EventHandler(this.buttonPathLoad_Click);
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(62, 96);
+            this.comboBox1.Location = new System.Drawing.Point(68, 131);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(151, 20);
+            this.comboBox1.Size = new System.Drawing.Size(237, 20);
             this.comboBox1.TabIndex = 28;
             this.comboBox1.DropDown += new System.EventHandler(this.comboBox1_DropDown);
             // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(77, 16);
+            this.textBox1.Location = new System.Drawing.Point(68, 16);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(304, 21);
+            this.textBox1.Size = new System.Drawing.Size(237, 21);
             this.textBox1.TabIndex = 21;
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(331, 95);
+            this.button8.Location = new System.Drawing.Point(128, 158);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(50, 21);
+            this.button8.Size = new System.Drawing.Size(54, 21);
             this.button8.TabIndex = 27;
             this.button8.Text = "删除";
             this.button8.UseVisualStyleBackColor = true;
@@ -147,7 +149,7 @@ namespace VisualInsectionSystem
             // 
             this.button5.BackColor = System.Drawing.SystemColors.Control;
             this.button5.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.button5.Location = new System.Drawing.Point(87, 67);
+            this.button5.Location = new System.Drawing.Point(89, 104);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 21);
             this.button5.TabIndex = 24;
@@ -157,9 +159,9 @@ namespace VisualInsectionSystem
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(219, 95);
+            this.button6.Location = new System.Drawing.Point(8, 158);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(50, 21);
+            this.button6.Size = new System.Drawing.Size(54, 21);
             this.button6.TabIndex = 25;
             this.button6.Text = "导入";
             this.button6.UseVisualStyleBackColor = true;
@@ -170,16 +172,17 @@ namespace VisualInsectionSystem
             this.label1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(6, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 21);
+            this.label1.Size = new System.Drawing.Size(56, 21);
             this.label1.TabIndex = 20;
             this.label1.Text = "路径";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(275, 95);
+            this.button7.Location = new System.Drawing.Point(68, 158);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(50, 21);
+            this.button7.Size = new System.Drawing.Size(54, 21);
             this.button7.TabIndex = 26;
             this.button7.Text = "导出";
             this.button7.UseVisualStyleBackColor = true;
@@ -188,7 +191,7 @@ namespace VisualInsectionSystem
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button3.Location = new System.Drawing.Point(168, 67);
+            this.button3.Location = new System.Drawing.Point(8, 77);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 21);
             this.button3.TabIndex = 18;
@@ -199,9 +202,9 @@ namespace VisualInsectionSystem
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button2.Location = new System.Drawing.Point(77, 40);
+            this.button2.Location = new System.Drawing.Point(68, 50);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(50, 21);
+            this.button2.Size = new System.Drawing.Size(54, 21);
             this.button2.TabIndex = 17;
             this.button2.Text = " 保存";
             this.button2.UseVisualStyleBackColor = true;
@@ -210,9 +213,9 @@ namespace VisualInsectionSystem
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(6, 40);
+            this.button1.Location = new System.Drawing.Point(8, 50);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(50, 21);
+            this.button1.Size = new System.Drawing.Size(54, 21);
             this.button1.TabIndex = 16;
             this.button1.Text = "加载";
             this.button1.UseVisualStyleBackColor = true;
@@ -223,7 +226,7 @@ namespace VisualInsectionSystem
             this.button4.BackColor = System.Drawing.SystemColors.Control;
             this.button4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button4.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.button4.Location = new System.Drawing.Point(6, 67);
+            this.button4.Location = new System.Drawing.Point(8, 104);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 21);
             this.button4.TabIndex = 19;
@@ -234,9 +237,9 @@ namespace VisualInsectionSystem
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(248, 67);
+            this.textBox2.Location = new System.Drawing.Point(89, 77);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(133, 21);
+            this.textBox2.Size = new System.Drawing.Size(216, 21);
             this.textBox2.TabIndex = 22;
             // 
             // vmMainViewConfigControl1
@@ -245,7 +248,7 @@ namespace VisualInsectionSystem
             this.vmMainViewConfigControl1.Location = new System.Drawing.Point(3, 17);
             this.vmMainViewConfigControl1.Margin = new System.Windows.Forms.Padding(2);
             this.vmMainViewConfigControl1.Name = "vmMainViewConfigControl1";
-            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(894, 465);
+            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(707, 517);
             this.vmMainViewConfigControl1.TabIndex = 0;
 // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
             this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);
@@ -255,11 +258,11 @@ namespace VisualInsectionSystem
             this.groupBox2.Controls.Add(this.groupBoxControl);
             this.groupBox2.Controls.Add(this.groupBoxTimeInterval);
             this.groupBox2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox2.Location = new System.Drawing.Point(12, 224);
+            this.groupBox2.Location = new System.Drawing.Point(12, 275);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(387, 123);
+            this.groupBox2.Size = new System.Drawing.Size(314, 123);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
@@ -346,7 +349,7 @@ namespace VisualInsectionSystem
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(3, 16);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(381, 153);
+            this.listBox1.Size = new System.Drawing.Size(308, 143);
             this.listBox1.TabIndex = 0;
             // 
             // groupBox3
@@ -355,11 +358,11 @@ namespace VisualInsectionSystem
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox3.Controls.Add(this.listBox1);
             this.groupBox3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox3.Location = new System.Drawing.Point(12, 351);
+            this.groupBox3.Location = new System.Drawing.Point(12, 402);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(387, 171);
+            this.groupBox3.Size = new System.Drawing.Size(314, 161);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
@@ -370,22 +373,21 @@ namespace VisualInsectionSystem
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.vmMainViewConfigControl1);
-            this.groupBox4.Location = new System.Drawing.Point(405, 37);
+            this.groupBox4.Location = new System.Drawing.Point(332, 26);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(900, 485);
+            this.groupBox4.Size = new System.Drawing.Size(713, 537);
             this.groupBox4.TabIndex = 63;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "groupBox4";
             // 
             // groupBox5
             // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox5.Controls.Add(this.vmRenderControl1);
-            this.groupBox5.Location = new System.Drawing.Point(1209, 37);
+            this.groupBox5.Location = new System.Drawing.Point(932, 25);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(99, 483);
+            this.groupBox5.Size = new System.Drawing.Size(110, 538);
             this.groupBox5.TabIndex = 64;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "groupBox5";
@@ -400,8 +402,9 @@ namespace VisualInsectionSystem
             this.vmRenderControl1.Location = new System.Drawing.Point(3, 17);
             this.vmRenderControl1.ModuleSource = null;
             this.vmRenderControl1.Name = "vmRenderControl1";
-            this.vmRenderControl1.Size = new System.Drawing.Size(93, 463);
+            this.vmRenderControl1.Size = new System.Drawing.Size(104, 518);
             this.vmRenderControl1.TabIndex = 0;
+            this.vmRenderControl1.Visible = false;
             // 
             // 文件ToolStripMenuItem
             // 
@@ -420,7 +423,7 @@ namespace VisualInsectionSystem
             // 
             this.dakaToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.dakaToolStripMenuItem.Name = "dakaToolStripMenuItem";
-            this.dakaToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.dakaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dakaToolStripMenuItem.Text = "打开";
             this.dakaToolStripMenuItem.Click += new System.EventHandler(this.打开方案ToolStripMenuItem_Click);
             // 
@@ -428,7 +431,7 @@ namespace VisualInsectionSystem
             // 
             this.保存ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存ToolStripMenuItem.Text = "另存为";
             this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
@@ -513,22 +516,31 @@ namespace VisualInsectionSystem
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1314, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1057, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.groupBox2);
+            this.panel1.Controls.Add(this.groupBox5);
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this.groupBox3);
+            this.panel1.Controls.Add(this.groupBox4);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1057, 574);
+            this.panel1.TabIndex = 65;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1314, 533);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(1057, 574);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";
@@ -546,6 +558,7 @@ namespace VisualInsectionSystem
             this.groupBox5.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -595,6 +608,7 @@ namespace VisualInsectionSystem
         private System.Windows.Forms.TextBox textBoxTimeInterval;
         private System.Windows.Forms.Button buttonSetTimeInterval;
         private VMControls.Winform.Release.VmRenderControl vmRenderControl1;
+        private System.Windows.Forms.Panel panel1;
 
         //private readonly EventHandler Form1_Load;
     }

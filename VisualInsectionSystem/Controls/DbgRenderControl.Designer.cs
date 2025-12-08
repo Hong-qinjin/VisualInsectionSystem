@@ -1,6 +1,6 @@
 ﻿namespace VisualInsectionSystem
 {
-    partial class RenderControl
+    partial class DbgRenderControl
     {
         /// <summary> 
         /// 必需的设计器变量。

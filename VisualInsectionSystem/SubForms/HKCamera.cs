@@ -56,28 +56,90 @@ namespace VisualInsectionSystem.SubForms
         private static Object BufForImageLock = new Object();
 
         IntPtr displayHandle = IntPtr.Zero;     // 显示句柄 | EN: Display handle
-
-        private int caotureCount = 0;   // 拍摄计数
+        private int captureCount = 0;   // 拍摄计数
         private bool isBatchCapture = false; // 是否正在批量拍摄
-         public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
+
+        private bool _isCapturing = false;
+        private object _captureLock = new object();     // 捕获锁对象 | EN: Capture lock
+        public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
 
         public HKCamera()
         {
             InitializeComponent();
             Control.CheckForIllegalCrossThreadCalls = false;
-            this.Load += new EventHandler(HKCamera_Load);
+            this.Load += HKCamera_Load;
+            this.FormClosed += HKCamera_FormClosed;
 
         }
         private void HKCamera_Load(object sender, EventArgs e)
         {
             // 初始化SDK
             MyCamera.MV_CC_Initialize_NET();
+            // PLC事件
+            if(PlcCommunicator != null)
+            {
+                //PlcCommunicator.CameraReadyTriggered += PlcCommunicator_CameraReadyTriggered;
+                PlcCommunicator.CameraReadyTriggered += OnPlcCamearaReady;
+                PlcCommunicator.ConnectionStatusChanged += OnPlcConnectionChanged;
+            }
             // 枚举相机（保持原有逻辑）
             // DeviceListAcq();  // 根据需要决定是否默认枚举
+        }
+        
+        // PLC连接变化处理
+        private void OnPlcConnectionChanged(bool isConnected)
+        {
+            // 在这里处理PLC连接状态变化的逻辑
+            if (isConnected)
+            {
+                // PLC已连接
+                Console.WriteLine("PLC connected.");
+                Invoke(new Action(() =>
+                {
+                    //
+                    MessageBox.Show("PLC connected. Enumerating cameras...");
+                    // 
+                    PlcCommunicator.Write("CameraAlive", 1); // 通知PLC相机在线                    
+                }));
+            }
+            else
+            {
+                Invoke(new Action(() =>
+                {
+                    //
+                    MessageBox.Show("PLC 断联. 警告");                                             
+                }));
+                Console.WriteLine("PLC disconnected.");
+            }
+        }
+        //private void PlcCommunicator_ConnectionStatusChanged(bool obj)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        // PLC触发拍照事件处理
+        private void OnPlcCamearaReady()
+        {
+            // 在这里处理PLC触发拍照的逻辑
+            Console.WriteLine("PLC triggered camera ready event.");
+            if(m_bGrabbing && IsConnect)
+            {
+                // 执行拍照操作
+                TriggerCapture();               
+            }
+            
         }
 
         private void HKCamera_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if(PlcCommunicator != null)
+            {
+                PlcCommunicator.CameraReadyTriggered -= OnPlcCamearaReady;
+                PlcCommunicator.ConnectionStatusChanged -= OnPlcConnectionChanged;
+            }
+            // 发送相机离线信号到PLC
+            PlcCommunicator?.Write("CameraAlive", 0); 
+
             // ch: 关闭设备 | en: Close Device
             button4_Click(sender, e);
 
@@ -163,10 +225,10 @@ namespace VisualInsectionSystem.SubForms
             comboBox1.Items.Clear();        // 设备列表
             m_stDeviceList.nDeviceNum = 0;  // 设备数量清零
 
-            // ch:枚举了所有类型，根据实际情况，选择合适的枚举类型即可 |
-            // en:Enumerate all types, select the appropriate enumeration type according to the actual situation
-            int nRet = MyCamera.MV_CC_EnumDevices_NET(MyCamera.MV_GIGE_DEVICE | MyCamera.MV_USB_DEVICE | MyCamera.MV_GENTL_GIGE_DEVICE
-                | MyCamera.MV_GENTL_CAMERALINK_DEVICE | MyCamera.MV_GENTL_CXP_DEVICE | MyCamera.MV_GENTL_XOF_DEVICE, ref m_stDeviceList);
+            // ch:枚举了所有类型 // en:Enumerate all types
+            int nRet = MyCamera.MV_CC_EnumDevices_NET(MyCamera.MV_GIGE_DEVICE | MyCamera.MV_USB_DEVICE | 
+                MyCamera.MV_GENTL_GIGE_DEVICE | MyCamera.MV_GENTL_CAMERALINK_DEVICE |
+                MyCamera.MV_GENTL_CXP_DEVICE | MyCamera.MV_GENTL_XOF_DEVICE, ref m_stDeviceList);
 
             if (0 != nRet)
             {
@@ -177,19 +239,23 @@ namespace VisualInsectionSystem.SubForms
             {
                 // todo list
             }
-            //ch:在combobox列表中显示相机
-            for (int i = 0; i < m_stDeviceList.nDeviceNum; i++)
+           
+            for (int i = 0; i < m_stDeviceList.nDeviceNum; i++)     // 在combobox列表中显示相机
             {
-                MyCamera.MV_CC_DEVICE_INFO device = (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(m_stDeviceList.pDeviceInfo[i],
-                    typeof(MyCamera.MV_CC_DEVICE_INFO));
+                MyCamera.MV_CC_DEVICE_INFO device = (MyCamera.MV_CC_DEVICE_INFO)Marshal.
+                    PtrToStructure(m_stDeviceList.pDeviceInfo[i], typeof(MyCamera.MV_CC_DEVICE_INFO));
+
                 string strUserDefinedName = "";
-                // 1. 普通GigE设备（非GenTL抽象的GigE相机）
+
+                // 1. 普通GigE设备
                 if (device.nTLayerType == MyCamera.MV_GIGE_DEVICE)
                 {
-                    MyCamera.MV_GIGE_DEVICE_INFO_EX gigeInfo = (MyCamera.MV_GIGE_DEVICE_INFO_EX)MyCamera.ByteToStruct(
-                        device.SpecialInfo.stGigEInfo, typeof(MyCamera.MV_GIGE_DEVICE_INFO_EX));
+                    MyCamera.MV_GIGE_DEVICE_INFO_EX gigeInfo = (MyCamera.MV_GIGE_DEVICE_INFO_EX)
+                        MyCamera.ByteToStruct(device.SpecialInfo.stGigEInfo, typeof(MyCamera.MV_GIGE_DEVICE_INFO_EX));
+
                     if ((gigeInfo.chUserDefinedName.Length > 0) && (gigeInfo.chUserDefinedName[0] != '\0'))
                     {
+                        /*
                         //if (MyCamera.IsTextUTF8(gigeInfo.chUserDefinedName))
                         //{
                         //    strUserDefinedName = Encoding.UTF8.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
@@ -198,6 +264,7 @@ namespace VisualInsectionSystem.SubForms
                         //{
                         //    strUserDefinedName = Encoding.Default.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
                         //}
+                        */
                         strUserDefinedName = MyCamera.IsTextUTF8(gigeInfo.chUserDefinedName)
                             ? Encoding.UTF8.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0')
                             : Encoding.Default.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
@@ -226,7 +293,7 @@ namespace VisualInsectionSystem.SubForms
                         comboBox1.Items.Add("U3V: " + usbInfo.chManufacturerName + " " + usbInfo.chModelName + " (" + usbInfo.chSerialNumber + ")");
                     }
                 }
-                // 3. 基于GenTL的CameraLink设备（工业CameraLink接口，通过GenTL抽象）
+                // 3. 基于GenTL的CameraLink设备（工业CameraLink接口）
                 else if (device.nTLayerType == MyCamera.MV_GENTL_CAMERALINK_DEVICE)
                 {
                     MyCamera.MV_CML_DEVICE_INFO CMLInfo = (MyCamera.MV_CML_DEVICE_INFO)
@@ -244,7 +311,7 @@ namespace VisualInsectionSystem.SubForms
                         comboBox1.Items.Add("CML: " + CMLInfo.chManufacturerInfo + " " + CMLInfo.chModelName + " (" + CMLInfo.chSerialNumber + ")");
                     }
                 }
-                // 4. 基于GenTL的CoaXPress设备（高速同轴接口，通过GenTL抽象）
+                // 4. 基于GenTL的CoaXPress设备（高速同轴接口）
                 else if (device.nTLayerType == MyCamera.MV_GENTL_CXP_DEVICE)
                 {
                     MyCamera.MV_CXP_DEVICE_INFO CXPInfo = (MyCamera.MV_CXP_DEVICE_INFO)
@@ -262,7 +329,7 @@ namespace VisualInsectionSystem.SubForms
                         comboBox1.Items.Add("CXP: " + CXPInfo.chManufacturerInfo + " " + CXPInfo.chModelName + " (" + CXPInfo.chSerialNumber + ")");
                     }
                 }
-                // 5. 基于GenTL的Xover Fiber设备（光纤接口，通过GenTL抽象）
+                // 5. 基于GenTL的Xover Fiber设备（光纤接口）
                 else if (device.nTLayerType == MyCamera.MV_GENTL_XOF_DEVICE)
                 {
                     MyCamera.MV_XOF_DEVICE_INFO XOFInfo = (MyCamera.MV_XOF_DEVICE_INFO)
@@ -282,7 +349,7 @@ namespace VisualInsectionSystem.SubForms
                 }
                 
             }
-            //默认第一项 | EN: Default first item
+            //默认第一项
             if (comboBox1.Items.Count > 0)
             {
                 comboBox1.SelectedIndex = 0;
@@ -305,15 +372,12 @@ namespace VisualInsectionSystem.SubForms
             comboBox1.Enabled = true;
         }
 
-        ///<summary>显示设置窗口</summary>
-        //public void DisPlaySet()
-        //{
-        //    HOperatorSet.OpenWindow(0, 0, pictureBox1.Width, pictureBox1.Height, pictureBox1.Handle, "visible", "", out HTuple hv_WindowHandle);
-        //    HDevWindowStack.Push(hv_WindowHandle);
-        //}
+        ///<summary>显示设置窗口</summary>      
         public void InitDisplayHandle()
         {
             // 将PictureBox的句柄作为显示目标
+            // HOperatorSet.OpenWindow(0, 0, pictureBox1.Width, pictureBox1.Height, pictureBox1.Handle, "visible", "", out HTuple hv_WindowHandle);
+            // HDevWindowStack.Push(hv_WindowHandle);            
             displayHandle = pictureBox1.Handle;
         }
         private void button2_Click(object sender, EventArgs e)
@@ -404,10 +468,7 @@ namespace VisualInsectionSystem.SubForms
 
             // ch:注册异常回调函数
             m_MyCamera.MV_CC_RegisterExceptionCallBack_NET(ExceptionCallBack, IntPtr.Zero);
-
-
             button9_Click(null, null);      // ch: 获取参数按钮 | en:Get parameters
-
             SetCtrlWhenOpen();      // ch: 界面打开后的控件状态 | en:Set the control status after opening
 
         }
@@ -466,7 +527,7 @@ namespace VisualInsectionSystem.SubForms
                 default:
                     break;
             }
-            MessageBox.Show(errorMsg, "PROMPT", MessageBoxButtons.OK);
+            MessageBox.Show($"{ errorMsg }", "ErrorCode", MessageBoxButtons.OK);
         }
 
         private void ShowErrorMsg()
@@ -498,7 +559,9 @@ namespace VisualInsectionSystem.SubForms
             // 关闭时设置，控件状态设置
             SetCtrlWhenClose();
         }
+
         #region  IO输出，控制源
+
         ///<summary>连续模式</summary>
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
@@ -516,22 +579,22 @@ namespace VisualInsectionSystem.SubForms
             {
                 m_MyCamera.MV_CC_SetEnumValue_NET("TriggerMode", (uint)MyCamera.MV_CAM_TRIGGER_MODE.MV_TRIGGER_MODE_ON);
 
-                // ch:触发源选择：0 - line0;
-                //                1 - line1;
-                //                2 - line2software;
-                //                3 - line3;
-                //                4 - counter;
-                //                7 - software;
-                //               -1 - external;
+                // ch:触发源选择:0 - line0;
+                //              1 - line1;
+                //              2 - line2software;
+                //              3 - line3;
+                //              4 - counter;
+                //              7 - software;
+                //              -1 - external;
                 if (checkBox1.Checked == true)   // 软触发
                 {
                     m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_SOFTWARE);
                     if (m_bGrabbing)
                     {
-                        button8.Enabled = true;  // 打开触发一次按钮
+                        button8.Enabled = true;  // 软触发一次按钮
                     }
                 }
-                else                            // 
+                else
                 {
                     m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_LINE0);
                 }
@@ -563,19 +626,18 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>取图核心线程</summary>
         public void ReceiveThreadProcess()
         {
-            MyCamera.MV_FRAME_OUT stFrameInfo = new MyCamera.MV_FRAME_OUT();    //
+            MyCamera.MV_FRAME_OUT stFrameInfo = new MyCamera.MV_FRAME_OUT();
             MyCamera.MV_DISPLAY_FRAME_INFO stDisplayInfo = new MyCamera.MV_DISPLAY_FRAME_INFO();
             MyCamera.MV_PIXEL_CONVERT_PARAM stConvertInfo = new MyCamera.MV_PIXEL_CONVERT_PARAM();
-        
+            
             int nRet = MyCamera.MV_OK;
 
             while (m_bGrabbing)
             {
-
                 // ch:获取一帧图像 | en:Get one frame of image
-                //MyCamera.MVCC_INTVALUE stParam = new MyCamera.MVCC_INTVALUE();  // 用于获取宽度高度参数
+                //MyCamera.MVCC_INTVALUE stParam = new MyCamera.MVCC_INTVALUE();
                 //int nRet = m_MyCamera.MV_CC_GetIntValue_NET("PayloadSize", ref stParam);
-                nRet = m_MyCamera.MV_CC_GetImageBuffer_NET(ref stFrameInfo, 1000);
+                nRet = m_MyCamera.MV_CC_GetImageBuffer_NET(ref stFrameInfo, 30000);
                 //nRet = m_MyCamera.MV_CC_GetImageBuffer_NET(ref m_stFrameInfo, m_pBufForDriver, m_nBufSizeForDriver, 1000);
 
                 if (nRet == MyCamera.MV_OK)
@@ -872,43 +934,68 @@ namespace VisualInsectionSystem.SubForms
             }
         }
 
-        // 触发
+        // 触发,
         public void TriggerCapture()
         {
-            if (m_bGrabbing && IsConnect)
+            lock (_captureLock)
             {
-                // 确保在UI线程执行
-                this.Invoke(new Action(() =>
-                {
-                    CaptureImage();
-                }));
+                if (_isCapturing) return; // 防止重复触发
+                _isCapturing = true;
+
             }
-            else
+            try
             {
-                ShowErrorMsg("相机未连接或未开始取流", -1);
+                if (m_bGrabbing && IsConnect)
+                {
+                    // 确保在UI线程执行
+                    this.Invoke(new Action(() =>
+                    {
+                        CaptureImage();
+                    }));
+                }
+                else
+                {
+                    ShowErrorMsg("相机未连接或未开始取流", -1);
+                }
+            }
+            finally
+            {
+                lock (_captureLock)
+                {
+                    _isCapturing = false;
+                }
             }
         }
 
-        // 拍照
+        // TCP客户端触发拍照的接口
+        public void TcpTriggerCapture()
+        {
+            TriggerCapture();
+        }
+
+        // 拍照核心逻辑
         private void CaptureImage()
         {
             try
             {
-                //实际拍照逻辑，复用现有取流代码
+                // 1.实际拍照逻辑，复用现有取流代码
                 m_bGrabbing = true;
 
                 int nRet = m_MyCamera.MV_CC_SetCommandValue_NET("TriggerSoftware");
-                if (MyCamera.MV_OK != nRet)
+                if (nRet !=MyCamera.MV_OK)
                 {
                     ShowErrorMsg("Soft Trigger Fail!", nRet);
+                    //PlcCommunicator?.Write("CameraAlive", false); // 拍照失败，复位PLC信号
                     return;
                 }
-                // 等待图像获取
+                
+                // 2. 获取图像缓存区
                 MyCamera.MV_FRAME_OUT stFrameInfo = new MyCamera.MV_FRAME_OUT();
                 nRet = m_MyCamera.MV_CC_GetImageBuffer_NET(ref stFrameInfo, 2000);
                 if (nRet != MyCamera.MV_OK)
                 {
                     ShowErrorMsg("获取图像失败!", nRet);
+                    //PlcCommunicator?.Write("Cameracomplete", false); // 拍照失败，复位PLC信号
                     return;
                 }
                 // 处理图像数据并显示
@@ -916,7 +1003,13 @@ namespace VisualInsectionSystem.SubForms
 
                 // 保存图像路径用于后续检测
                 string imagePath = SaveCapturedImage(stFrameInfo);
-                LastCapturedImagePath = imagePath;                
+                LastCapturedImagePath = imagePath;
+
+                // 拍照完成，通知PLC
+                PlcCommunicator?.Write("Cameracomplete", true);
+
+                // 延迟复位信号
+                Thread.Sleep(100);
 
                 // 释放图像缓冲区
                 m_MyCamera.MV_CC_FreeImageBuffer_NET(ref stFrameInfo);               
@@ -924,7 +1017,8 @@ namespace VisualInsectionSystem.SubForms
             }
             catch (Exception ex)
             {
-                ShowErrorMsg("Capture Image Exception: " + ex.Message, -1);                
+                ShowErrorMsg("Capture Image Exception: " + ex.Message, -1);
+                // PlcCommunicator?.Write("Cameracomplete", false);
             }
         }
         
@@ -1040,7 +1134,7 @@ namespace VisualInsectionSystem.SubForms
         // 保存拍摄的图像并返回保存路径
         public string LastCapturedImagePath { get; private set; }
 
-        ///<summary> 软触发一次 </summary>
+        ///<summary> 手动，软触发一次 </summary>
         private void button8_Click(object sender, EventArgs e)
         {
             int nRet = m_MyCamera.MV_CC_SetCommandValue_NET("TriggerSoftware");
@@ -1049,6 +1143,8 @@ namespace VisualInsectionSystem.SubForms
                 ShowErrorMsg("Soft Trigger Fail!", nRet);
                 return;
             }
+
+            TriggerCapture();   //统一调用触发
         }
 
         /// <summary>
@@ -1088,6 +1184,7 @@ namespace VisualInsectionSystem.SubForms
                 float.Parse(textBox1.Text);
                 float.Parse(textBox2.Text);
                 float.Parse(textBox3.Text);
+                // more param
             }
             catch
             {
@@ -1171,10 +1268,9 @@ namespace VisualInsectionSystem.SubForms
                 case ".png":
                     return (MyCamera.MV_SAVE_IAMGE_TYPE.MV_Image_Png, 8);   // PNG 质量8（与原代码一致）
                 case ".tif":
-                    return (MyCamera.MV_SAVE_IAMGE_TYPE.MV_Image_Tif, null); // TIF 无质量参数
-                                                                             // 无 default 分支：若传入其他扩展名，后续需提前校验（避免走到这里）
+                    return (MyCamera.MV_SAVE_IAMGE_TYPE.MV_Image_Tif, null); // TIF 无质量参数                                                                            
                 default:
-                    // 若意外传入其他格式，抛出明确异常（便于调试，增强健壮性）
+                    // 若意外传入其他格式，抛出明确异常（便于调试,增强健壮性, 避免走到这里）
                     throw new ArgumentException(
                         $"不支持的图片格式：{extension}，仅支持 .bmp/.jpg/.png/.tif",
                         nameof(extension)

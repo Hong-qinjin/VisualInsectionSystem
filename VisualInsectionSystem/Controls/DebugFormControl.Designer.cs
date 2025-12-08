@@ -1,6 +1,6 @@
 ﻿namespace VisualInsectionSystem
 {
-    partial class MainViewControl
+    partial class DebugFormControl
     {
         /// <summary> 
         /// 必需的设计器变量。

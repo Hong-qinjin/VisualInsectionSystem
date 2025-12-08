@@ -11,9 +11,9 @@ using VMControls.Interface;
 
 namespace VisualInsectionSystem
 {
-    public partial class RenderControl : UserControl
+    public partial class DbgRenderControl : UserControl
     {
-        public RenderControl()
+        public DbgRenderControl()
         {
             InitializeComponent();
         }

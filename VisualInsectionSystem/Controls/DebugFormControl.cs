@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace VisualInsectionSystem
 {
-    public partial class MainViewControl : UserControl
+    public partial class DebugFormControl : UserControl
     {
-        public MainViewControl()
+        public DebugFormControl()
         {
             InitializeComponent();
         }

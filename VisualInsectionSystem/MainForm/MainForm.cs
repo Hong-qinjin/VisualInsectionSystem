@@ -34,6 +34,8 @@ namespace VisualInsectionSystem
 
         string strMsg = null;  //提示信息
 
+        string strPassword = null; //方案密码
+
         private PLCCommunicator _plcComm;
 
         public static object Instance { get; internal set; }
@@ -55,8 +57,10 @@ namespace VisualInsectionSystem
             //初始化子窗口集合
             subForms.Add(new HKCamera());
             subForms.Add(new DebugForm());
+            subForms.Add(new TCPConnect(this));
             //subForms.Add(new CommunicationForm());
 
+            // 组件填充父容器
             vmMainViewConfigControl1.Dock = DockStyle.Fill;
         }
 
@@ -201,6 +205,7 @@ namespace VisualInsectionSystem
                 return;
             }
 
+            strPassword=textBox2.Text;  
             try
             {
                 this.Enabled = false;
@@ -215,8 +220,8 @@ namespace VisualInsectionSystem
                     {
                         // 执行文件保存操作（这里假设是复制文件）
                         File.Copy(textBox1.Text, saveFileDialog.FileName, true);
-                        //string savePath = saveFileDialog.FileName;
-                        //VmSolution.SaveAs(savePath);
+                        string savePath = saveFileDialog.FileName;
+                        VmSolution.SaveAs(savePath, strPassword);
 
 
                         strMsg = /*[{DateTime.Now:HH:mm:ss}]*/ $"成功保存到：{saveFileDialog.FileName}";
@@ -454,6 +459,9 @@ namespace VisualInsectionSystem
         private void button4_Click(object sender, EventArgs e)
         {
             vmMainViewConfigControl1.LockWorkArea();
+            //锁定参数配置页，不允许编辑流程/Group/模块的参数配置页
+            vmMainViewConfigControl1.SetParamTabEditable(false);
+
         }
 
         /// <summary>
@@ -462,6 +470,9 @@ namespace VisualInsectionSystem
         private void button5_Click(object sender, EventArgs e)
         {
             vmMainViewConfigControl1.UnlockWorkArea();
+            //解锁参数配置页，允许编辑流程/Group/模块的参数配置页
+            vmMainViewConfigControl1.SetParamTabEditable(true);
+
 
         }
 
@@ -892,6 +903,11 @@ namespace VisualInsectionSystem
                 }               
                 return errorMsg ;
             }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
     

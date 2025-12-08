@@ -13,9 +13,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <!-- 统一输出 -->
-    <BaseOutputPath>$(RootNamespace)bin\</BaseOutputPath>
+    <BaseOutputPath>$(RootNamespace)\bin\</BaseOutputPath>
     <!--中间输出files-->
-    <BaseIntermediateOutputPath>$(RootNamespace)obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>$(RootNamespace)\obj\</BaseIntermediateOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <UseCommonOutputDirectory>false</UseCommonOutputDirectory>
     <TargetFrameworkProfile />
@@ -669,17 +669,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\MainViewControl.cs">
+    <Compile Include="Controls\DebugFormControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\MainViewControl.Designer.cs">
-      <DependentUpon>MainViewControl.cs</DependentUpon>
+    <Compile Include="Controls\DebugFormControl.Designer.cs">
+      <DependentUpon>DebugFormControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\RenderControl.cs">
+    <Compile Include="Controls\DbgRenderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\RenderControl.Designer.cs">
-      <DependentUpon>RenderControl.cs</DependentUpon>
+    <Compile Include="Controls\DbgRenderControl.Designer.cs">
+      <DependentUpon>DbgRenderControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\AsyncTcpServer.cs" />
     <Compile Include="Core\ImageProcessor.cs" />
@@ -711,11 +711,11 @@
     <Compile Include="SubForms\TCPConnect.Designer.cs">
       <DependentUpon>TCPConnect.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\MainViewControl.resx">
-      <DependentUpon>MainViewControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\DebugFormControl.resx">
+      <DependentUpon>DebugFormControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\RenderControl.resx">
-      <DependentUpon>RenderControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\DbgRenderControl.resx">
+      <DependentUpon>DbgRenderControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

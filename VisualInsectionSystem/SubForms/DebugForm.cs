@@ -23,12 +23,12 @@ namespace VisualInsectionSystem
         /// <summary>
         /// 图片显示面板
         /// </summary>
-        private readonly RenderControl renderControl;
+        private readonly DbgRenderControl renderControl;
 
         /// <summary>
         /// 参数面板config parameter
         /// </summary>
-        private readonly MainViewControl mainViewControl;
+        private readonly DebugFormControl mainViewControl;
 
         /// <summary>
         /// Solution Path
@@ -55,8 +55,8 @@ namespace VisualInsectionSystem
         public DebugForm()
         {
             InitializeComponent();
-            renderControl = new RenderControl();        //实例化渲染面板
-            mainViewControl = new MainViewControl();    //参数设置
+            renderControl = new DbgRenderControl();     //实例化渲染面板
+            mainViewControl = new DebugFormControl();   //参数设置
             renderControl.Dock = DockStyle.Fill;        //填充
             mainViewControl.Dock = DockStyle.Fill;
 
@@ -341,6 +341,9 @@ namespace VisualInsectionSystem
         {
             renderPanel.Controls.Clear();
             renderPanel.Controls.Add(renderControl);
+            //add 模块识别过后的图片显示
+            //绑定当前运行流程
+            //获取图像结果
 
         }
 
