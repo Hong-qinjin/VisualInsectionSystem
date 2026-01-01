@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using VisualInsectionSystem.Core;
 
 
 namespace VisualInsectionSystem.SubForms
@@ -460,6 +461,7 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>打开相机</summary>
         private void button3_Click(object sender, EventArgs e)
         {
+            button3 = new StyledButton { Text = "打开相机", NormalColor = Color.FromArgb(74, 144, 226) };
             if (m_stDeviceList.nDeviceNum == 0 || comboBox1.SelectedIndex == -1)
             {
                 ShowErrorMsg("No Device Found!", -1);
@@ -620,6 +622,7 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>关闭相机</summary>
         private void button4_Click(object sender, EventArgs e)
         {
+            button4 = new StyledButton { Text = "关闭相机", NormalColor = Color.FromArgb(74, 144, 226) };
             if (m_bGrabbing == true)            //清除取流标志
             {
                 m_bGrabbing = false;
@@ -986,6 +989,7 @@ namespace VisualInsectionSystem.SubForms
         // ch:开始预览取流 | en:Start Grab
         private void button5_Click(object sender, EventArgs e)
         {
+            button5 = new StyledButton { Text = "开始预览", NormalColor = Color.FromArgb(50, 150, 100) };
             // 确保之前的线程已结束
             if (m_hReceiveThread != null && m_hReceiveThread.IsAlive)
             {
@@ -1037,6 +1041,7 @@ namespace VisualInsectionSystem.SubForms
         // ch:停止预览取流 | en:Stop Grab
         private void button6_Click(object sender, EventArgs e)
         {
+            button3 = new StyledButton { Text = "停止预览", NormalColor = Color.FromArgb(200, 50, 50) };
             m_bGrabbing = false;
             m_hReceiveThread.Join(); //取流退出({"未将对象引用设置到对象的实例。"})            
             int nRet = m_MyCamera.MV_CC_StopGrabbing_NET();
@@ -1080,12 +1085,10 @@ namespace VisualInsectionSystem.SubForms
 
                     // 拍照完成后复位PLC触发信号Cameracomplete
                     PlcCommunicator.Write("Cameracomplete", false);
-
-                    // 短暂延迟避免重复触发
-                    Thread.Sleep(100);
+                   
                 }
-                Thread.Sleep(10); //避免死循环
-
+                Thread.Sleep(100); //避免死循环
+                                   // 短暂延迟避免重复触发                
             }
         }
 
@@ -1389,6 +1392,7 @@ namespace VisualInsectionSystem.SubForms
         //保存图像
         private void button11_Click(object sender, EventArgs e)
         {
+            button11 = new StyledButton { Text = "保存图片", NormalColor = Color.FromArgb(150, 100, 200) };
             // 检查是否正在采集
             if (!m_bGrabbing)
             {

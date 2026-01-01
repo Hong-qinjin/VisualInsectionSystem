@@ -1,106 +1,227 @@
+using FrontendUI.Design;
 using S7.Net;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using System.Windows.Forms;
+using VisualInsectionSystem.Core;
 using VisualInsectionSystem.SubForms;
+
 using VM.Core;
 using VM.PlatformSDKCS;
 
 namespace VisualInsectionSystem
 {
-    public partial class MainForm : Form
+    public partial class MainForm: Form
     {
-        
-        public static MainForm form1 = null;   // 设置form1为主窗口
-      
+        public static MainForm Instance { get; private set; }   // 设置form1为主窗口
         public static List<Form> subForms = new List<Form>();   // 子窗口集合
+        public HKCamera HKCameraInstance { get; private set; }
+        
 
-        bool mSolutionIsLoad = false;  //是否加载方案
-
-        VmProcedure m_VmProc = null;   //流程
-       
-        private string ProcedureFilePath = null;    /// Solution Path
-
-        private List<VmProcedure> processList;  //流程列表
-
+        bool mSolutionIsLoad = false;  //方案
+        VmProcedure m_VmProc = null;   //流程       
+        private string ProcedureFilePath = null;    // Solution Path
+        private List<VmProcedure> processList;      //流程列表
         string strMsg = null;  //提示信息
-
         string strPassword = null; //方案密码
 
-        private PLCCommunicator _plcComm;
 
-        public static object Instance { get; internal set; }
-        public HKCamera HKCameraInstance { get; private set; }
+        private PLCCommunicator _plcComm;       
+       
+        // 用于拖动窗口的变量
+        private bool isDragging = false;
+        private Point dragStartPoint;
+        // 边框颜色和宽度        
+        private Color borderColor = Color.LightSkyBlue;
+        private int borderWidth = 3;
 
-        #region
+
+        #region  form展示
+
+        /// <summary>
+        /// 窗体动画函数（API声明）
+        /// </summary>
+        /// <param name="hwnd">指定产生动画的窗口的句柄</param>
+        /// <param name="dwTime">指定动画持续的时间</param>
+        /// <param name="dwFlags">指定动画类型，可以是一个或多个标志的组合。</param>
+        /// <returns></returns>
+        [DllImport("user32")]
+        private static extern bool AnimateWindow(IntPtr hwnd, int dwTime, int dwFlags);   
+        private const int AW_HOR_POSITIVE = 0x0001;//自左向右显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
+        private const int AW_HOR_NEGATIVE = 0x0002;//自右向左显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
+        private const int AW_VER_POSITIVE = 0x0004;//自顶向下显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
+        private const int AW_VER_NEGATIVE = 0x0008;//自下向上显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志该标志
+        private const int AW_CENTER = 0x0010;//若使用了AW_HIDE标志，则使窗口向内重叠；否则向外扩展
+        private const int AW_HIDE = 0x10000;//隐藏窗口
+        private const int AW_ACTIVE = 0x20000;//**窗口，在使用了AW_HIDE标志后不要使用这个标志
+        private const int AW_SLIDE = 0x40000;//使用滑动类型动画效果，默认为滚动动画类型，当使用AW_CENTER标志时，这个标志就被忽略
+        private const int AW_BLEND = 0x80000;//使用淡入淡出效果
 
         public MainForm()
-        {
-            InitializeComponent();
-            
+        {                        
+            InitializeComponent();            
             InitializePLCCommunicator();
+            
         }
 
         private void InitUI()
         {
-             //设置form1为主窗口
-            form1 = this;
-            //初始化子窗口集合
+            //form1
+            Instance = this;//设置form1为主窗口
+            this.DoubleBuffered = true; //窗体调整大小时闪烁
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.BackColor = Color.White;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+
+            // 替换原来的 titleBar 面板，使用 FlowLayoutPanel 自动右对齐排列按钮
+            FlowLayoutPanel titleBar = new FlowLayoutPanel();
+            titleBar.Height = 30;
+            titleBar.Dock = DockStyle.Top;
+            titleBar.BackColor = SystemColors.Control; // 与按钮形成对比度
+            titleBar.FlowDirection = FlowDirection.RightToLeft; // 按钮右对齐
+            titleBar.Padding = new Padding(0, 0, 3, 0); // 右侧留间距，避免贴边
+            // 确保 titleBar 在最上层（避免被 panel1 覆盖）
+            titleBar.BringToFront();
+
+            panel1.Padding = new Padding(0, titleBar.Height, 0, 0);
+            this.Controls.Add(panel1);
+
             subForms.Add(new HKCamera());
             subForms.Add(new DebugForm());
-            subForms.Add(new TCPConnect(this));
-            //subForms.Add(new CommunicationForm());
+            subForms.Add(new TCPConnect(this));                               
 
-            // 组件填充父容器
-            vmMainViewConfigControl1.Dock = DockStyle.Fill;
+            /*
+            ////加载            
+            //button1.Image = StyledButton.CreateButtonIcon(IconType.Load, 18);
+
+            ////保存
+            //button2.Image = StyledButton.CreateButtonIcon(IconType.Save);
+
+            ////导入
+            //button6.Image = StyledButton.CreateButtonIcon(IconType.Delete);
+
+            ////导出
+            //button7.Image = StyledButton.CreateButtonIcon(IconType.Export);
+
+            ////删除
+            //button8.Image = StyledButton.CreateButtonIcon(IconType.Delete);
+            */
         }
 
-        private void InitializePLCCommunicator()
+        // 重绘边框
+        protected override void OnPaint(PaintEventArgs e)
         {
-            // 初始化S7-1200通信（IP地址根据实际设备修改）
-            _plcComm = new PLCCommunicator(
-                CpuType.S71200,
-                "192.168.0.1",  // PLC实际IP
-                0,              // 机架号
-                1               // 插槽号
-            );
-
-            //// 订阅连接状态和错误事件
-            //_plcComm.ConnectionStatusChanged += OnPlcConnectionStatusChanged;
-            //_plcComm.HardwareErrorOccurred += OnPlcHardwareError;
-        }
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            // 定义淡蓝色画笔（可自行调整RGB值，比如更柔和的淡蓝：Color.FromArgb(200, 220, 255)）
-            using (Pen borderPen = new Pen(Color.LightBlue, 2))
+            base.OnPaint(e);
+            using (Pen pen = new Pen(borderColor, borderWidth))
             {
-                // 绘制边框（矩形范围为窗体整个区域，减1避免超出窗体）
-                Rectangle borderRect = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
-                e.Graphics.DrawRectangle(borderPen, borderRect);
+                // 绘制边框
+                e.Graphics.DrawRectangle(pen,
+                    new Rectangle(borderWidth / 2,
+                                 borderWidth / 2,
+                                 this.ClientSize.Width - borderWidth,
+                                 this.ClientSize.Height - borderWidth));
             }
         }
-
-        private void Form1_Load_1(object sender, EventArgs e)
+        // 实现窗口拖动
+        protected override void OnMouseDown(MouseEventArgs e)
         {
-            //UI_Control加载
+            base.OnMouseDown(e);
+            // 只有在标题栏区域（上50像素）点击才能拖动
+            if (e.Button == MouseButtons.Left && e.Y < 50)
+            {
+                isDragging = true;
+                dragStartPoint = new Point(e.X, e.Y);
+            }
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            if (isDragging)
+            {
+                Point currentPoint = PointToScreen(e.Location);
+                Location = new Point(currentPoint.X - dragStartPoint.X, currentPoint.Y - dragStartPoint.Y);
+            }
+        }
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            isDragging = false;
+        }
+        // 处理窗口大小改变时重新定位按钮
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (this.Controls["buttonMinimize"] != null)
+            {
+                this.Controls["buttonMinimize"].Location = new Point(this.Width - 100, borderWidth + 10);
+                this.Controls["buttonMaximize"].Location = new Point(this.Width - 65, borderWidth + 10);
+                this.Controls["buttonClose"].Location = new Point(this.Width - 30, borderWidth + 10);
+            }
+            this.Invalidate(); // 重绘边框
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {            
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnMaximize_Click(object sender, EventArgs e)
+        {
+            // 实现最大化/还原功能（切换窗口状态）
+            this.WindowState = this.WindowState == FormWindowState.Maximized
+                ? FormWindowState.Normal
+                : FormWindowState.Maximized;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            // 实现关闭功能
+            this.Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            InitUI();
+            btnMinimize.Click += btnMinimize_Click;
+            btnMinimize.MouseEnter += btnMinimize_MouseEnter;
+            btnMinimize.MouseLeave += btnMinimize_MouseLeave;
+
+            btnMaximize.Click += btnMaximize_Click;
+            btnMaximize.MouseEnter += btnMaximize_MouseEnter;
+            btnMaximize.MouseLeave += btnMinimize_MouseLeave;
+
+            btnClose.Click += btnClose_Click;
+            btnClose.MouseEnter += btnClose_MouseEnter;
+            btnClose.MouseLeave += btnClose_MouseLeave;
+
+            //// 基于父容器 titleBar 计算按钮位置，避免超出范围
+            //btnMinimize.Location = new Point(titleBar.Width - 100, 0);
+            //btnMaximize.Location = new Point(titleBar.Width - 70, 0);
+            //btnClose.Location = new Point(titleBar.Width - 40, 0);
             try
             {
-                InitUI();
                 ListBox.CheckForIllegalCrossThreadCalls = false;
+                LogHelper.Info("主窗口加载完成");
             }
             catch (Exception ex)
             {
                 string strMsg = " Error Code: " + Convert.ToString(ex.Message);                
                 MessageBox.Show(strMsg);
+                LogHelper.Error("主窗口加载失败", ex);
             }
         }
         private void Form1_Closing(FormClosingEventArgs e)
@@ -109,7 +230,6 @@ namespace VisualInsectionSystem
             if (MessageBox.Show(@"确定退出？", @"提示", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) != DialogResult.Yes)
             {
                 e.Cancel = true;
-
                 return;
             }
 
@@ -119,33 +239,147 @@ namespace VisualInsectionSystem
                 vmMainViewConfigControl1.Dispose();
                 vmMainViewConfigControl1 = null;
             }
-
-            // 释放其他子窗口
-            foreach (var form in subForms)
+            try
             {
-                if (form != null && !form.IsDisposed)
+                // 释放其他子窗口
+                foreach (var form in subForms)
                 {
-                    form.Close();
-                    form.Dispose();
+                    if (form != null && !form.IsDisposed)
+                    {
+                        form.Close();
+                        form.Dispose();
+                    }
                 }
+                subForms.Clear();
+                VmSolution.Instance?.Dispose();
+                // 释放PLC资源
+                _plcComm?.Dispose();
+                _plcComm = null;
+                LogHelper.Info("应用程序正常退出");
             }
-            subForms.Clear();
-            
-            VmSolution.Instance?.Dispose();
+            catch(Exception ex) 
+            {
+                LogHelper.Error("应用程序退出时发生异常", ex);
+            }
             Application.Exit();  //确保应用程序完全退出
-
         }
+        #endregion
 
+        #region  PLC事件处理
+        private void InitializePLCCommunicator()
+        {
+            try
+            {
+                // 初始化S7通信（IP地址根据实际设备修改）
+                _plcComm = new PLCCommunicator(
+                    CpuType.S71200,
+                    "192.168.0.1",  // 实际IP
+                    0,              // 机架号
+                    1               // 插槽号
+                );
+
+                //// 订阅连接状态和错误事件
+                //_plcComm.ConnectionStatusChanged += OnPlcConnectionStatusChanged;
+                //_plcComm.HardwareErrorOccurred += OnPlcHardwareError;
+                LogHelper.Info("PLC通信器初始化完成");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("PLC通信器初始化失败", ex);
+                MessageBox.Show($"PLC初始化失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        /*
+        //private void OnPlcConnectionStatusChanged(bool isConnected)
+        //{
+        //    Invoke(new Action(() =>
+        //    {
+        //        string status = isConnected ? "已连接" : "已断开";
+        //        toolStripStatusLabel1.Text = $"PLC状态: {status}";
+
+        //        // 如果相机窗口已打开，更新其PLC引用
+        //        if (_hkCameraForm != null && !_hkCameraForm.IsDisposed)
+        //        {
+        //            _hkCameraForm.PlcCommunicator = _plcComm;
+        //        }
+        //    }));
+        //}
+        */
+        /*
+        //private void OnPlcHardwareError(string errorMessage)
+        //{
+        //    Invoke(new Action(() =>
+        //    {
+        //        MessageBox.Show($"PLC硬件错误: {errorMessage}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }));
+        //}
+        */
         #endregion
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
-        private void 文件ToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void 帮助ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 用户ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 日志ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 报警ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 调试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //打开调试页面
+                DebugForm debugForm = new DebugForm();
+                debugForm.Show();
+            }
+            catch (Exception ex)
+            {
+                VM.PlatformSDKCS.VmException vmEx = VM.Core.VmSolution.GetVmException(ex);
+                if (null != vmEx)
+                {
+                    string strMsg = "InitControl failed. Error Code: " + Convert.ToString(vmEx.errorCode, 16);
+                    MessageBox.Show(strMsg);
+                }
+            }
+        }
+
+        private void 通讯ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 打开TCPConnect页面，传递当前MainForm实例
+                TCPConnect tcpConnect = new TCPConnect(this);  // 补充this参数
+                tcpConnect.Show();
+            }
+            catch (Exception ex)
+            {
+                // 建议添加错误日志
+                MessageBox.Show($"打开通讯窗口失败：{ex.Message}");
+            }
+        }
+
         private void 相机ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -172,55 +406,7 @@ namespace VisualInsectionSystem
                     string strMsg = "InitControl failed. Error Code: " + Convert.ToString(vmEx.errorCode, 16);
                     MessageBox.Show(strMsg);
                 }
-            }            
-        }
-        private void 通讯ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // 打开TCPConnect页面，传递当前MainForm实例
-                TCPConnect tCPConnect = new TCPConnect(this);  // 补充this参数
-                tCPConnect.Show();
             }
-            catch (Exception ex)
-            {
-                // 建议添加错误日志
-                MessageBox.Show($"打开通讯窗口失败：{ex.Message}");
-            }
-        }
-        private void 调试ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //打开调试页面
-                DebugForm debugForm = new DebugForm();
-                debugForm.Show();
-            }
-            catch (Exception ex)
-            {
-                VM.PlatformSDKCS.VmException vmEx = VM.Core.VmSolution.GetVmException(ex);
-                if (null != vmEx)
-                {
-                    string strMsg = "InitControl failed. Error Code: " + Convert.ToString(vmEx.errorCode, 16);
-                    MessageBox.Show(strMsg);
-                }
-            }
-        }
-        private void 报警ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void 日志ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void 用户ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void 帮助ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -228,7 +414,7 @@ namespace VisualInsectionSystem
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 保存ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 另存为ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(ProcedureFilePath))     //textBox1.text
             {
@@ -242,7 +428,7 @@ namespace VisualInsectionSystem
                 return;
             }
 
-            strPassword=textBox2.Text;  
+            strPassword = textBox2.Text;
             try
             {
                 this.Enabled = false;
@@ -286,12 +472,7 @@ namespace VisualInsectionSystem
 
         }
 
-        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void 打开方案ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 打开ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // disabled button
             button1.Enabled = false;
@@ -302,19 +483,20 @@ namespace VisualInsectionSystem
             string message;
             try
             {
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = @"VM Sol File(*.sol)|*.sol";
+                DialogResult openFileRes = openFileDialog.ShowDialog();
+
+                if (openFileRes == DialogResult.OK)
                 {
-                    openFileDialog.Filter = @"VM Sol File(*.sol)|*.sol";
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        // 同时更新文件路径和文本框
-                        ProcedureFilePath = openFileDialog.FileName; // ..\Demo.sol
-                        textBox1.Text = ProcedureFilePath;
-                        
-                        listBox1.Items.Add($"已打开文件：{ProcedureFilePath}");  //添加打开记录
-                        listBox1.TopIndex = listBox1.Items.Count - 1;
-                    }
-                }                
+                    // 同时更新文件路径和文本框
+                    ProcedureFilePath = openFileDialog.FileName; // ..\Demo.sol
+                    textBox1.Text = ProcedureFilePath;
+
+                    listBox1.Items.Add($"已打开文件：{ProcedureFilePath}");  //添加打开记录
+                    listBox1.TopIndex = listBox1.Items.Count - 1;
+                }
+
             }
             catch (VmException ex)
             {
@@ -331,6 +513,11 @@ namespace VisualInsectionSystem
             {
                 button1.Enabled = !string.IsNullOrEmpty(ProcedureFilePath);
             }
+        }
+
+        private void 文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         /// <summary>
@@ -452,12 +639,9 @@ namespace VisualInsectionSystem
 
         /// <summary>
         /// 检查密码并输入
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// </summary>      
         private void button3_Click(object sender, EventArgs e)
         {
-            //string strMsg = null;
             try
             {
                 if (mSolutionIsLoad == true)
@@ -465,7 +649,7 @@ namespace VisualInsectionSystem
                     if(VmSolution.Instance.HasPassword(textBox1.Text))
                     {
                         //VmSolution.Instance.Unlock(textBox1.Text);
-                        strMsg = "Has password.";
+                        strMsg = "The solution has password.";
                     }
                     else
                     {
@@ -491,7 +675,7 @@ namespace VisualInsectionSystem
         }
 
         /// <summary>
-        /// 锁定按钮,方便后续
+        /// 锁定按钮
         /// </summary>
         private void button4_Click(object sender, EventArgs e)
         {
@@ -562,32 +746,29 @@ namespace VisualInsectionSystem
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button7_Click(object sender, EventArgs e)
-        {
-            //string strMsg = null;
-            try
+        {//绑定下拉框中选中的流程名称
+            VmProcedure m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text]; 
+            if (m_VmProc != null)
             {
-                VmProcedure m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text];   //绑定下拉框中选中的流程名称
-                if (m_VmProc != null)
+                try
                 {
-                    try
-                    {                        
-                        m_VmProc.Save();
-                        listBox1.Items.Add("流程导出成功" + comboBox1.Text + ".prc");
-                        listBox1.TopIndex = listBox1.Items.Count - 1;
+                    m_VmProc.Save();
+                    //m_VmProc.SaveAs(comboBox1.Text);//导出
+                    listBox1.Items.Add("流程导出成功(ExportProcess success)" + comboBox1.Text + ".prc");
+                    listBox1.TopIndex = listBox1.Items.Count - 1;
 
-                    }
-                    catch (VmException ex)
-                    {
-                        strMsg = "流程导出失败(ExportProcess failed.)"+" Error Code: " + Convert.ToString(ex.errorCode, 16);
-                        listBox1.Items.Add(strMsg);
-                        listBox1.TopIndex = listBox1.Items.Count - 1;                        
-                    }
                 }
-                
+                catch (VmException ex)
+                {
+                    strMsg = "流程导出失败(ExportProcess failed.)"+" Error Code: " + Convert.ToString(ex.errorCode, 16);
+                    listBox1.Items.Add(strMsg);
+                    listBox1.TopIndex = listBox1.Items.Count - 1;  
+                }
             }
-            catch (VmException ex)
+            else
             {
-                MessageBox.Show("流程绑定出现失败." + Convert.ToString(ex.errorCode, 16));
+                strMsg = "No " + comboBox1.Text + " name procedure";
+                MessageBox.Show(strMsg);
             }
         }
 
@@ -597,17 +778,16 @@ namespace VisualInsectionSystem
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button8_Click(object sender, EventArgs e)
-        {
-            //string strMsg = null;            
+        {         
             try
             {
                 m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text];
                 if(m_VmProc != null)
                 {
-                    listBox1.Items.Add("流程删除成功" + comboBox1.Text);
+                    listBox1.Items.Add("流程删除成功(DeleteProcess success)" + comboBox1.Text);
                     listBox1.TopIndex = listBox1.Items.Count - 1;
                 }
-                //m_VmProc.IsEnabled = false; // 删除前禁用
+                m_VmProc.IsEnabled = false; // 删除前禁用
                 m_VmProc.Dispose();
             }
             catch (VmException ex)
@@ -616,7 +796,7 @@ namespace VisualInsectionSystem
                 strMsg = "DeleteProcess failed. Error Code: " + Convert.ToString(ex.errorCode, 16);
                 listBox1.Items.Add(strMsg);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
-                //MessageBox.Show("流程删除失败." + Convert.ToString(ex.errorCode, 16));
+                MessageBox.Show("流程删除失败." + Convert.ToString(ex.errorCode, 16));
             }
         }
 
@@ -630,7 +810,7 @@ namespace VisualInsectionSystem
             try
             {
                 ProcessInfoList vmProcessInfoList = VmSolution.Instance.GetAllProcedureList();  //获取流程
-                VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["ExampleDemo1"];
+                VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["example1"];
                 if (vmProcessInfoList.nNum == 0)
                 {
                     MessageBox.Show("未获取到流程列表.");
@@ -638,7 +818,7 @@ namespace VisualInsectionSystem
 
                 }
                 comboBox1.Items.Clear();
-                comboBox1.Items.Add("ExampleDemo1");
+                comboBox1.Items.Add("example1");
                 for (int item = 0; item < vmProcessInfoList.nNum; item++)
                 {
                     comboBox1.Items.Add(vmProcessInfoList.astProcessInfo[item].strProcessName);  //添加流程名称到下拉列表
@@ -942,7 +1122,35 @@ namespace VisualInsectionSystem
             }
         }
 
+        private void btnMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMinimize.BackColor = Color.LightGray;
+        }
 
+        private void btnMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMinimize.BackColor = Color.Transparent;
+        }
+
+        private void btnMaximize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMaximize.BackColor = Color.LightGray;
+        }
+
+        private void btnMaximize_MouseMove(object sender, MouseEventArgs e)
+        {
+            btnMaximize.BackColor = Color.Transparent;
+        }
+
+        private void btnClose_MouseEnter(object sender, EventArgs e)
+        {
+            btnClose.BackColor = Color.Red;
+        }
+
+        private void btnClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnClose.BackColor = Color.Transparent;
+        }
     }
     
 }

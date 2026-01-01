@@ -63,75 +63,6 @@
     <Reference Include="IMVSBoxOverlapCalculationModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=274d19f8bbc7ef2f, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="IMVSCnnClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1ce48ca275f18deb, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a5ee55d7734e2dbf, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnSingleCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a0a50bebe561608a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnSingleCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ad772401d31c66c1, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFlawModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d60f139e428105c6, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4118cf07549972fc, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRetrievalModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1f018be5be2f57f3, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRetrievalModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=02507b3722aeb2e1, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9ff606522a42e0cf, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=11441092ae200d87, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSOcrDlModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=18d9baf32b5c135a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSOcrDlModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=550f37a1d881ce6f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInstanceSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=41811bad56014bef, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInstanceSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cdf2a15ba4a21c36, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInspectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4b1d6c8dd732854d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInspectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=214d901a7dfd3a90, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFastFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=367b1a9b1f4d75d5, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnUnSupervisedModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3c09dd897fe1ed50, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnUnSupervisedClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0371b0a0537a61cd, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f2c756fd9ccb83e0, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f59aabff94c4511, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCodeRecgModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ec21f3cc2b45d9d4, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCodeRecgModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2d1fe7f3c7d7e4d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="ImageCollectDalsaModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48bc90db4681f2a4, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -146,6 +77,12 @@
     </Reference>
     <Reference Include="IMVSNPointCalibModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=da4efc9666ec3aaa, processorArchitecture=MSIL">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.TimeProvider, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.TimeProvider.8.0.0\lib\netstandard2.0\Microsoft.Bcl.TimeProvider.dll</HintPath>
     </Reference>
     <Reference Include="MvCameraControl.Net, Version=3.4.0.1, Culture=neutral, PublicKeyToken=52fddfb3f94be800, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -307,6 +244,13 @@
     <Reference Include="Apps.ColorFun, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cfdb8c430127f15b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="VM.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=61600122bc9264b9, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -437,24 +381,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSEllipseFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ed79a8a6ba9ab09, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d0dacd268aa4e624, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=63b30597fbdecc73, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f72bd71b2ed9da9, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6ae11060c5b20d69, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=762a57d9b2a9ed67, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSImageSharpnessModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15fee5829ecec07c, processorArchitecture=MSIL">
@@ -622,12 +548,6 @@
     <Reference Include="IMVSHPFeatureMatchModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3a8001c24b4e8881, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="IMVSCnnHPRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnHPRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="S7.Net, Version=0.17.0.0, Culture=neutral, PublicKeyToken=d5812d469e84c693, processorArchitecture=MSIL">
       <HintPath>packages\S7netplus.0.17.0\lib\net452\S7.Net.dll</HintPath>
     </Reference>
@@ -673,21 +593,25 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\DebugFormControl.cs">
+    <Compile Include="Core\LogHelper.cs" />
+    <Compile Include="SubControls\DebugFormControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\DebugFormControl.Designer.cs">
+    <Compile Include="SubControls\DebugFormControl.Designer.cs">
       <DependentUpon>DebugFormControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DbgRenderControl.cs">
+    <Compile Include="SubControls\DbgRenderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\DbgRenderControl.Designer.cs">
+    <Compile Include="SubControls\DbgRenderControl.Designer.cs">
       <DependentUpon>DbgRenderControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\AsyncTcpServer.cs" />
     <Compile Include="Core\ImageProcessor.cs" />
     <Compile Include="Core\PLCCommunicator.cs" />
+    <Compile Include="Core\StyledButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MainForm\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -715,10 +639,10 @@
     <Compile Include="SubForms\TCPConnect.Designer.cs">
       <DependentUpon>TCPConnect.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\DebugFormControl.resx">
+    <EmbeddedResource Include="SubControls\DebugFormControl.resx">
       <DependentUpon>DebugFormControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DbgRenderControl.resx">
+    <EmbeddedResource Include="SubControls\DbgRenderControl.resx">
       <DependentUpon>DbgRenderControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm\MainForm.resx">
@@ -764,5 +688,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\images\AUTOBOX _LOGO.png" />
+    <Content Include="Resources\images\保存.png" />
+    <Content Include="Resources\images\加载.png" />
+    <Content Include="Resources\images\导入.png" />
+    <Content Include="Resources\images\导出.png" />
+    <Content Include="Resources\images\系统登录\登录按钮.png" />
+    <Content Include="Resources\images\系统登录\登录背景.bmp" />
+    <Content Include="Resources\images\系统登录\退出按钮.png" />
+    <Content Include="Resources\images\软件注册页面\关闭按钮.png" />
+    <Content Include="Resources\images\软件注册页面\注册按钮.png" />
+    <Content Include="Resources\images\软件注册页面\背景.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

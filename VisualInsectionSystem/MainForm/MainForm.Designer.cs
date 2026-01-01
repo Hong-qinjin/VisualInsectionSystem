@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 namespace VisualInsectionSystem
 {
@@ -72,6 +73,7 @@ namespace VisualInsectionSystem
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxControl.SuspendLayout();
@@ -99,7 +101,7 @@ namespace VisualInsectionSystem
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 26);
+            this.groupBox1.Location = new System.Drawing.Point(6, 44);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -176,7 +178,6 @@ namespace VisualInsectionSystem
             this.label1.TabIndex = 20;
             this.label1.Text = "路径";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button7
             // 
@@ -248,7 +249,7 @@ namespace VisualInsectionSystem
             this.vmMainViewConfigControl1.Location = new System.Drawing.Point(3, 17);
             this.vmMainViewConfigControl1.Margin = new System.Windows.Forms.Padding(2);
             this.vmMainViewConfigControl1.Name = "vmMainViewConfigControl1";
-            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(707, 517);
+            this.vmMainViewConfigControl1.Size = new System.Drawing.Size(898, 591);
             this.vmMainViewConfigControl1.TabIndex = 0;
 // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
             this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);
@@ -258,7 +259,7 @@ namespace VisualInsectionSystem
             this.groupBox2.Controls.Add(this.groupBoxControl);
             this.groupBox2.Controls.Add(this.groupBoxTimeInterval);
             this.groupBox2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox2.Location = new System.Drawing.Point(12, 275);
+            this.groupBox2.Location = new System.Drawing.Point(6, 293);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -349,7 +350,7 @@ namespace VisualInsectionSystem
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(3, 16);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(308, 143);
+            this.listBox1.Size = new System.Drawing.Size(308, 218);
             this.listBox1.TabIndex = 0;
             // 
             // groupBox3
@@ -358,11 +359,11 @@ namespace VisualInsectionSystem
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox3.Controls.Add(this.listBox1);
             this.groupBox3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox3.Location = new System.Drawing.Point(12, 402);
+            this.groupBox3.Location = new System.Drawing.Point(6, 420);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(314, 161);
+            this.groupBox3.Size = new System.Drawing.Size(314, 236);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
@@ -373,9 +374,9 @@ namespace VisualInsectionSystem
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.vmMainViewConfigControl1);
-            this.groupBox4.Location = new System.Drawing.Point(332, 26);
+            this.groupBox4.Location = new System.Drawing.Point(323, 45);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(713, 537);
+            this.groupBox4.Size = new System.Drawing.Size(904, 611);
             this.groupBox4.TabIndex = 63;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "groupBox4";
@@ -385,9 +386,9 @@ namespace VisualInsectionSystem
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox5.Controls.Add(this.vmRenderControl1);
-            this.groupBox5.Location = new System.Drawing.Point(932, 25);
+            this.groupBox5.Location = new System.Drawing.Point(932, 71);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(110, 538);
+            this.groupBox5.Size = new System.Drawing.Size(110, 578);
             this.groupBox5.TabIndex = 64;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "groupBox5";
@@ -402,7 +403,7 @@ namespace VisualInsectionSystem
             this.vmRenderControl1.Location = new System.Drawing.Point(3, 17);
             this.vmRenderControl1.ModuleSource = null;
             this.vmRenderControl1.Name = "vmRenderControl1";
-            this.vmRenderControl1.Size = new System.Drawing.Size(104, 518);
+            this.vmRenderControl1.Size = new System.Drawing.Size(104, 558);
             this.vmRenderControl1.TabIndex = 0;
             this.vmRenderControl1.Visible = false;
             // 
@@ -413,9 +414,9 @@ namespace VisualInsectionSystem
             this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dakaToolStripMenuItem,
             this.保存ToolStripMenuItem});
-            this.文件ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.文件ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
-            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(61, 38);
             this.文件ToolStripMenuItem.Text = "文件";
             this.文件ToolStripMenuItem.Click += new System.EventHandler(this.文件ToolStripMenuItem_Click);
             // 
@@ -423,7 +424,7 @@ namespace VisualInsectionSystem
             // 
             this.dakaToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.dakaToolStripMenuItem.Name = "dakaToolStripMenuItem";
-            this.dakaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dakaToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.dakaToolStripMenuItem.Text = "打开";
             this.dakaToolStripMenuItem.Click += new System.EventHandler(this.打开方案ToolStripMenuItem_Click);
             // 
@@ -431,55 +432,55 @@ namespace VisualInsectionSystem
             // 
             this.保存ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.保存ToolStripMenuItem.Text = "另存为";
             this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
             // 相机ToolStripMenuItem
             // 
-            this.相机ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.相机ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.相机ToolStripMenuItem.Name = "相机ToolStripMenuItem";
-            this.相机ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.相机ToolStripMenuItem.Size = new System.Drawing.Size(71, 38);
             this.相机ToolStripMenuItem.Text = " 相机";
             this.相机ToolStripMenuItem.Click += new System.EventHandler(this.相机ToolStripMenuItem_Click);
             // 
             // 通讯ToolStripMenuItem
             // 
-            this.通讯ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.通讯ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.通讯ToolStripMenuItem.Name = "通讯ToolStripMenuItem";
-            this.通讯ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.通讯ToolStripMenuItem.Size = new System.Drawing.Size(71, 38);
             this.通讯ToolStripMenuItem.Text = " 通讯";
             this.通讯ToolStripMenuItem.Click += new System.EventHandler(this.通讯ToolStripMenuItem_Click);
             // 
             // 调试ToolStripMenuItem
             // 
-            this.调试ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.调试ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.调试ToolStripMenuItem.Name = "调试ToolStripMenuItem";
-            this.调试ToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.调试ToolStripMenuItem.Size = new System.Drawing.Size(61, 38);
             this.调试ToolStripMenuItem.Text = "调试";
             this.调试ToolStripMenuItem.Click += new System.EventHandler(this.调试ToolStripMenuItem_Click);
             // 
             // 报警ToolStripMenuItem
             // 
-            this.报警ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.报警ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.报警ToolStripMenuItem.Name = "报警ToolStripMenuItem";
-            this.报警ToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.报警ToolStripMenuItem.Size = new System.Drawing.Size(61, 38);
             this.报警ToolStripMenuItem.Text = "报警";
             this.报警ToolStripMenuItem.Click += new System.EventHandler(this.报警ToolStripMenuItem_Click);
             // 
             // 日志ToolStripMenuItem
             // 
-            this.日志ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.日志ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.日志ToolStripMenuItem.Name = "日志ToolStripMenuItem";
-            this.日志ToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.日志ToolStripMenuItem.Size = new System.Drawing.Size(61, 38);
             this.日志ToolStripMenuItem.Text = "日志";
             this.日志ToolStripMenuItem.Click += new System.EventHandler(this.日志ToolStripMenuItem_Click);
             // 
             // 用户ToolStripMenuItem
             // 
-            this.用户ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.用户ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.用户ToolStripMenuItem.Name = "用户ToolStripMenuItem";
-            this.用户ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.用户ToolStripMenuItem.Size = new System.Drawing.Size(71, 38);
             this.用户ToolStripMenuItem.Text = " 用户";
             this.用户ToolStripMenuItem.Click += new System.EventHandler(this.用户ToolStripMenuItem_Click);
             // 
@@ -487,9 +488,9 @@ namespace VisualInsectionSystem
             // 
             this.帮助ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.关于ToolStripMenuItem});
-            this.帮助ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.帮助ToolStripMenuItem.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
-            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(61, 38);
             this.帮助ToolStripMenuItem.Text = "帮助";
             this.帮助ToolStripMenuItem.Click += new System.EventHandler(this.帮助ToolStripMenuItem_Click);
             // 
@@ -497,13 +498,14 @@ namespace VisualInsectionSystem
             // 
             this.关于ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.关于ToolStripMenuItem.Text = "关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.menuStrip1.AutoSize = false;
+            this.menuStrip1.Font = new System.Drawing.Font("楷体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
             this.相机ToolStripMenuItem,
@@ -516,34 +518,49 @@ namespace VisualInsectionSystem
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1057, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1239, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.SystemColors.Window;
+            this.panel1.Controls.Add(this.menuStrip1);
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox5);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.groupBox4);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(2, 42);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1057, 574);
+            this.panel1.Size = new System.Drawing.Size(1239, 660);
             this.panel1.TabIndex = 65;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.Window;
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(2, 2);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1239, 40);
+            this.flowLayoutPanel1.TabIndex = 65;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1057, 574);
-            this.Controls.Add(this.menuStrip1);
+            this.ClientSize = new System.Drawing.Size(1243, 704);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";
+            this.Padding = new System.Windows.Forms.Padding(2);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "视觉检测系统";
             this.Load += new System.EventHandler(this.Form1_Load_1);
@@ -560,7 +577,6 @@ namespace VisualInsectionSystem
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -609,6 +625,7 @@ namespace VisualInsectionSystem
         private System.Windows.Forms.Button buttonSetTimeInterval;
         private VMControls.Winform.Release.VmRenderControl vmRenderControl1;
         private System.Windows.Forms.Panel panel1;
+        private FlowLayoutPanel flowLayoutPanel1;
 
         //private readonly EventHandler Form1_Load;
     }

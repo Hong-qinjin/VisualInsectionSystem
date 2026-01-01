@@ -12,12 +12,6 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <!-- 统一输出 -->
-    <BaseOutputPath>$(RootNamespace)\bin\</BaseOutputPath>
-    <!--中间输出files-->
-    <BaseIntermediateOutputPath>$(RootNamespace)\obj\</BaseIntermediateOutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <UseCommonOutputDirectory>false</UseCommonOutputDirectory>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -25,29 +19,25 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>$(BaseOutputPath)Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>$(BaseOutputPath)Release\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>VisualInsectionSystem.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="iMVS-6000PlatformSDKCS">
-      <HintPath>C:\Program Files\VisionMaster4.4.0\Development\V4.x\Libraries\AnyCPU\C#\iMVS-6000PlatformSDKCS.dll</HintPath>
-    </Reference>
     <Reference Include="IMVSBlobFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fe8bad26cdedb7b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -146,10 +136,6 @@
     </Reference>
     <Reference Include="IMVSNPointCalibModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=da4efc9666ec3aaa, processorArchitecture=MSIL">
       <Private>False</Private>
-    </Reference>
-    <Reference Include="MvCameraControl.Net, Version=3.4.0.1, Culture=neutral, PublicKeyToken=52fddfb3f94be800, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\MVS\Development\DotNet\AnyCpu\netstandard2.0\MvCameraControl.Net.dll</HintPath>
     </Reference>
     <Reference Include="PyShellModuleCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a0ce0b6ba72d1d05, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -643,6 +629,10 @@
     <Reference Include="HslCommunication, Version=12.5.2.0, Culture=neutral, PublicKeyToken=3d72ad3b6b5ec0e3, processorArchitecture=MSIL">
       <HintPath>packages\HslCommunication.12.5.2\lib\net451\HslCommunication.dll</HintPath>
     </Reference>
+    <Reference Include="MvCameraControl.Net, Version=3.4.0.1, Culture=neutral, PublicKeyToken=52fddfb3f94be800, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\VAutobox\MVS\Development\DotNet\AnyCpu\net40\MvCameraControl.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -673,17 +663,17 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\DebugFormControl.cs">
+    <Compile Include="Controls\MainViewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\DebugFormControl.Designer.cs">
-      <DependentUpon>DebugFormControl.cs</DependentUpon>
+    <Compile Include="Controls\MainViewControl.Designer.cs">
+      <DependentUpon>MainViewControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DbgRenderControl.cs">
+    <Compile Include="Controls\RenderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\DbgRenderControl.Designer.cs">
-      <DependentUpon>DbgRenderControl.cs</DependentUpon>
+    <Compile Include="Controls\RenderControl.Designer.cs">
+      <DependentUpon>RenderControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\AsyncTcpServer.cs" />
     <Compile Include="Core\ImageProcessor.cs" />
@@ -715,11 +705,11 @@
     <Compile Include="SubForms\TCPConnect.Designer.cs">
       <DependentUpon>TCPConnect.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\DebugFormControl.resx">
-      <DependentUpon>DebugFormControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\MainViewControl.resx">
+      <DependentUpon>MainViewControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DbgRenderControl.resx">
-      <DependentUpon>DbgRenderControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\RenderControl.resx">
+      <DependentUpon>RenderControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -766,3 +756,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
+
+
+
+
+
+
