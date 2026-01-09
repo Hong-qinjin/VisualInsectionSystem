@@ -1,6 +1,3 @@
-//using MvCamCtrl.NET;
-using IfModuleCs;
-using MvCameraControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,35 +15,38 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+
 using VisualInsectionSystem.Core;
+using MvCameraControl;
 
 
 namespace VisualInsectionSystem.SubForms
 {
     public partial class HKCamera : Form, IDisposable
     {
+        #region 全局状态变量
         [DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory", SetLastError = false)]
-
         private static extern void CopyMemory(IntPtr dest, IntPtr src, uint count);     // 内存拷贝函数 | EN: Memory copy function
+        
         public const Int32 CUSTOMER_PIXEL_FORMAT = unchecked((Int32)0x80000000);        // 判断用户自定义像素格式  | EN: Determine user-defined pixel format
-
+        
+        public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
+ 
         MyCamera.MV_CC_DEVICE_INFO_LIST m_stDeviceList = new MyCamera.MV_CC_DEVICE_INFO_LIST();     // 设备列表
         MyCamera.MV_FRAME_OUT_INFO_EX m_stFrameInfo = new MyCamera.MV_FRAME_OUT_INFO_EX();          // 图像帧信息
         private MyCamera m_MyCamera = null;     // 相机对象
-        public bool m_bGrabbing = false;    // 取流标志，是否开始抓图
-        public bool IsConnect { get; private set; }     // 相机连接状态
-        Thread m_hReceiveThread = null;     // 图像取图线程
+        private IntPtr _cameraHandle = IntPtr.Zero;             
+        public bool IsConnect { get; private set; }     // 连接状态
+        private bool m_bCameraConnected = false;    // 相机连接状态
 
+        private bool m_bPreviewStarted = false; // 预览是否已开始
+        public bool m_bGrabbing = false;    // 取流标志，是否开始抓图
+        
+        Thread m_hReceiveThread = null;     // 图像取图线程 
         // 从驱动获取图像数据的缓存 | EN: Cache for obtaining image data from the driver
         UInt32 m_nBufSizeForDriver = 0;
-        IntPtr m_pBufForDriver = IntPtr.Zero;
-        // R通道数据
-        byte[] m_pDataForRed = null;
-        // G通道数据
-        byte[] m_pDataForGreen = null;
-        // B通道数据
-        byte[] m_pDataForBlue = null;
-
+        IntPtr m_pBufForDriver = IntPtr.Zero;                   
+        
         // ch:Bitmap及其像素格式 | en:Bitmap and Pixel Format
         Bitmap m_bitmap = null;
         PixelFormat m_bitmapPixelFormat = PixelFormat.DontCare;
@@ -55,15 +55,11 @@ namespace VisualInsectionSystem.SubForms
 
         private static Object BufForDriverLock = new Object();  // 读写图像时锁定
         private static Object BufForImageLock = new Object();
-
-        IntPtr displayHandle = IntPtr.Zero;     // 显示句柄 | EN: Display handle
-        private int captureCount = 0;   // 拍摄计数
-        private bool isBatchCapture = false; // 是否正在批量拍摄
-
-        private bool _isCapturing = false;
         private object _captureLock = new object();     // 捕获锁对象 | EN: Capture lock
-        public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
-
+        private bool _isCapturing = false;
+        IntPtr displayHandle = IntPtr.Zero;     // 显示句柄 | EN: Display handle
+        #endregion                
+        
         public HKCamera()
         {
             InitializeComponent();
@@ -88,11 +84,12 @@ namespace VisualInsectionSystem.SubForms
                 catch (ObjectDisposedException)
                 {
                     // 窗体已释放的异常忽略
+
                 }
                 catch (Exception ex)
                 {
                     // 记录跨线程调用异常（可选）
-                    //LogHelper.WriteLog($"跨线程UI更新异常: {ex.Message}");
+                    LogHelper.Error($"跨线程UI更新异常: {ex.Message}");
                 }
             }
             else
@@ -122,7 +119,7 @@ namespace VisualInsectionSystem.SubForms
                 }
                 catch (Exception ex)
                 {
-                    //LogHelper.WriteLog($"跨线程UI更新(带返回值)异常: {ex.Message}");
+                    LogHelper.Error($"跨线程UI更新(带返回值)异常: {ex.Message}");
                     return default(T);
                 }
             }
@@ -137,50 +134,40 @@ namespace VisualInsectionSystem.SubForms
             MyCamera.MV_CC_Initialize_NET();
             // PLC事件
             if (PlcCommunicator != null)
-            {
-                //PlcCommunicator.CameraReadyTriggered += PlcCommunicator_CameraReadyTriggered;
+            {                
                 PlcCommunicator.CameraReadyTriggered += OnPlcCamearaReady;
                 PlcCommunicator.ConnectionStatusChanged += OnPlcConnectionChanged;
             }
-            // 枚举相机（保持原有逻辑）
-            // DeviceListAcq();  // 根据需要决定是否默认枚举
         }
 
         // PLC连接变化处理
         private void OnPlcConnectionChanged(bool isConnected)
         {
-            // 在这里处理PLC连接状态变化的逻辑
+            // PLC连接状态变化
             if (isConnected)
             {
                 // PLC已连接
                 Console.WriteLine("PLC connected.");
                 Invoke(new Action(() =>
                 {
-                    //
-                    MessageBox.Show("PLC connected. Enumerating cameras...");
-                    // 
+                    MessageBox.Show("PLC connected. Enumerating cameras...");                    
                     PlcCommunicator.Write("CameraAlive", 1); // 通知PLC相机在线                    
                 }));
             }
             else
             {
                 Invoke(new Action(() =>
-                {
-                    //
+                {                    
                     MessageBox.Show("PLC 断联. 警告");
                 }));
                 Console.WriteLine("PLC disconnected.");
             }
-        }
-        //private void PlcCommunicator_ConnectionStatusChanged(bool obj)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        }     
 
         // PLC触发拍照事件处理
         private void OnPlcCamearaReady()
         {
-            // 在这里处理PLC触发拍照的逻辑
+            // 处理PLC触发拍照
             Console.WriteLine("PLC triggered camera ready event.");
             if (m_bGrabbing && IsConnect)
             {
@@ -282,16 +269,22 @@ namespace VisualInsectionSystem.SubForms
         // // ch：枚举相机 | en: Enumerate cameras
         private void button1_Click(object sender, EventArgs e)
         {
+            // 如果相机已经连接，则提示"已打开一个相机"
+            if (m_bCameraConnected)
+            {
+                MessageBox.Show("已打开一个相机，请先关闭当前相机", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             DeviceListAcq();
         }
 
         // ch:创建设备列表 | EN:Create device list
         public void DeviceListAcq()
-        {
-            // CH:枚举设备列表 | EN:Create device list
+        {    
+            // CH:枚举设备列表 | EN:Create device list        
             System.GC.Collect();
-            comboBox1.Items.Clear();        // 设备列表
-            m_stDeviceList.nDeviceNum = 0;  // 设备数量清零
+            comboBox1.Items.Clear();        
+            m_stDeviceList.nDeviceNum = 0;  // 数量清零
 
             // ch:枚举了所有类型 // en:Enumerate all types
             int nRet = MyCamera.MV_CC_EnumDevices_NET(MyCamera.MV_GIGE_DEVICE | MyCamera.MV_USB_DEVICE |
@@ -302,10 +295,6 @@ namespace VisualInsectionSystem.SubForms
             {
                 ShowErrorMsg("Enum Devices Fail!", nRet);
                 return;
-            }
-            else
-            {
-                // todo list
             }
 
             for (int i = 0; i < m_stDeviceList.nDeviceNum; i++)     // 在combobox列表中显示相机
@@ -327,16 +316,7 @@ namespace VisualInsectionSystem.SubForms
 
                     if ((gigeInfo.chUserDefinedName.Length > 0) && (gigeInfo.chUserDefinedName[0] != '\0'))
                     {
-                        /*
-                        //if (MyCamera.IsTextUTF8(gigeInfo.chUserDefinedName))
-                        //{
-                        //    strUserDefinedName = Encoding.UTF8.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
-                        //}
-                        //else
-                        //{
-                        //    strUserDefinedName = Encoding.Default.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
-                        //}
-                        */
+                        
                         strUserDefinedName = MyCamera.IsTextUTF8(gigeInfo.chUserDefinedName)
                             ? Encoding.UTF8.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0')
                             : Encoding.Default.GetString(gigeInfo.chUserDefinedName).TrimEnd('\0');
@@ -350,8 +330,8 @@ namespace VisualInsectionSystem.SubForms
                 // 2. USB3.0 Vision设备
                 else if (device.nTLayerType == MyCamera.MV_USB_DEVICE)
                 {
-                    MyCamera.MV_USB3_DEVICE_INFO_EX usbInfo = (MyCamera.MV_USB3_DEVICE_INFO_EX)
-                        MyCamera.ByteToStruct(device.SpecialInfo.stUsb3VInfo, typeof(MyCamera.MV_USB3_DEVICE_INFO_EX));
+                    MyCamera.MV_USB3_DEVICE_INFO_EX usbInfo = 
+                        (MyCamera.MV_USB3_DEVICE_INFO_EX)MyCamera.ByteToStruct(device.SpecialInfo.stUsb3VInfo, typeof(MyCamera.MV_USB3_DEVICE_INFO_EX));
 
                     if ((usbInfo.chUserDefinedName.Length > 0) && (usbInfo.chUserDefinedName[0] != '\0'))
                     {
@@ -368,8 +348,8 @@ namespace VisualInsectionSystem.SubForms
                 // 3. 基于GenTL的CameraLink设备（工业CameraLink接口）
                 else if (device.nTLayerType == MyCamera.MV_GENTL_CAMERALINK_DEVICE)
                 {
-                    MyCamera.MV_CML_DEVICE_INFO CMLInfo = (MyCamera.MV_CML_DEVICE_INFO)
-                        MyCamera.ByteToStruct(device.SpecialInfo.stCMLInfo, typeof(MyCamera.MV_CML_DEVICE_INFO));
+                    MyCamera.MV_CML_DEVICE_INFO CMLInfo = 
+                        (MyCamera.MV_CML_DEVICE_INFO)MyCamera.ByteToStruct(device.SpecialInfo.stCMLInfo, typeof(MyCamera.MV_CML_DEVICE_INFO));
 
                     if ((CMLInfo.chUserDefinedName.Length > 0) && (CMLInfo.chUserDefinedName[0] != '\0'))
                     {
@@ -431,18 +411,6 @@ namespace VisualInsectionSystem.SubForms
                 button2.Enabled = true;
             }
         }
-        private void SetCtrlWhenOpen()
-        {
-            button1.Enabled = true;
-            button2.Enabled = true;
-            comboBox1.Enabled = false;
-        }
-        private void SetCtrlWhenClose()
-        {
-            button1.Enabled = true;
-            button2.Enabled = false;
-            comboBox1.Enabled = true;
-        }
 
         ///<summary>显示设置窗口</summary>      
         public void InitDisplayHandle()
@@ -467,21 +435,11 @@ namespace VisualInsectionSystem.SubForms
                 ShowErrorMsg("No Device Found!", -1);
                 return;
             }
-
-
-            InitDisplayHandle();
-            //other code ...
+            InitDisplayHandle();    
 
             ///<summary>获取设备信息</summary>
             MyCamera.MV_CC_DEVICE_INFO deviceInfo = (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(
                 m_stDeviceList.pDeviceInfo[comboBox1.SelectedIndex], typeof(MyCamera.MV_CC_DEVICE_INFO));
-
-            if (m_MyCamera != null)     //先关闭已有相机实例
-            {
-                m_MyCamera.MV_CC_CloseDevice_NET();
-                m_MyCamera.MV_CC_DestroyDevice_NET();
-                m_MyCamera = null;
-            }
 
             m_MyCamera = new MyCamera();    //创建实例
             if (null == m_MyCamera)
@@ -508,7 +466,7 @@ namespace VisualInsectionSystem.SubForms
             if (deviceInfo.nTLayerType == MyCamera.MV_GIGE_DEVICE)
             {
                 // 心跳超时时间，单位ms
-                int heartbeaTimeout = 30000;
+                int heartbeaTimeout = 3000;
                 nRet = m_MyCamera.MV_CC_SetIntValueEx_NET("GevHeartbeatTimeout", heartbeaTimeout);
                 if (nRet != MyCamera.MV_OK)
                 {
@@ -516,11 +474,12 @@ namespace VisualInsectionSystem.SubForms
                 }
                 // 获取当前网络最佳包大小
                 int optimalPacketSize = m_MyCamera.MV_CC_GetOptimalPacketSize_NET();
-                // 检测包并校验
+                const int MIN_PACKET_SIZE = 512;
+                const int MAX_PACKET_SIZE = 9000;
+               
                 if (optimalPacketSize > 0)
                 {
-                    const int MIN_PACKET_SIZE = 512;
-                    const int MAX_PACKET_SIZE = 9000;   // Jumbo Frame（巨型帧）                  
+                    // 检测包并校验
                     if (optimalPacketSize >= MIN_PACKET_SIZE && optimalPacketSize <= MAX_PACKET_SIZE)
                     {
                         nRet = m_MyCamera.MV_CC_SetIntValueEx_NET("GevSCPSPacketSize", optimalPacketSize);
@@ -531,14 +490,14 @@ namespace VisualInsectionSystem.SubForms
                     }
                     else
                     {
-                        //TODO list// 补充成功日志（可选，便于调试）
+                        // 补充成功日志（可选，便于调试）
                         ShowErrorMsg($"获取的最佳包大小({optimalPacketSize}字节)超出合理范围" +
                             $"[{MIN_PACKET_SIZE}-{MAX_PACKET_SIZE}]", optimalPacketSize);
                     }
                 }
                 else
                 {
-                    // 3.获取最佳包大小失败时的错误处理，错误码（如-1代表未知错误，-100代表网络异常等）                   
+                    //  获取最佳包大小失败时的错误处理，错误码（如-1代表未知错误，-100代表网络异常等）                   
                     ShowErrorMsg($"获取最佳网络包大小失败！错误码：{optimalPacketSize}", optimalPacketSize);
                 }
             }
@@ -552,9 +511,27 @@ namespace VisualInsectionSystem.SubForms
 
             // ch:注册异常回调函数
             m_MyCamera.MV_CC_RegisterExceptionCallBack_NET(ExceptionCallBack, IntPtr.Zero);
-            button9_Click(null, null);
-            SetCtrlWhenOpen();
+            // 初始状态：连续模式
+            radioButton1.Checked = true;
+            radioButton2.Checked = false;
+            checkBox1.Enabled = false;
+            button8.Enabled = false;
 
+            // 更新UI状态
+            button1.Enabled = false;
+            button2.Enabled = false;
+            button3.Enabled = false;
+            button4.Enabled = true;//关闭
+            button5.Enabled = true;
+            button6.Enabled = false;
+            button7.Enabled = false;
+            button8.Enabled = false;
+            button9.Enabled = false;
+            button10.Enabled = false;
+            button11.Enabled = false;
+
+            m_bCameraConnected = true;
+            IsConnect = true;
         }
 
         // ch:异常处理回调函数 | en:Exception handling callback function
@@ -573,8 +550,7 @@ namespace VisualInsectionSystem.SubForms
             }
             else
             {
-                errorMsg = csMessage + "" + String.Format("{0:X}", nErrorNum);
-                //errorMsg = csMessage + " ErrorCode: " + String.Format("0x{0:X8}", nErrorNum);
+                errorMsg = csMessage + "" + String.Format("{0:X}", nErrorNum);                
             }
             switch (nErrorNum)
             {
@@ -637,8 +613,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 try
                 {
-                    // 检查指针是否有效
-                    //if(!IsBadReadPtr(m_pBufForDriver, (UIntPtr)m_nBufSizeForDriver))
+                    // 检查指针是否有效                    
                     if (!IsBadReadPtr(m_pBufForDriver, 1))
                     {
                         Marshal.FreeHGlobal(m_pBufForDriver);   // Marshal.Release(m_BufForDriver);
@@ -659,8 +634,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 try
                 {
-                    // 检查指针是否有效
-                    //if (!IsBadReadPtr(m_ConvertDstBuf, (UIntPtr)m_nConvertDstBufLen))
+                    // 检查指针是否有效                   
                     if (!IsBadReadPtr(m_ConvertDstBuf, 1))
                     {
                         Marshal.FreeHGlobal(m_ConvertDstBuf);
@@ -681,15 +655,7 @@ namespace VisualInsectionSystem.SubForms
                 m_bitmap.Dispose();
                 m_bitmap = null;
             }            
-            // // ch:关闭设备 | en:Close Device
-            //if (m_MyCamera != null)
-            //{
-            //    m_MyCamera.MV_CC_StopGrabbing_NET();
-            //    m_MyCamera.MV_CC_CloseDevice_NET();
-            //    m_MyCamera.MV_CC_DestroyDevice_NET();
-            //    m_MyCamera = null;
-
-            //}
+       
             // 释放相机资源
             if (m_MyCamera != null)
             {
@@ -705,9 +671,21 @@ namespace VisualInsectionSystem.SubForms
                 m_MyCamera = null;
             }
 
-            // 关闭时设置，控件状态设置
+            // 关闭时设置，// 更新UI控件状态设置            
             IsConnect = false;
-            SetCtrlWhenClose();
+            m_bCameraConnected = false;
+
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            button4.Enabled = false;
+            button5.Enabled = false;
+            button6.Enabled = false;
+            button7.Enabled = false;
+            button8.Enabled = false;
+            button9.Enabled = false;
+            button10.Enabled = false;
+            button11.Enabled = false;
         }
 
         #region  IO输出，控制源
@@ -719,41 +697,34 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>连续模式</summary>
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton1.Checked == true)
+            if (radioButton1.Checked)
             {
                 m_MyCamera.MV_CC_SetEnumValue_NET("TriggerMode", (uint)MyCamera.MV_CAM_TRIGGER_MODE.MV_TRIGGER_MODE_OFF);
-                checkBox1.Enabled = false;  // 关闭外触发使能
-                button8.Enabled = false; // 关闭触发一次按钮
+                checkBox1.Enabled = false;  // 关闭触发使能
+                button8.Enabled = false;    // 关闭软触发一次
             }
         }
 
         ///<summary>触发模式</summary>
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton2.Checked == true)      // ch:打开触发模式 | en:Open trigger mode
+            // ch:触发源MV_CAM_TRIGGER_SOURCE选择:
+            //      MV_TRIGGER_SOURCE_LINE0    = 0 - LINE0;
+            //      MV_TRIGGER_SOURCE_LINE1    = 1 - LINE1;
+            //      MV_TRIGGER_SOURCE_LINE2    = 2 - LINE2;
+            //      MV_TRIGGER_SOURCE_LINE3    = 3 - LINE3;
+            //      MV_TRIGGER_SOURCE_COUNTER0 = 4 - COUNTER0;
+            //      MV_TRIGGER_SOURCE_SOFTWARE = 7 - software;
+            //      MV_TRIGGER_SOURCE_FrequencyConverter = 8 - FrequencyConverter;     
+          
+            if (radioButton2.Checked)     
             {
                 m_MyCamera.MV_CC_SetEnumValue_NET("TriggerMode", (uint)MyCamera.MV_CAM_TRIGGER_MODE.MV_TRIGGER_MODE_ON);
-
-                // ch:触发源选择:0 - line0;
-                //              1 - line1;
-                //              2 - line2software;
-                //              3 - line3;
-                //              4 - counter;
-                //              7 - software;
-                //              -1 - external;
-                if (checkBox1.Checked == true)   // 软触发
+                if (m_bPreviewStarted)
                 {
-                    m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_SOFTWARE);
-                    if (m_bGrabbing)
-                    {
-                        button8.Enabled = true;  // 软触发一次按钮
-                    }
-                }
-                else
-                {
-                    m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_LINE0);
-                }
-                checkBox1.Enabled = true;       // 打开外触发使能
+                    checkBox1.Enabled = true;
+                    button8.Enabled = checkBox1.Checked;
+                }                                     
             }
         }
 
@@ -989,12 +960,16 @@ namespace VisualInsectionSystem.SubForms
         // ch:开始预览取流 | en:Start Grab
         private void button5_Click(object sender, EventArgs e)
         {
-            button5 = new StyledButton { Text = "开始预览", NormalColor = Color.FromArgb(50, 150, 100) };
+            if (!m_bCameraConnected)
+            {
+                MessageBox.Show("请先打开相机", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             // 确保之前的线程已结束
             if (m_hReceiveThread != null && m_hReceiveThread.IsAlive)
             {
                 m_bGrabbing = false;
-                m_hReceiveThread.Join(1000);
+                m_hReceiveThread.Join(100);
                 m_hReceiveThread = null;
             }
 
@@ -1003,16 +978,17 @@ namespace VisualInsectionSystem.SubForms
             {
                 return;
             }
-            displayHandle = pictureBox1.Handle;  // ch:显示控件句柄 | en:Display control handle         
-            m_bGrabbing = true;  // ch:取流标志位 | en:Grab flag bit
-            m_stFrameInfo.nFrameLen = 0;    //取流之前先清除帧长度
-            m_stFrameInfo.enPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_Undefined;
+            displayHandle = pictureBox1.Handle;     // ch:显示控件句柄    
+            m_bGrabbing = true;     // ch:取流标志位
+            m_stFrameInfo.nFrameLen = 0;    //取流前先清除帧长度
+            m_stFrameInfo.enPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_Undefined;      // 未定义
+            m_stFrameInfo.enPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_Mono8_Signed;   // 8位
 
             m_hReceiveThread = new Thread(ReceiveThreadProcess);
             m_hReceiveThread.IsBackground = true;
             m_hReceiveThread.Start();
 
-            nRet = m_MyCamera.MV_CC_StartGrabbing_NET();    // ch:开始取流 | en:Start Grab            
+            nRet = m_MyCamera.MV_CC_StartGrabbing_NET();    // ch:开始取流
             if (MyCamera.MV_OK != nRet)
             {
                 m_bGrabbing = false;
@@ -1025,8 +1001,40 @@ namespace VisualInsectionSystem.SubForms
                 return;
             }
 
-            //pictureBox1.Image = m_bitmap;
-            //改造
+            // 更新UI状态
+            button1.Enabled = false;
+            button2.Enabled = false;
+            button3.Enabled = false;
+            button4.Enabled = true;
+            button5.Enabled = false;
+            button6.Enabled = true;
+            button7.Enabled = true;
+            button8.Enabled = radioButton2.Checked && checkBox1.Checked;
+            button9.Enabled = true;
+            button10.Enabled = true;
+            button11.Enabled = false;
+
+            m_bPreviewStarted = true;            
+        }
+
+        // ch:停止预览取流 | en:Stop Grab
+        private void button6_Click(object sender, EventArgs e)
+        {
+            button3 = new StyledButton { Text = "停止预览", NormalColor = Color.FromArgb(200, 50, 50) };
+            m_bGrabbing = false;
+            if (m_hReceiveThread != null && m_hReceiveThread.IsAlive)
+            {
+                m_hReceiveThread.Join();//取流退出({"未将对象引用设置到对象的实例。"}) 
+            }
+                     
+            int nRet = m_MyCamera.MV_CC_StopGrabbing_NET();
+            if (MyCamera.MV_OK != nRet)
+            {
+                ShowErrorMsg("Stop Grabbing Fail!", nRet);
+                return;
+            }
+            ;
+            //改造  pictureBox1.Image = m_bitmap
             UpdateUI(() =>
             {
                 if (pictureBox1.Image != null)
@@ -1035,40 +1043,40 @@ namespace VisualInsectionSystem.SubForms
                 }
                 pictureBox1.Image = m_bitmap;
             });
-            SetCtrlWhenStartGrab();  // ch:开始取流时，控件状态设置
-        }
 
-        // ch:停止预览取流 | en:Stop Grab
-        private void button6_Click(object sender, EventArgs e)
-        {
-            button3 = new StyledButton { Text = "停止预览", NormalColor = Color.FromArgb(200, 50, 50) };
-            m_bGrabbing = false;
-            m_hReceiveThread.Join(); //取流退出({"未将对象引用设置到对象的实例。"})            
-            int nRet = m_MyCamera.MV_CC_StopGrabbing_NET();
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = true;
+            button4.Enabled = true;
+            button5.Enabled = true;
+            button6.Enabled = false;
+            button7.Enabled = false;
+            button8.Enabled = false;
+            button9.Enabled = false;
+            button10.Enabled = false;
+            button11.Enabled = false;
 
-            // 显示控件置空           
-
-            if (MyCamera.MV_OK != nRet)
-            {
-                ShowErrorMsg("Stop Grabbing Fail!", nRet);
-                return;
-            }
-            SetCtrlWhenStopGrab();   // ch:停止取流时，控件状态设置
+            m_bPreviewStarted = false;
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            // 校验PLC实例是否有效
-            if (PlcCommunicator == null)
+            if (!m_bPreviewStarted)
             {
-                ShowErrorMsg("PLC通信实例未初始化", -1);
+                MessageBox.Show("请先开始预览", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            //// 校验PLC实例是否有效
+            //if (PlcCommunicator == null)
+            //{
+            //    ShowErrorMsg("PLC通信实例未初始化", -1);
+            //    return;
+            //}
             Thread captureThread = new Thread(LoopCaptureByPLC);
             captureThread.IsBackground = true;
             captureThread.Start();
         }
-        //plc触发取图线程,自动循环拍照, // 修改LoopCaptureByPLC方法，使用PlcCommunicator属性
+        //触发取图线程,自动循环拍照
         private void LoopCaptureByPLC()
         {
             int stateValue = 0; // PLC状态值,变为1时触发拍照
@@ -1080,15 +1088,13 @@ namespace VisualInsectionSystem.SubForms
                     PlcCommunicator.Read("CameraReady", out object triggerValue) &&
                    triggerValue is bool isTriggered && isTriggered)
                 {
-                    // run cmd
                     CaptureImage();
 
                     // 拍照完成后复位PLC触发信号Cameracomplete
                     PlcCommunicator.Write("Cameracomplete", false);
-                   
+                    Thread.Sleep(100);
                 }
-                Thread.Sleep(100); //避免死循环
-                                   // 短暂延迟避免重复触发                
+                Thread.Sleep(10); // 短暂延迟避免重复触发                
             }
         }
 
@@ -1106,10 +1112,7 @@ namespace VisualInsectionSystem.SubForms
                 if (m_bGrabbing && IsConnect)
                 {
                     // 确保在UI线程执行
-                    this.Invoke(new Action(() =>
-                    {
-                        CaptureImage();
-                    }));
+                    UpdateUI(() => { CaptureImage(); });
                 }
                 else
                 {
@@ -1165,10 +1168,7 @@ namespace VisualInsectionSystem.SubForms
 
                 // 拍照完成，通知PLC
                 PlcCommunicator?.Write("Cameracomplete", true);
-
-                // 延迟复位信号
-                Thread.Sleep(100);
-
+               
                 // 释放图像缓冲区
                 m_MyCamera.MV_CC_FreeImageBuffer_NET(ref stFrameInfo);
 
@@ -1213,13 +1213,13 @@ namespace VisualInsectionSystem.SubForms
 
                         // 解锁并显示
                         bmp.UnlockBits(bmpData);
-                        pictureBox1.Image = new Bitmap(bmp); // 创建副本，避免后续释放问题
+                        UpdateUI(() => { pictureBox1.Image = new Bitmap(bmp); }); // 创建副本，避免后续释放问题
                     }
                 }
                 else
                 {
-                    // 处理彩色图像（根据实际像素格式扩展）
-                    // 这里以RGB888为例，实际应根据相机支持的格式处理
+                    // 处理彩色图像（根据实际像素格式扩展）这里以RGB888为例
+                    // 
                     int bufferSize = width * height * 3;
                     byte[] rgbData = new byte[bufferSize];
                     Marshal.Copy(pData, rgbData, 0, bufferSize);
@@ -1237,9 +1237,9 @@ namespace VisualInsectionSystem.SubForms
                             rgbData[i + 2] = temp;
                         }
                         Marshal.Copy(rgbData, 0, bmpData.Scan0, bufferSize);
-
                         bmp.UnlockBits(bmpData);
-                        pictureBox1.Image = new Bitmap(bmp);
+                        //pictureBox1.Image = new Bitmap(bmp);
+                        UpdateUI(() => { pictureBox1.Image = new Bitmap(bmp); });
                     }
                 }
             }
@@ -1257,7 +1257,7 @@ namespace VisualInsectionSystem.SubForms
         private string SaveCapturedImage(MyCamera.MV_FRAME_OUT frameInfo)
         {
             // 1. 创建保存目录（若不存在则创建）
-            string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CapturedImages");
+            string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ImageTemp");
             if (!Directory.Exists(saveDir))
             {
                 Directory.CreateDirectory(saveDir);
@@ -1280,7 +1280,7 @@ namespace VisualInsectionSystem.SubForms
             int nRet = m_MyCamera.MV_CC_SaveImage_NET(ref stSaveParam);
             if (nRet != MyCamera.MV_OK)
             {
-                // 保存失败：调用SDK获取错误信息
+                // 保存失败
                 MessageBox.Show("图像保存失败");
                 return string.Empty;
             }
@@ -1292,35 +1292,43 @@ namespace VisualInsectionSystem.SubForms
         // 保存拍摄的图像并返回保存路径
         public string LastCapturedImagePath { get; private set; }
 
-        ///<summary> cbsoftTrigger软触发 </summary>
+        ///<summary> softTrigger软触发 </summary>
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+            if (checkBox1.Checked == true)   // 软触发
             {
                 m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_SOFTWARE);
                 if (m_bGrabbing)
                 {
-                    button8.Enabled = true;
+                    button8.Enabled = true;  // 软触发一次按钮
                 }
             }
             else
-            {
+            {               
                 m_MyCamera.MV_CC_SetEnumValue_NET("TriggerSource", (uint)MyCamera.MV_CAM_TRIGGER_SOURCE.MV_TRIGGER_SOURCE_LINE0);
                 button8.Enabled = false;
-            }
+            }      
         }
 
         ///<summary> 手动，软触发一次 </summary>
         private void button8_Click(object sender, EventArgs e)
         {
-            int nRet = m_MyCamera.MV_CC_SetCommandValue_NET("TriggerSoftware");
-            if (MyCamera.MV_OK != nRet)
+            if (!m_bPreviewStarted)
             {
-                ShowErrorMsg("Soft Trigger Fail!", nRet);
+                MessageBox.Show("请先开始预览", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            TriggerCapture();   //统一调用触发
+            if (m_bGrabbing && checkBox1.Checked)
+            {
+                int nRet = m_MyCamera.MV_CC_SetCommandValue_NET("TriggerSoftware");
+                if (MyCamera.MV_OK != nRet)
+                {
+                    ShowErrorMsg("Soft Trigger Fail!", nRet);
+                    return;
+                }
+                TriggerCapture();   //统一调用触发
+            }
+                        
         }
 
         /// <summary>
@@ -1355,6 +1363,11 @@ namespace VisualInsectionSystem.SubForms
 
         private void button10_Click(object sender, EventArgs e)
         {
+            if (!m_bPreviewStarted)
+            {
+                MessageBox.Show("请保持预览", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             try
             {
                 float.Parse(textBox1.Text);

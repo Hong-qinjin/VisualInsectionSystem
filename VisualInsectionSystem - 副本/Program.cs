@@ -47,7 +47,7 @@ namespace VisualInsectionSystem
                 File.AppendAllText("error.log", $"{DateTime.Now}: {errorMessage}\n");
 
                 // 显示友好错误提示
-                MessageBox.Show("发生未知错误，请检查日志文件。", "系统错误",
+                DialogResult dialogResult = MessageBox.Show("发生未知错误，请检查日志文件。", "系统错误",
                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch

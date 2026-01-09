@@ -63,6 +63,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Window;
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
@@ -79,7 +80,7 @@ namespace VisualInsectionSystem.SubForms
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox3.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox3.Controls.Add(this.button11);
             this.groupBox3.Controls.Add(this.button10);
             this.groupBox3.Controls.Add(this.button9);
@@ -99,8 +100,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button11
             // 
-            this.button11.BackColor = System.Drawing.SystemColors.Control;
-            this.button11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button11.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button11.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button11.Location = new System.Drawing.Point(6, 127);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(170, 30);
@@ -111,8 +112,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button10
             // 
-            this.button10.BackColor = System.Drawing.SystemColors.Control;
-            this.button10.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button10.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button10.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button10.Location = new System.Drawing.Point(95, 101);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(81, 20);
@@ -123,8 +124,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button9
             // 
-            this.button9.BackColor = System.Drawing.SystemColors.Control;
-            this.button9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button9.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button9.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button9.Location = new System.Drawing.Point(6, 101);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(81, 20);
@@ -156,8 +157,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label3
             // 
-            this.label3.BackColor = System.Drawing.SystemColors.Control;
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label3.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label3.Location = new System.Drawing.Point(7, 75);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 20);
@@ -167,8 +168,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label2
             // 
-            this.label2.BackColor = System.Drawing.SystemColors.Control;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label2.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label2.Location = new System.Drawing.Point(7, 48);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 20);
@@ -178,8 +179,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label1
             // 
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label1.Location = new System.Drawing.Point(7, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 20);
@@ -208,8 +209,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button8
             // 
-            this.button8.BackColor = System.Drawing.SystemColors.Control;
-            this.button8.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button8.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button8.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button8.Location = new System.Drawing.Point(95, 106);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(81, 20);
@@ -220,8 +221,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button7
             // 
-            this.button7.BackColor = System.Drawing.SystemColors.Control;
-            this.button7.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button7.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button7.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button7.Location = new System.Drawing.Point(9, 72);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(167, 28);
@@ -232,8 +233,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button6
             // 
-            this.button6.BackColor = System.Drawing.SystemColors.Control;
-            this.button6.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button6.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button6.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button6.Location = new System.Drawing.Point(95, 46);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(81, 20);
@@ -244,8 +245,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // checkBox1
             // 
-            this.checkBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.checkBox1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.checkBox1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.checkBox1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.checkBox1.Location = new System.Drawing.Point(9, 106);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(81, 20);
@@ -256,8 +257,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button5
             // 
-            this.button5.BackColor = System.Drawing.SystemColors.Control;
-            this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button5.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button5.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button5.Location = new System.Drawing.Point(9, 46);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(81, 20);
@@ -268,8 +269,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // radioButton2
             // 
-            this.radioButton2.BackColor = System.Drawing.SystemColors.Control;
-            this.radioButton2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radioButton2.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.radioButton2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.radioButton2.Location = new System.Drawing.Point(95, 20);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(81, 20);
@@ -281,8 +282,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // radioButton1
             // 
-            this.radioButton1.BackColor = System.Drawing.SystemColors.Control;
-            this.radioButton1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radioButton1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.radioButton1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.radioButton1.Location = new System.Drawing.Point(9, 20);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(81, 20);
@@ -310,8 +311,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.Control;
-            this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button1.Location = new System.Drawing.Point(9, 19);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
@@ -323,8 +324,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.SystemColors.Control;
-            this.button4.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button4.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button4.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button4.Location = new System.Drawing.Point(95, 44);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(81, 20);
@@ -335,9 +336,9 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.Control;
+            this.button2.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button2.Enabled = false;
-            this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button2.Location = new System.Drawing.Point(95, 18);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 20);
@@ -349,8 +350,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.Control;
-            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button3.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button3.Location = new System.Drawing.Point(9, 44);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(81, 20);
@@ -376,7 +377,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pictureBox1.BackColor = System.Drawing.Color.Black;
             this.pictureBox1.Location = new System.Drawing.Point(12, 37);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";

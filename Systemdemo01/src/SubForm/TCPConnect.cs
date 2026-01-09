@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Systemdemo01;
 
@@ -31,7 +27,7 @@ namespace VisualInsectionSystem.SubForms
         private string currentClientInfo;
 
         private UdpClient udpServer;
-        private UdpClient udpClient;   
+        private UdpClient udpClient;
 
         private NetworkStream stream;
         private Thread listenThread;            // 监听线程
@@ -43,7 +39,7 @@ namespace VisualInsectionSystem.SubForms
 
         private string currentProtocol = "";    // 当前选择的协议类型
         private Dictionary<string, TcpClient> connectedClients = new Dictionary<string, TcpClient>();   // 存储已连接的客户端
-        
+
         private bool isHexSend = false;     // 是否16进制发送
         private bool isHexReceive = false;
         private int repeatInterval = 1000;      // 默认重复发送间隔1秒      
@@ -71,7 +67,7 @@ namespace VisualInsectionSystem.SubForms
             comboBox1.SelectedItem = "TCP服务端";
             UpdateControlStates();
         }
-        
+
         // 协议选择变化时更新控件状态
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -163,15 +159,15 @@ namespace VisualInsectionSystem.SubForms
         }
         //启动TCP服务端
         private void StartTcpServer()
-        {          
+        {
             try
             {
                 //获取到的本机IP和port，作为服务器
-                if(!ValidateIPAddress(comboBox2.Text))
+                if (!ValidateIPAddress(comboBox2.Text))
                 {
                     MessageBox.Show("本地IP地址无效");
                 }
-                if(!ValidatePort(textBox1.Text, out int port))
+                if (!ValidatePort(textBox1.Text, out int port))
                 {
                     MessageBox.Show("端口号无效");
                     return;
@@ -181,7 +177,7 @@ namespace VisualInsectionSystem.SubForms
                 IPAddress localAddr = IPAddress.Parse(comboBox2.Text);  // 本地IP地址
                 port = int.Parse(textBox1.Text);    // 本地端口号
                 tcpServer = new TcpListener(localAddr, port);  // 创建TCP服务端
-                
+
                 tcpServer.Start();
                 isListening = true;
                 button1.Text = "停止监听";
@@ -223,7 +219,7 @@ namespace VisualInsectionSystem.SubForms
                     listenThread.Abort();
                 }
                 //
-                if(receiveThread != null && receiveThread.IsAlive)
+                if (receiveThread != null && receiveThread.IsAlive)
                 {
                     receiveThread.Abort();
                 }
@@ -243,8 +239,8 @@ namespace VisualInsectionSystem.SubForms
                 while (isListening)
                 {
                     //等待客户端连接
-                    TcpClient client = tcpServer.AcceptTcpClient();                    
-                    
+                    TcpClient client = tcpServer.AcceptTcpClient();
+
                     //成功获取到client消息（远程端点信息，IP和port）
                     IPEndPoint clientEndPoint = (IPEndPoint)client.Client.RemoteEndPoint;
 
@@ -260,7 +256,7 @@ namespace VisualInsectionSystem.SubForms
                         connectedClients[clientEndPointInfoStr] = client;
                         currentClient = client;
                         currentClientInfo += clientEndPointInfoStr;
-                    }                   
+                    }
 
                     // 更新UI显示
                     Invoke(new Action(() =>
@@ -291,12 +287,12 @@ namespace VisualInsectionSystem.SubForms
                 {
                     Invoke(new Action(() => AddMessage($"监听错误: {ex.Message}")));
                     // 发生错误后，重新启动监听
-                    if(isListening)
+                    if (isListening)
                     {
                         Invoke(new Action(() => AddMessage("尝试重新启动监听...")));
                         Thread.Sleep(3000);
                         ListenForClients();     //递归
-                    }                    
+                    }
                 }
             }
         }
@@ -358,8 +354,8 @@ namespace VisualInsectionSystem.SubForms
                 CleanupClientConnection(tcpClient);
 
                 // 重新等待新的客户端连接
-                ConnectToNextClient();                              
-            }           
+                ConnectToNextClient();
+            }
         }
 
         // 处理指令函数
@@ -390,7 +386,7 @@ namespace VisualInsectionSystem.SubForms
                             AddMessage($"收到指令 ‘{command}’，启动连续执行");
                             mainForm.button4_Click(this, EventArgs.Empty);
                             result = "连续执行已启动";
-                        break;
+                            break;
                         case "STOP_CONTINUOUS":
                             AddMessage($"收到指令 '{command}', 停止连续执行...");
                             mainForm.button5_Click(this, EventArgs.Empty);
@@ -407,7 +403,7 @@ namespace VisualInsectionSystem.SubForms
                 //
                 SendResultToClient(result, clientInfo);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Invoke(new Action(() =>
                 {
@@ -444,7 +440,7 @@ namespace VisualInsectionSystem.SubForms
                     }));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Invoke(new Action(() =>
                 {
@@ -522,7 +518,7 @@ namespace VisualInsectionSystem.SubForms
             catch (Exception)
             {
                 return "未知客户端";
-            }            
+            }
         }
 
         // 清理断开连接的客户端缓存，方便客户端重新连接
@@ -647,7 +643,7 @@ namespace VisualInsectionSystem.SubForms
 
             SendData();
         }
-        
+
         //添加消息到列表
         private void AddMessage(string message)
         {
@@ -888,7 +884,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 AddMessage($"断开连接错误: {ex.Message}");
             }
-        }       
+        }
 
         // TCP服务端监听
         private void TcpServerListen()

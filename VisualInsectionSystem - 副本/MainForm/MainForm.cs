@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,22 +13,19 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 using System.Windows.Forms;
-using VisualInsectionSystem.Core;
 using VisualInsectionSystem.SubForms;
-
 using VM.Core;
 using VM.PlatformSDKCS;
 
 namespace VisualInsectionSystem
 {
-    public partial class MainForm: Form
+    public partial class MainForm : Form
     {
+
         public static MainForm Instance { get; private set; }   // 设置form1为主窗口
         public static List<Form> subForms = new List<Form>();   // 子窗口集合
         public HKCamera HKCameraInstance { get; private set; }
-        
 
         bool mSolutionIsLoad = false;  //方案
         VmProcedure m_VmProc = null;   //流程       
@@ -38,97 +34,102 @@ namespace VisualInsectionSystem
         string strMsg = null;  //提示信息
         string strPassword = null; //方案密码
 
+        private PLCCommunicator _plcComm;
 
-        private PLCCommunicator _plcComm;       
-       
+
+        #region  form展示效果
+
         // 用于拖动窗口的变量
         private bool isDragging = false;
         private Point dragStartPoint;
+        Point mouseOff;//鼠标移动位置变量
+        bool leftFlag;//标签是否为左键     
         // 边框颜色和宽度        
         private Color borderColor = Color.LightSkyBlue;
         private int borderWidth = 3;
 
-
-        #region  form展示
-
-        /// <summary>
-        /// 窗体动画函数（API声明）
-        /// </summary>
-        /// <param name="hwnd">指定产生动画的窗口的句柄</param>
-        /// <param name="dwTime">指定动画持续的时间</param>
-        /// <param name="dwFlags">指定动画类型，可以是一个或多个标志的组合。</param>
-        /// <returns></returns>
-        [DllImport("user32")]
-        private static extern bool AnimateWindow(IntPtr hwnd, int dwTime, int dwFlags);   
-        private const int AW_HOR_POSITIVE = 0x0001;//自左向右显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
-        private const int AW_HOR_NEGATIVE = 0x0002;//自右向左显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
-        private const int AW_VER_POSITIVE = 0x0004;//自顶向下显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志
-        private const int AW_VER_NEGATIVE = 0x0008;//自下向上显示窗口，该标志可以在滚动动画和滑动动画中使用。使用AW_CENTER标志时忽略该标志该标志
-        private const int AW_CENTER = 0x0010;//若使用了AW_HIDE标志，则使窗口向内重叠；否则向外扩展
-        private const int AW_HIDE = 0x10000;//隐藏窗口
-        private const int AW_ACTIVE = 0x20000;//**窗口，在使用了AW_HIDE标志后不要使用这个标志
-        private const int AW_SLIDE = 0x40000;//使用滑动类型动画效果，默认为滚动动画类型，当使用AW_CENTER标志时，这个标志就被忽略
-        private const int AW_BLEND = 0x80000;//使用淡入淡出效果
-
+        #region 相关方法
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+        [DllImport("user32.dll")]
+        public static extern bool SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+        public const int WM_SYSCOMMAND = 0x0112;
+        public const int SC_MOVE = 0xF010;
+        public const int HTCAPTION = 0x0002;
         public MainForm()
-        {                        
-            InitializeComponent();            
+        {
+            InitializeComponent();
             InitializePLCCommunicator();
-            
+            InitUI();
         }
 
         private void InitUI()
         {
             //form1
-            Instance = this;//设置form1为主窗口
-            this.DoubleBuffered = true; //窗体调整大小时闪烁
+            Instance = this;    //设置form1为主窗口       
+            this.DoubleBuffered = true;     //窗体调整大小时闪烁
+            this.BackColor = SystemColors.Window;
             this.FormBorderStyle = FormBorderStyle.None;
-            this.BackColor = Color.White;
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.WindowState = FormWindowState.Normal;
 
+            //初始化标题栏
+            InitializeTitleBar();
+           
+            subForms = new List<Form>
+            {
+                new HKCamera(),
+                new DebugForm(),
+                new TCPConnect(this)
+            };
+            // 考虑边框和标题栏           
 
-            // 替换原来的 titleBar 面板，使用 FlowLayoutPanel 自动右对齐排列按钮
-            FlowLayoutPanel titleBar = new FlowLayoutPanel();
-            titleBar.Height = 30;
-            titleBar.Dock = DockStyle.Top;
-            titleBar.BackColor = SystemColors.Control; // 与按钮形成对比度
-            titleBar.FlowDirection = FlowDirection.RightToLeft; // 按钮右对齐
-            titleBar.Padding = new Padding(0, 0, 3, 0); // 右侧留间距，避免贴边
-            // 确保 titleBar 在最上层（避免被 panel1 覆盖）
-            titleBar.BringToFront();
+            // 事件处理
+            SetupEventHandlers();
 
-            panel1.Padding = new Padding(0, titleBar.Height, 0, 0);
-            this.Controls.Add(panel1);
-
-            subForms.Add(new HKCamera());
-            subForms.Add(new DebugForm());
-            subForms.Add(new TCPConnect(this));                               
-
-            /*
-            ////加载            
-            //button1.Image = StyledButton.CreateButtonIcon(IconType.Load, 18);
-
-            ////保存
-            //button2.Image = StyledButton.CreateButtonIcon(IconType.Save);
-
-            ////导入
-            //button6.Image = StyledButton.CreateButtonIcon(IconType.Delete);
-
-            ////导出
-            //button7.Image = StyledButton.CreateButtonIcon(IconType.Export);
-
-            ////删除
-            //button8.Image = StyledButton.CreateButtonIcon(IconType.Delete);
-            */
         }
+        private void InitializeTitleBar()
+        {
+            //设置logo
+            PictureBox pictureBoxLogo = new PictureBox
+            {
+                Image = VisualInsectionSystem.Properties.Resources.AUTOBOX_LOGO,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Size = new Size(369, 44),
+                Location = new Point(1, 1),
+                Enabled = false,
+                BackColor = SystemColors.Window
+            };
+            
+            //标题栏容器
+            panelTitleBar = new Panel()
+            {
+                BackColor = SystemColors.Window,
+                Width =1260,
+                Height = 45,
+                Dock = DockStyle.Top
+            };
+            //添加按钮到标题栏
+            AddTitleBarButtons(panelTitleBar);
+            panelTitleBar.Controls.Add(pictureBoxLogo);
 
-        // 重绘边框
+            // 添加标题栏到窗体
+            //this.Controls.Add(panelTitleBar);
+            panelTitleBar.BringToFront();
+
+            //内容容器 panel1,顶部留出的标题栏空间           
+            panel1.Padding = new Padding(0, 0, 0, 0);
+            // 调整panel1的位置和大小
+            panel1.Location = new Point(0, panelTitleBar.Height);
+            panel1.Size = new Size(this.ClientSize.Width, this.ClientSize.Height - panelTitleBar.Height);
+
+        }
+        // 绘制边框
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             using (Pen pen = new Pen(borderColor, borderWidth))
-            {
-                // 绘制边框
+            {                
                 e.Graphics.DrawRectangle(pen,
                     new Rectangle(borderWidth / 2,
                                  borderWidth / 2,
@@ -136,100 +137,199 @@ namespace VisualInsectionSystem
                                  this.ClientSize.Height - borderWidth));
             }
         }
-        // 实现窗口拖动
-        protected override void OnMouseDown(MouseEventArgs e)
+        private void AddTitleBarButtons(Panel titleBar)
         {
-            base.OnMouseDown(e);
-            // 只有在标题栏区域（上50像素）点击才能拖动
-            if (e.Button == MouseButtons.Left && e.Y < 50)
+            // 最小化按钮
+            btnMinimize = new Button
             {
-                isDragging = true;
-                dragStartPoint = new Point(e.X, e.Y);
-            }
-        }
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            if (isDragging)
-            {
-                Point currentPoint = PointToScreen(e.Location);
-                Location = new Point(currentPoint.X - dragStartPoint.X, currentPoint.Y - dragStartPoint.Y);
-            }
-        }
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            isDragging = false;
-        }
-        // 处理窗口大小改变时重新定位按钮
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            if (this.Controls["buttonMinimize"] != null)
-            {
-                this.Controls["buttonMinimize"].Location = new Point(this.Width - 100, borderWidth + 10);
-                this.Controls["buttonMaximize"].Location = new Point(this.Width - 65, borderWidth + 10);
-                this.Controls["buttonClose"].Location = new Point(this.Width - 30, borderWidth + 10);
-            }
-            this.Invalidate(); // 重绘边框
-        }
+                Text = "—",
+                Size = new Size(40, 30),
+                Location = new Point(titleBar.Width - 120, 10),//1260-135=1125
+                FlatStyle = FlatStyle.Flat,
+                BackColor = SystemColors.ButtonFace
 
+            };
+            btnMinimize.FlatAppearance.BorderSize = 0;
+            btnMinimize.Click += btnMinimize_Click;
+            // 最大化按钮
+            btnMaximize = new Button
+            {
+                Text = "□",
+                Size = new Size(40, 30),
+                Location = new Point(titleBar.Width - 80, 10),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent
+            };
+            btnMaximize.FlatAppearance.BorderSize = 0;
+            btnMaximize.Click += btnMaximize_Click;
+            // 关闭按钮
+            btnClose = new Button
+            {
+                Text = "✕",
+                Size = new Size(40, 30),
+                Location = new Point(titleBar.Width - 40, 10),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Red
+            };
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.Click += btnClose_Click;
+
+            // 添加按钮到标题栏
+            titleBar.Controls.Add(btnMinimize);
+            titleBar.Controls.Add(btnMaximize);
+            titleBar.Controls.Add(btnClose);
+        }   
+        private void SetupEventHandlers()
+        {
+            // 标题栏拖动事件
+            this.MouseDown += panelTitleBar_MouseDown;
+            this.MouseMove += panelTitleBar_MouseMove;
+            this.MouseUp += panelTitleBar_MouseUp;
+
+            // 按钮鼠标悬停效果          
+            btnMinimize.MouseEnter += btnMinimize_MouseEnter;
+            btnMinimize.MouseLeave += btnMinimize_MouseLeave;
+            
+            btnMaximize.MouseEnter += btnMaximize_MouseEnter;
+            btnMaximize.MouseLeave += btnMaximize_MouseLeave;
+
+            btnClose.MouseEnter += btnClose_MouseEnter;
+            btnClose.MouseLeave += btnClose_MouseLeave;           
+        }
+        #endregion
+
+        #region 最大，最小，关闭，
+        // 最小化
         private void btnMinimize_Click(object sender, EventArgs e)
-        {            
+        {
             this.WindowState = FormWindowState.Minimized;
         }
+        private void btnMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMinimize.BackColor = Color.LightGray;
+        }
+        private void btnMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMinimize.BackColor = Color.Transparent;
+        }
 
+        //最大化
         private void btnMaximize_Click(object sender, EventArgs e)
         {
             // 实现最大化/还原功能（切换窗口状态）
-            this.WindowState = this.WindowState == FormWindowState.Maximized
-                ? FormWindowState.Normal
-                : FormWindowState.Maximized;
+            //this.WindowState = this.WindowState == FormWindowState.Maximized
+            //    ? FormWindowState.Normal
+            //    : FormWindowState.Maximized;
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                btnMaximize.Text = "❐"; // 还原图标
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+                btnMaximize.Text = "□"; // 最大化图标
+            }
         }
-
+        private void btnMaximize_MouseEnter(object sender, EventArgs e)
+        {
+            btnMaximize.BackColor = Color.LightGray;
+        }
+        private void btnMaximize_MouseLeave(object sender, EventArgs e)
+        {
+            btnMaximize.BackColor = Color.Transparent;
+        }         
+        //关闭
         private void btnClose_Click(object sender, EventArgs e)
         {
             // 实现关闭功能
             this.Close();
+
+        }
+        private void btnClose_MouseEnter(object sender, EventArgs e)
+        {
+            btnClose.BackColor = Color.Red;
+        }
+        private void btnClose_MouseLeave(object sender, EventArgs e)
+        {
+            btnClose.BackColor = Color.Transparent;
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            InitUI();
-            btnMinimize.Click += btnMinimize_Click;
-            btnMinimize.MouseEnter += btnMinimize_MouseEnter;
-            btnMinimize.MouseLeave += btnMinimize_MouseLeave;
+        #endregion
 
-            btnMaximize.Click += btnMaximize_Click;
-            btnMaximize.MouseEnter += btnMaximize_MouseEnter;
-            btnMaximize.MouseLeave += btnMinimize_MouseLeave;
+        #region 拖动
 
-            btnClose.Click += btnClose_Click;
-            btnClose.MouseEnter += btnClose_MouseEnter;
-            btnClose.MouseLeave += btnClose_MouseLeave;
-
-            //// 基于父容器 titleBar 计算按钮位置，避免超出范围
-            //btnMinimize.Location = new Point(titleBar.Width - 100, 0);
-            //btnMaximize.Location = new Point(titleBar.Width - 70, 0);
-            //btnClose.Location = new Point(titleBar.Width - 40, 0);
-            try
+        //鼠标移动
+        private void panelTitleBar_MouseDown(object sender, MouseEventArgs e)
+        {            
+            //if (e.Button == MouseButtons.Left && e.Y <= 45.0)     
+            if(e.Button == MouseButtons.Left)
             {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+                mouseOff = new Point(-e.X, -e.Y); //得到变量的值
+                leftFlag = true; //点击左键按下时标注为true;
+            }
+        }
+        private void panelTitleBar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (leftFlag)
+            {
+                Point mouseSet = Control.MousePosition;
+                mouseSet.Offset(mouseOff.X, mouseOff.Y); //设置移动后的位置
+                Location = mouseSet;
+            }
+        }
+        private void panelTitleBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (leftFlag)
+            {
+                leftFlag = false;//释放鼠标后标注为false;
+            }
+        }
+        // 窗口大小改变,组件定位,重绘边框
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            base.OnResize(e);
+            // 调整panel1的大小，考虑边框宽度
+            int borderAdjust = borderWidth * 2;
+
+            // 调整panel1的大小和位置
+            if (panel1 != null)
+            {
+                panel1.Size = new Size(this.ClientSize.Width, this.ClientSize.Height - panelTitleBar.Height);
+                panel1.Location = new Point(0, panelTitleBar.Height);
+            }
+            // 调整标题栏按钮位置
+            if (panelTitleBar != null && btnMinimize != null)
+            {
+                btnMinimize.Location = new Point(panelTitleBar.Width - 120, 8);
+                btnMaximize.Location = new Point(panelTitleBar.Width - 80, 8);
+                btnClose.Location = new Point(panelTitleBar.Width - 40, 8);
+            }
+            this.Invalidate(); // 重绘边框
+        }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            try
+            {                
                 ListBox.CheckForIllegalCrossThreadCalls = false;
                 LogHelper.Info("主窗口加载完成");
             }
             catch (Exception ex)
             {
-                string strMsg = " Error Code: " + Convert.ToString(ex.Message);                
+                string strMsg = " Error Code: " + Convert.ToString(ex.Message);
                 MessageBox.Show(strMsg);
                 LogHelper.Error("主窗口加载失败", ex);
             }
         }
-        private void Form1_Closing(FormClosingEventArgs e)
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //UI关闭
             if (MessageBox.Show(@"确定退出？", @"提示", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) != DialogResult.Yes)
             {
-                e.Cancel = true;
+                //e.Cancel = true;
                 return;
             }
 
@@ -257,15 +357,17 @@ namespace VisualInsectionSystem
                 _plcComm = null;
                 LogHelper.Info("应用程序正常退出");
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 LogHelper.Error("应用程序退出时发生异常", ex);
             }
             Application.Exit();  //确保应用程序完全退出
         }
         #endregion
+        #endregion
 
-        #region  PLC事件处理
+
+        #region  PLC 通讯事件处理
         private void InitializePLCCommunicator()
         {
             try
@@ -384,7 +486,7 @@ namespace VisualInsectionSystem
         {
             try
             {
-                // 先关闭已存在的相机窗口
+                // 先关闭已存在的相机窗口,（即使相机不存在，也应该可以打开界面）260106记录
                 if (HKCameraInstance != null && !HKCameraInstance.IsDisposed)
                 {
                     HKCameraInstance.Close();
@@ -540,12 +642,12 @@ namespace VisualInsectionSystem
                 processList = GetCurrentSolProcedureList();
 
                 UpdateProcessComboBox(processList);
-                
+
                 mSolutionIsLoad = true;              // 1
             }
             catch (VmException ex)
             {
-                strMsg = "LoadSolution failed. Error Code: " + Convert.ToString(ex.errorCode, 16);                               
+                strMsg = "LoadSolution failed. Error Code: " + Convert.ToString(ex.errorCode, 16);
                 MessageBox.Show(strMsg);
                 return;
             }
@@ -553,7 +655,7 @@ namespace VisualInsectionSystem
             {
                 this.Enabled = true;
             }
-           
+
             // enable buttons
             button1.Enabled = true;
             button2.Enabled = true;
@@ -569,7 +671,7 @@ namespace VisualInsectionSystem
         /// <summary>
         /// CH:获取当前方案的所有流程  || Obtain all processes in the solution
         /// </summary>
-        private List<VmProcedure> GetCurrentSolProcedureList()  
+        private List<VmProcedure> GetCurrentSolProcedureList()
         {
             List<VmProcedure> procedureList = new List<VmProcedure>();
             string processName;
@@ -646,7 +748,7 @@ namespace VisualInsectionSystem
             {
                 if (mSolutionIsLoad == true)
                 {
-                    if(VmSolution.Instance.HasPassword(textBox1.Text))
+                    if (VmSolution.Instance.HasPassword(textBox1.Text))
                     {
                         //VmSolution.Instance.Unlock(textBox1.Text);
                         strMsg = "The solution has password.";
@@ -655,7 +757,7 @@ namespace VisualInsectionSystem
                     {
                         strMsg = "No password.";
                     }
-                    textBox2.Text = strMsg;                    
+                    textBox2.Text = strMsg;
                 }
                 else
                 {
@@ -670,7 +772,7 @@ namespace VisualInsectionSystem
                 listBox1.Items.Add(strMsg);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 return;
-            }             
+            }
 
         }
 
@@ -730,14 +832,14 @@ namespace VisualInsectionSystem
                 listBox1.Items.Add(strMsg);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
             }
-            catch(VmException ex)
+            catch (VmException ex)
             {
-                strMsg = "流程导入失败(ImportProcess failed.)"+" Error Code: " + Convert.ToString(ex.errorCode, 16);
+                strMsg = "流程导入失败(ImportProcess failed.)" + " Error Code: " + Convert.ToString(ex.errorCode, 16);
                 listBox1.Items.Add(strMsg);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 MessageBox.Show(strMsg);
             }
-            
+
         }
 
         /// <summary>
@@ -747,7 +849,7 @@ namespace VisualInsectionSystem
         /// <param name="e"></param>
         private void button7_Click(object sender, EventArgs e)
         {//绑定下拉框中选中的流程名称
-            VmProcedure m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text]; 
+            VmProcedure m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text];
             if (m_VmProc != null)
             {
                 try
@@ -760,9 +862,9 @@ namespace VisualInsectionSystem
                 }
                 catch (VmException ex)
                 {
-                    strMsg = "流程导出失败(ExportProcess failed.)"+" Error Code: " + Convert.ToString(ex.errorCode, 16);
+                    strMsg = "流程导出失败(ExportProcess failed.)" + " Error Code: " + Convert.ToString(ex.errorCode, 16);
                     listBox1.Items.Add(strMsg);
-                    listBox1.TopIndex = listBox1.Items.Count - 1;  
+                    listBox1.TopIndex = listBox1.Items.Count - 1;
                 }
             }
             else
@@ -778,11 +880,11 @@ namespace VisualInsectionSystem
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button8_Click(object sender, EventArgs e)
-        {         
+        {
             try
             {
                 m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text];
-                if(m_VmProc != null)
+                if (m_VmProc != null)
                 {
                     listBox1.Items.Add("流程删除成功(DeleteProcess success)" + comboBox1.Text);
                     listBox1.TopIndex = listBox1.Items.Count - 1;
@@ -792,7 +894,7 @@ namespace VisualInsectionSystem
             }
             catch (VmException ex)
             {
-                
+
                 strMsg = "DeleteProcess failed. Error Code: " + Convert.ToString(ex.errorCode, 16);
                 listBox1.Items.Add(strMsg);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
@@ -906,7 +1008,7 @@ namespace VisualInsectionSystem
                 string result = ExecuteProcedure(selectedProcedure, true);
                 listBox1.Items.Add($"手动执行: {result}");
                 listBox1.TopIndex = listBox1.Items.Count - 1;
-            }           
+            }
             catch (VmException ex)
             {
                 string errorMsg = $"手动执行失败: 错误码 {Convert.ToString(ex.errorCode, 16)}";
@@ -984,7 +1086,7 @@ namespace VisualInsectionSystem
                 listBox1.TopIndex = listBox1.Items.Count - 1;
 
             }
-            
+
         }
 
         /// <summary>
@@ -998,11 +1100,11 @@ namespace VisualInsectionSystem
             try
             {
                 string strTimeInteval = textBoxTimeInterval.Text;  //定位
-                if(string.IsNullOrEmpty(strTimeInteval))
+                if (string.IsNullOrEmpty(strTimeInteval))
                 {
                     MessageBoxButtons msgType = MessageBoxButtons.OK;
                     DialogResult diaMsg = MessageBox.Show("Please enter the time interval!", "Prompt", msgType);
-                    if(diaMsg == DialogResult.OK)
+                    if (diaMsg == DialogResult.OK)
                     {
                         return;
                     }
@@ -1010,8 +1112,8 @@ namespace VisualInsectionSystem
                 uint nTimeInterval = 0;
                 nTimeInterval = uint.Parse(strTimeInteval);
                 m_VmProc = (VmProcedure)VmSolution.Instance[comboBox1.Text];
-                
-                if(m_VmProc == null)
+
+                if (m_VmProc == null)
                 {
                     MessageBoxButtons msgType = MessageBoxButtons.OK;
                     DialogResult diagMsg = MessageBox.Show(comboBox1.Text + " name procedure does't exist", "Prompt", msgType);
@@ -1023,9 +1125,9 @@ namespace VisualInsectionSystem
 
                 m_VmProc.SetContinousRunInterval(nTimeInterval);  // 设置运行间隔
 
-               
+
             }
-            catch(VmException ex)
+            catch (VmException ex)
             {
                 strMsg = "SetContinousRunInterval failed. Error Code: " + Convert.ToString(ex.errorCode, 16);
                 listBox1.Items.Add(strMsg);
@@ -1046,7 +1148,7 @@ namespace VisualInsectionSystem
             try
             {
                 // check procedure is exist
-                m_VmProc = (VmProcedure)VmSolution.Instance[procedureName];                
+                m_VmProc = (VmProcedure)VmSolution.Instance[procedureName];
                 if (m_VmProc == null)
                 {
                     return $"{procedureName} is not exist!";
@@ -1054,10 +1156,10 @@ namespace VisualInsectionSystem
                 //执行流程
                 VmProcedure vmProcess = (VmProcedure)m_VmProc;
                 vmProcess.Run();
-                
+
                 //等待流程执行完全
                 System.Threading.Thread.Sleep(1000);
-                
+
 
                 ////获取识别结果，string----GetOutputString
                 /*
@@ -1108,8 +1210,8 @@ namespace VisualInsectionSystem
                 vmRenderControl1.ModuleSource = vmProcess;
 
                 return $"流程 {procedureName} 执行成功(excute success): resultName1={strResult}";
-                    /*$"+resultName2={intResult}+resultName3={floatResult}";*/
-                
+                /*$"+resultName2={intResult}+resultName3={floatResult}";*/
+
             }
             catch (VmException ex)
             {
@@ -1117,40 +1219,12 @@ namespace VisualInsectionSystem
                 if (isManual)
                 {
                     listBox1.Items.Add(errorMsg);   //执令时添加
-                }               
-                return errorMsg ;
+                }
+                return errorMsg;
             }
         }
 
-        private void btnMinimize_MouseEnter(object sender, EventArgs e)
-        {
-            btnMinimize.BackColor = Color.LightGray;
-        }
 
-        private void btnMinimize_MouseLeave(object sender, EventArgs e)
-        {
-            btnMinimize.BackColor = Color.Transparent;
-        }
-
-        private void btnMaximize_MouseEnter(object sender, EventArgs e)
-        {
-            btnMaximize.BackColor = Color.LightGray;
-        }
-
-        private void btnMaximize_MouseMove(object sender, MouseEventArgs e)
-        {
-            btnMaximize.BackColor = Color.Transparent;
-        }
-
-        private void btnClose_MouseEnter(object sender, EventArgs e)
-        {
-            btnClose.BackColor = Color.Red;
-        }
-
-        private void btnClose_MouseLeave(object sender, EventArgs e)
-        {
-            btnClose.BackColor = Color.Transparent;
-        }
     }
-    
+
 }

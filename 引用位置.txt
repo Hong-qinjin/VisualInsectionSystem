@@ -1,0 +1,15 @@
+
+
+相机sdk:MvCameraControl.Net.dll
+
+	C:\Program Files (x86)\MVS\Development\DotNet\AnyCpu\netstandard2.0
+
+VM文件夹位置：
+	C:\Program Files\VisionMaster4.4.0\MVDAlgorithmSDK\ReferencedAssemblies\Algorithms\MvCameraControl.Net.dll
+
+算法dll位置：
+
+	C:\Program Files\VisionMaster4.4.0\MVDAlgorithmSDK\ReferencedAssemblies\Algorithms
+
+导入工具：<<<ImportRef.exe>>>
+	C:\Program Files\VisionMaster4.4.0\Development\V4.x\ComControls\Tool

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Systemdemo01
@@ -17,7 +14,7 @@ namespace Systemdemo01
         {
             // 初始化应用程序目录
             InitializeApplicationPaths();
-            
+
             // 设置异常处理
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -36,7 +33,7 @@ namespace Systemdemo01
             {
                 // 获取应用程序基目录
                 string appBasePath = AppDomain.CurrentDomain.BaseDirectory;
-                
+
                 // 确保必要的目录存在
                 string[] requiredDirs = { "images", "logs", "config" };
                 foreach (string dir in requiredDirs)
@@ -50,13 +47,13 @@ namespace Systemdemo01
 
                 // 初始化日志系统
                 InitializeLogging(Path.Combine(appBasePath, "logs"));
-                
+
                 // 加载语言配置
                 LoadLanguageSettings(Path.Combine(appBasePath, "LanguageSet.cfg"));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"应用程序初始化失败: {ex.Message}", "错误", 
+                MessageBox.Show($"应用程序初始化失败: {ex.Message}", "错误",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -90,12 +87,12 @@ namespace Systemdemo01
         {
             Exception ex = e.ExceptionObject as Exception;
             string errorMessage = $"未处理的异常: {ex?.Message}\n{ex?.StackTrace}";
-            
+
             // 记录到日志文件
             string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "error.log");
             File.AppendAllText(logPath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {errorMessage}\n");
-            
-            MessageBox.Show("应用程序发生未处理的异常，请查看日志文件。", "错误", 
+
+            MessageBox.Show("应用程序发生未处理的异常，请查看日志文件。", "错误",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

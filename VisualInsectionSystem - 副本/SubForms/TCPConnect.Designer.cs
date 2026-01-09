@@ -62,6 +62,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.SystemColors.Window;
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.comboBox3);
             this.groupBox1.Controls.Add(this.comboBox2);
@@ -82,6 +83,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // textBox1
             // 
+            this.textBox1.BackColor = System.Drawing.Color.Snow;
             this.textBox1.Location = new System.Drawing.Point(81, 82);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(141, 21);
@@ -89,6 +91,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // comboBox3
             // 
+            this.comboBox3.BackColor = System.Drawing.Color.Snow;
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Location = new System.Drawing.Point(81, 122);
             this.comboBox3.Name = "comboBox3";
@@ -97,6 +100,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // comboBox2
             // 
+            this.comboBox2.BackColor = System.Drawing.Color.Snow;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(81, 56);
             this.comboBox2.Name = "comboBox2";
@@ -117,6 +121,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label5
             // 
+            this.label5.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label5.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label5.Location = new System.Drawing.Point(6, 149);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(69, 20);
@@ -126,6 +132,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // textBox2
             // 
+            this.textBox2.BackColor = System.Drawing.Color.Snow;
             this.textBox2.Location = new System.Drawing.Point(81, 148);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(141, 21);
@@ -133,6 +140,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label4
             // 
+            this.label4.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label4.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label4.Location = new System.Drawing.Point(6, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 20);
@@ -142,6 +151,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // comboBox1
             // 
+            this.comboBox1.BackColor = System.Drawing.Color.Snow;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(81, 20);
             this.comboBox1.Name = "comboBox1";
@@ -151,6 +161,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label3
             // 
+            this.label3.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label3.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label3.Location = new System.Drawing.Point(6, 83);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 20);
@@ -160,6 +172,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label1.Location = new System.Drawing.Point(6, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(69, 20);
@@ -169,6 +183,8 @@ namespace VisualInsectionSystem.SubForms
             // 
             // label2
             // 
+            this.label2.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label2.Location = new System.Drawing.Point(6, 56);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(69, 20);
@@ -197,24 +213,28 @@ namespace VisualInsectionSystem.SubForms
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button3.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button3.Location = new System.Drawing.Point(274, 322);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(97, 46);
             this.button3.TabIndex = 3;
             this.button3.Text = "发送";
-            this.button3.UseVisualStyleBackColor = true;
+            this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.button2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.button2.Location = new System.Drawing.Point(274, 270);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(97, 46);
             this.button2.TabIndex = 2;
             this.button2.Text = "清空消息";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // textBox5
@@ -222,6 +242,7 @@ namespace VisualInsectionSystem.SubForms
             this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox5.BackColor = System.Drawing.SystemColors.Window;
             this.textBox5.Location = new System.Drawing.Point(6, 270);
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
@@ -232,6 +253,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.BackColor = System.Drawing.Color.Snow;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(6, 20);
@@ -298,6 +320,7 @@ namespace VisualInsectionSystem.SubForms
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.Window;
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.groupBox1);

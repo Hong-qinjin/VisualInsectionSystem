@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" 
-  Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <!--项目基础属性-->
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F1AAFF8E-9AF2-4CF3-8757-53B612F04D85}</ProjectGuid>
+    <ProjectGuid>{AAFBC634-CE62-446D-9201-45C8DF900BED}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Systemdemo01</RootNamespace>
-    <AssemblyName>Systemdemo01</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>ABVisualSystems</RootNamespace>
+    <AssemblyName>ABVisualSystems</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1/TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <!-- 【关键】统一输出路径到根目录 /bin/{Configuration}/ -->
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <!-- 【关键】统一中间件路径到根目录 /obj/{Configuration}/ -->
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <!-- 不自动附加目标框架子目录（因为我们用Configuration区分） -->
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <!-- 发布配置 -->
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom> 
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-
-  <!-- Debug 配置 -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>   
+    <WarningLevel>5</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
   </PropertyGroup>
-
-  <!-- Release 配置 -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
+    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
-  <!-- 文件复制配置，第三方程序引用 -->
   <ItemGroup>
-    <!-- 第三方库示例（保持 Private=False 表示不复制到输出目录，使用共享位置） -->
     <Reference Include="IMVSBlobFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fe8bad26cdedb7b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -69,6 +70,75 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSBoxOverlapCalculationModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=274d19f8bbc7ef2f, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1ce48ca275f18deb, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a5ee55d7734e2dbf, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnSingleCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a0a50bebe561608a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnSingleCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ad772401d31c66c1, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnFlawModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d60f139e428105c6, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4118cf07549972fc, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRetrievalModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1f018be5be2f57f3, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRetrievalModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=02507b3722aeb2e1, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9ff606522a42e0cf, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=11441092ae200d87, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSOcrDlModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=18d9baf32b5c135a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSOcrDlModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=550f37a1d881ce6f, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnInstanceSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=41811bad56014bef, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnInstanceSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cdf2a15ba4a21c36, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnInspectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4b1d6c8dd732854d, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnInspectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=214d901a7dfd3a90, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnFastFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=367b1a9b1f4d75d5, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnUnSupervisedModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3c09dd897fe1ed50, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnUnSupervisedClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0371b0a0537a61cd, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f2c756fd9ccb83e0, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f59aabff94c4511, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnCodeRecgModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ec21f3cc2b45d9d4, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnCodeRecgModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2d1fe7f3c7d7e4d, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="ImageCollectDalsaModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48bc90db4681f2a4, processorArchitecture=MSIL">
@@ -85,6 +155,10 @@
     </Reference>
     <Reference Include="IMVSNPointCalibModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=da4efc9666ec3aaa, processorArchitecture=MSIL">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="MvCameraControl.Net, Version=3.4.0.1, Culture=neutral, PublicKeyToken=52fddfb3f94be800, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\VAutobox\MVS\Development\DotNet\AnyCpu\net40\MvCameraControl.Net.dll</HintPath>
     </Reference>
     <Reference Include="PyShellModuleCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a0ce0b6ba72d1d05, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -151,6 +225,9 @@
     </Reference>
     <Reference Include="IMVSSinglePointAlignModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b3fdadaaeb190014, processorArchitecture=MSIL">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="S7.Net, Version=0.20.0.0, Culture=neutral, PublicKeyToken=d5812d469e84c693, processorArchitecture=MSIL">
+      <HintPath>..\packages\S7netplus.0.20.0\lib\net452\S7.Net.dll</HintPath>
     </Reference>
     <Reference Include="SinglePointGrabModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fb4f07aaff38d00b, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -242,6 +319,21 @@
     <Reference Include="Apps.ColorFun, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cfdb8c430127f15b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="VM.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=61600122bc9264b9, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -372,6 +464,24 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSEllipseFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ed79a8a6ba9ab09, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d0dacd268aa4e624, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=63b30597fbdecc73, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f72bd71b2ed9da9, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6ae11060c5b20d69, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=762a57d9b2a9ed67, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSImageSharpnessModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15fee5829ecec07c, processorArchitecture=MSIL">
@@ -539,78 +649,27 @@
     <Reference Include="IMVSHPFeatureMatchModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3a8001c24b4e8881, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <!-- 配置文件 -->
-    <!-- 图片资源 -->
-    <Content Include="images\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <!-- 语言文件 -->
-    <Content Include="config\LanguageSet.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <!--  .NET Framework 基础库引用 -->
-  <ItemGroup>
+    <Reference Include="IMVSCnnHPRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IMVSCnnHPRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
   </ItemGroup>
-
-  <!--  【核心】编译文件 (C# 源代码)  -->
   <ItemGroup>
-  
-    <!-- 程序入口 -->
-    <Compile Include="src\Controls\CustomButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="src\Controls\CustomButton.Designer.cs">
-      <DependentUpon>CustomButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Controls\UserControl1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="src\Controls\UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Core\ApplicationManager.cs" />
-    <Compile Include="src\Core\ModuleLoader.cs" />
-    <Compile Include="src\MainForm\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\MainForm\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\MainForm\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\MainForm\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Program.cs" />
-    <!-- 主窗体 -->
-    <!-- 子窗体/控件 -->
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Services\DataService.cs" />
-    <Compile Include="src\Services\logService.cs" />
-    <Compile Include="src\SubForm\SettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\SubForm\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\SubForm\TCPConnect.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\SubForm\TCPConnect.Designer.cs">
-      <DependentUpon>TCPConnect.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Utilities\FileHelper.cs" />
-    <Content Include="assets\lang\en-US.txt" />
-    <Content Include="assets\lang\zh-CN.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -619,18 +678,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="src\MainForm\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\SubForm\TCPConnect.resx">
-      <DependentUpon>TCPConnect.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="assets\docs\API.md" />
-    <None Include="assets\docs\Architecture.md" />
-    <None Include="config\App.Template.config" />
-    <None Include="config\ConnectionStrings.config" />
-    <None Include="config\Logging.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -642,14 +692,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="assets\fonts\" />
-    <Folder Include="assets\images\backgrounds\" />
-    <Folder Include="assets\images\buttons\" />
-    <Folder Include="assets\images\icons\" />
-    <Folder Include="src\Models\" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

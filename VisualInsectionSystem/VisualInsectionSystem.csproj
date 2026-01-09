@@ -63,75 +63,6 @@
     <Reference Include="IMVSBoxOverlapCalculationModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=274d19f8bbc7ef2f, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="IMVSCnnClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1ce48ca275f18deb, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a5ee55d7734e2dbf, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnSingleCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a0a50bebe561608a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnSingleCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ad772401d31c66c1, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFlawModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d60f139e428105c6, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4118cf07549972fc, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRetrievalModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1f018be5be2f57f3, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRetrievalModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=02507b3722aeb2e1, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCharDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9ff606522a42e0cf, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCharDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=11441092ae200d87, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSOcrDlModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=18d9baf32b5c135a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSOcrDlModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=550f37a1d881ce6f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInstanceSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=41811bad56014bef, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInstanceSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cdf2a15ba4a21c36, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInspectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4b1d6c8dd732854d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnInspectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=214d901a7dfd3a90, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnFastFlawModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=367b1a9b1f4d75d5, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnUnSupervisedModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3c09dd897fe1ed50, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnUnSupervisedClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0371b0a0537a61cd, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f2c756fd9ccb83e0, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f59aabff94c4511, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCodeRecgModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ec21f3cc2b45d9d4, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnCodeRecgModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c2d1fe7f3c7d7e4d, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="ImageCollectDalsaModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=48bc90db4681f2a4, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -439,24 +370,6 @@
     <Reference Include="IMVSEllipseFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8ed79a8a6ba9ab09, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="IMVSCnnRegisterSegmentModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d0dacd268aa4e624, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterSegmentModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=63b30597fbdecc73, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterClassifyModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5f72bd71b2ed9da9, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterClassifyModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6ae11060c5b20d69, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=762a57d9b2a9ed67, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="IMVSImageSharpnessModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=15fee5829ecec07c, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -620,12 +533,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="IMVSHPFeatureMatchModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3a8001c24b4e8881, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnHPRegisterDetectModuCCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IMVSCnnHPRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="S7.Net, Version=0.17.0.0, Culture=neutral, PublicKeyToken=d5812d469e84c693, processorArchitecture=MSIL">

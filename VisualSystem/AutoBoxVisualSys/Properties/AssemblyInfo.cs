@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Systemdemo01")]
+[assembly: AssemblyTitle("AutoBoxVisualSystem")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Systemdemo01")]
+[assembly: AssemblyCompany("上海奥特博格汽车工程有限公司")]
+[assembly: AssemblyProduct("AutoBoxVisualSystem")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("f1aaff8e-9af2-4cf3-8757-53b612f04d85")]
+[assembly: Guid("aafbc634-ce62-446d-9201-45c8df900bed")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

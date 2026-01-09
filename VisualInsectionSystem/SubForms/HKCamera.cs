@@ -24,44 +24,42 @@ namespace VisualInsectionSystem.SubForms
 {
     public partial class HKCamera : Form, IDisposable
     {
+        #region 全局状态变量
         [DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory", SetLastError = false)]
-
-        private static extern void CopyMemory(IntPtr dest, IntPtr src, uint count);     // 内存拷贝函数 | EN: Memory copy function
-        public const Int32 CUSTOMER_PIXEL_FORMAT = unchecked((Int32)0x80000000);        // 判断用户自定义像素格式  | EN: Determine user-defined pixel format
-
+        private static extern void CopyMemory(IntPtr dest, IntPtr src, uint count);                 // 内存拷贝函数
         MyCamera.MV_CC_DEVICE_INFO_LIST m_stDeviceList = new MyCamera.MV_CC_DEVICE_INFO_LIST();     // 设备列表
         MyCamera.MV_FRAME_OUT_INFO_EX m_stFrameInfo = new MyCamera.MV_FRAME_OUT_INFO_EX();          // 图像帧信息
-        private MyCamera m_MyCamera = null;     // 相机对象
-        public bool m_bGrabbing = false;    // 取流标志，是否开始抓图
-        public bool IsConnect { get; private set; }     // 相机连接状态
-        Thread m_hReceiveThread = null;     // 图像取图线程
+                                                                                                    // 
+        public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
+                                                         
 
-        // 从驱动获取图像数据的缓存 | EN: Cache for obtaining image data from the driver
+        private MyCamera m_MyCamera = null;     // 相机对象
+        private IntPtr _cameraHandle = IntPtr.Zero;
+        public bool IsConnect { get; private set; }     // 连接状态
+        public bool m_bCameraConnected  = false;     // 相机连接状态
+        public bool IsCameraOpen { get; private set; } = false;  // 相机打开状态
+        public bool m_bPreviewStarted = false; // 预览是否已开始
+        public bool m_bGrabbing = false;    // 取流标志，是否开始抓图 
+        Thread m_hReceiveThread = null;     // 图像取图线程        
+
+        // 从驱动获取图像数据的缓存 
         UInt32 m_nBufSizeForDriver = 0;
         IntPtr m_pBufForDriver = IntPtr.Zero;
-        // R通道数据
-        byte[] m_pDataForRed = null;
-        // G通道数据
-        byte[] m_pDataForGreen = null;
-        // B通道数据
-        byte[] m_pDataForBlue = null;
-
-        // ch:Bitmap及其像素格式 | en:Bitmap and Pixel Format
+        // Bitmap及其像素格式 
         Bitmap m_bitmap = null;
         PixelFormat m_bitmapPixelFormat = PixelFormat.DontCare;
-        IntPtr m_ConvertDstBuf = IntPtr.Zero;   // 图像转换后的数据缓存 
+        // 图像转换后的数据缓存 
+        IntPtr m_ConvertDstBuf = IntPtr.Zero;   
         UInt32 m_nConvertDstBufLen = 0;
 
         private static Object BufForDriverLock = new Object();  // 读写图像时锁定
         private static Object BufForImageLock = new Object();
 
-        IntPtr displayHandle = IntPtr.Zero;     // 显示句柄 | EN: Display handle
-        private int captureCount = 0;   // 拍摄计数
-        private bool isBatchCapture = false; // 是否正在批量拍摄
-
         private bool _isCapturing = false;
         private object _captureLock = new object();     // 捕获锁对象 | EN: Capture lock
-        public PLCCommunicator PlcCommunicator { get; set; }  // 接收从MainForm传递的PLC实例
+        IntPtr displayHandle = IntPtr.Zero;     // 显示句柄 | EN: Display handle
+
+        #endregion
 
         public HKCamera()
         {
@@ -133,7 +131,8 @@ namespace VisualInsectionSystem.SubForms
         private void HKCamera_Load(object sender, EventArgs e)
         {
             // 初始化SDK
-            MyCamera.MV_CC_Initialize_NET();
+            MyCamera.MV_CC_Initialize_NET();              
+           
             // PLC事件
             if (PlcCommunicator != null)
             {
@@ -141,8 +140,7 @@ namespace VisualInsectionSystem.SubForms
                 PlcCommunicator.CameraReadyTriggered += OnPlcCamearaReady;
                 PlcCommunicator.ConnectionStatusChanged += OnPlcConnectionChanged;
             }
-            // 枚举相机（保持原有逻辑）
-            // DeviceListAcq();  // 根据需要决定是否默认枚举
+
         }
 
         // PLC连接变化处理
@@ -181,7 +179,7 @@ namespace VisualInsectionSystem.SubForms
         {
             // 在这里处理PLC触发拍照的逻辑
             Console.WriteLine("PLC triggered camera ready event.");
-            if (m_bGrabbing && IsConnect)
+            if (m_bGrabbing && m_bCameraConnected)
             {
                 // 执行拍照操作
                 TriggerCapture();
@@ -230,7 +228,7 @@ namespace VisualInsectionSystem.SubForms
             return strstrUserDefinedName;
         }
 
-        // 判断是否为黑白相机像素格式 | EN: Determine whether it is a monochrome camera pixel format
+        // 判断是否为黑白相机像素格式
         private Boolean IsMonoData(MyCamera.MvGvspPixelType enGvspPixelType)
         {
             switch (enGvspPixelType)
@@ -433,13 +431,13 @@ namespace VisualInsectionSystem.SubForms
         private void SetCtrlWhenOpen()
         {
             button1.Enabled = true;
-            button2.Enabled = true;
+            button3.Enabled = true;
             comboBox1.Enabled = false;
         }
         private void SetCtrlWhenClose()
         {
             button1.Enabled = true;
-            button2.Enabled = false;
+            button3.Enabled = false;
             comboBox1.Enabled = true;
         }
 
@@ -502,7 +500,7 @@ namespace VisualInsectionSystem.SubForms
                 return;
             }
 
-            //ch:探测网络最佳包大小(只对GigE相机有效) | en:Detect the optimal packet size for the network (only valid for GigE cameras)
+            //ch:探测网络最佳包大小(只对GigE相机有效) 
             if (deviceInfo.nTLayerType == MyCamera.MV_GIGE_DEVICE)
             {
                 // 心跳超时时间，单位ms
@@ -550,7 +548,9 @@ namespace VisualInsectionSystem.SubForms
 
             // ch:注册异常回调函数
             m_MyCamera.MV_CC_RegisterExceptionCallBack_NET(ExceptionCallBack, IntPtr.Zero);
-            button9_Click(null, null);
+            // 初始状态：只能设置连续模式，不能设置触发模式
+                       
+            //button9_Click(null, null);
             SetCtrlWhenOpen();
 
         }
@@ -558,7 +558,7 @@ namespace VisualInsectionSystem.SubForms
         // ch:异常处理回调函数 | en:Exception handling callback function
         private void ExceptionCallBack(uint nMsgType, IntPtr pUser)
         {
-            IsConnect = false;
+            m_bCameraConnected = false;
             ShowErrorMsg();
         }
         // ch:错误信息显示 | en: Error message display
@@ -694,7 +694,7 @@ namespace VisualInsectionSystem.SubForms
                 {
                     m_MyCamera.MV_CC_StopGrabbing_NET();
                 }
-                if (IsConnect)
+                if (m_bCameraConnected)
                 {
                     m_MyCamera.MV_CC_CloseDevice_NET();
                 }
@@ -703,7 +703,7 @@ namespace VisualInsectionSystem.SubForms
             }
 
             // 关闭时设置，控件状态设置
-            IsConnect = false;
+            m_bCameraConnected = false;
             SetCtrlWhenClose();
         }
 
@@ -1100,7 +1100,7 @@ namespace VisualInsectionSystem.SubForms
             }
             try
             {
-                if (m_bGrabbing && IsConnect)
+                if (m_bGrabbing && m_bCameraConnected)
                 {
                     // 确保在UI线程执行
                     this.Invoke(new Action(() =>
@@ -1310,6 +1310,11 @@ namespace VisualInsectionSystem.SubForms
         ///<summary> 手动，软触发一次 </summary>
         private void button8_Click(object sender, EventArgs e)
         {
+            if (!m_bPreviewStarted)
+            {
+                MessageBox.Show("请先开始预览", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             int nRet = m_MyCamera.MV_CC_SetCommandValue_NET("TriggerSoftware");
             if (MyCamera.MV_OK != nRet)
             {
@@ -1352,6 +1357,11 @@ namespace VisualInsectionSystem.SubForms
 
         private void button10_Click(object sender, EventArgs e)
         {
+            if (!m_bPreviewStarted)
+            {
+                MessageBox.Show("请先开始预览", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             try
             {
                 float.Parse(textBox1.Text);

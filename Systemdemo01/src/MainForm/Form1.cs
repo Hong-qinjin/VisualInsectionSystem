@@ -1,18 +1,7 @@
-using IMVSOcrModuCs;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using VisualInsectionSystem.SubForms;
 using VM.Core;
 using VM.PlatformSDKCS;
-using VMControls.BaseInterface;
 using VMControls.Winform.Release;
 
 
@@ -46,7 +35,7 @@ namespace Systemdemo01
             {
                 //为0表示执行完毕，为1表示正在执行   10000表示流程1,流程结束后返回回调函数
                 if (workStatusInfo.nWorkStatus == 0 && workStatusInfo.nProcessID == 10000)
-                {                    
+                {
                     VmProcedure vmProcess1 = (VmProcedure)VmSolution.Instance["Flow1"];                       //绑定方案中流程                    
                     string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;   //模块中获取识别结果  
                     this.BeginInvoke(new Action(() =>  //在回调中对控件操作，需要使用委托
@@ -59,15 +48,15 @@ namespace Systemdemo01
 
                     //通过模块获取：IMVS获取，实例化模块对象，获取结果
                     //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];
-                    IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"]; 
+                    IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"];
 
                     IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
-                   
+
                 }
             }
-            catch(VmException ex)
+            catch (VmException ex)
             {
-                MessageBox.Show(" list error "+ Convert.ToString(ex.errorCode, 16));
+                MessageBox.Show(" list error " + Convert.ToString(ex.errorCode, 16));
 
             }
 
@@ -87,7 +76,7 @@ namespace Systemdemo01
         {
             string message;
             try
-            {                
+            {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     //InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\",
@@ -194,10 +183,11 @@ namespace Systemdemo01
             #region 
 
             // 1.3获取结果,分为渲染结果以及数据结果
-            /*VMControls.Winform.Release.*/VmRenderControl vmRenderControl = new /*VMControls.Winform.Release.*/VmRenderControl();          
+            /*VMControls.Winform.Release.*/
+            VmRenderControl vmRenderControl = new /*VMControls.Winform.Release.*/VmRenderControl();
             //VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];   //从方案中绑定流程对象
             VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["Flow1"];
-            
+
             vmRenderControl1.ModuleSource = vmProcedure;  //设置全局渲染控件的显示源与流程绑定
             vmRenderControl1.Show();  //显示渲染控件
 
@@ -227,7 +217,7 @@ namespace Systemdemo01
         /// <param name="e"></param>
         public void button4_Click(object sender, EventArgs e)
         {
-            
+
             VmSolution.Instance.SetRunInterval(1000);
             VmSolution.Instance.ContinuousRunEnable = true;
 
@@ -243,7 +233,7 @@ namespace Systemdemo01
         /// <param name="e"></param>
         public void button5_Click(object sender, EventArgs e)
         {
-            
+
             VmSolution.Instance.ContinuousRunEnable = false;
 
             listBox1.Items.Add("停止.");
@@ -258,7 +248,7 @@ namespace Systemdemo01
         private void button6_Click(object sender, EventArgs e)
         {
             try
-            {                
+            {
                 string path = "D:\\AutoBox Camera\\ABVisualSystem\\";
                 //VmSolution.Save();   // 保存方案到原始路径并替换原有文件1.2_2:16
                 VmSolution.SaveAs(path);   //保存方案到自定义路径
@@ -278,7 +268,7 @@ namespace Systemdemo01
         /// </summary>       
         void KillProcess(string strKillName)
         {
-            foreach(System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
+            foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
             {
                 if (p.ProcessName.Contains(strKillName))
                 {
@@ -464,7 +454,7 @@ namespace Systemdemo01
                 {
                     listBox1.Items.Add("请选择要执行的流程");
                     listBox1.TopIndex = listBox1.Items.Count - 1;
-                }                           
+                }
             }
             catch (VmException ex)
             {
@@ -491,7 +481,7 @@ namespace Systemdemo01
             // 打开TCP页面
             OpenTcpConnectionForm();
         }
-   
+
         // 在Form1中添加打开TCP连接窗口的方法
         private void OpenTcpConnectionForm()
         {
