@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" 
-  Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--项目基础属性-->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -23,9 +22,8 @@
     <!-- 发布配置 -->
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom> 
+    <InstallFrom>Disk</InstallFrom>
   </PropertyGroup>
-
   <!-- Debug 配置 -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,10 +32,9 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>   
+    <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
   <!-- Release 配置 -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,14 +45,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
   <!-- 文件复制配置，第三方程序引用 -->
   <ItemGroup>
-    <!-- 第三方库示例（保持 Private=False 表示不复制到输出目录，使用共享位置） -->
     <Reference Include="IMVSBlobFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fe8bad26cdedb7b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -539,6 +534,8 @@
     <Reference Include="IMVSHPFeatureMatchModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3a8001c24b4e8881, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Content Include="assets\images\backgrounds\renderImage.bmp" />
+    <!-- 第三方库示例（保持 Private=False 表示不复制到输出目录，使用共享位置） -->
     <!-- 配置文件 -->
     <!-- 图片资源 -->
     <Content Include="images\**\*">
@@ -559,10 +556,8 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
-
   <!--  【核心】编译文件 (C# 源代码)  -->
   <ItemGroup>
-  
     <!-- 程序入口 -->
     <Compile Include="src\Controls\CustomButton.cs">
       <SubType>UserControl</SubType>
@@ -646,7 +641,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\fonts\" />
-    <Folder Include="assets\images\backgrounds\" />
     <Folder Include="assets\images\buttons\" />
     <Folder Include="assets\images\icons\" />
     <Folder Include="src\Models\" />

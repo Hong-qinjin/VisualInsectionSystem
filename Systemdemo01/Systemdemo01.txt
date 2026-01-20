@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" 
+  Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--项目基础属性-->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,28 +14,28 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-
-    <!-- 统一输出 -->
-    <BaseOutputPath>..\bin\</BaseOutputPath>
-    <!--中间输出files-->
-    <BaseIntermediateOutputPath>..\obj\</BaseIntermediateOutputPath>
+    <!-- 【关键】统一输出路径到根目录 /bin/{Configuration}/ -->
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <!-- 【关键】统一中间件路径到根目录 /obj/{Configuration}/ -->
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <!-- 不自动附加目标框架子目录（因为我们用Configuration区分） -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <UseCommonOutputDirectory>false</UseCommonOutputDirectory>
-
+    <!-- 发布配置 -->
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom> 
   </PropertyGroup>
+
   <!-- Debug 配置 -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>$(BaseOutputPath)Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>4</WarningLevel>   
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-    <!-- 调试特定配置 -->
   </PropertyGroup>
 
   <!-- Release 配置 -->
@@ -41,20 +43,17 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>$(BaseOutputPath)Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
-
-    <!-- 文件复制配置 -->
+  <!-- 文件复制配置，第三方程序引用 -->
   <ItemGroup>
     <Reference Include="IMVSBlobFindModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7fe8bad26cdedb7b, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -632,55 +631,79 @@
     <Reference Include="IMVSCnnHPRegisterDetectModuCs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=906fbaa5b999ab0b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <!-- 第三方库示例（保持 Private=False 表示不复制到输出目录，使用共享位置） -->
     <!-- 配置文件 -->
-    <Content Include="config\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    
     <!-- 图片资源 -->
     <Content Include="images\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    
     <!-- 语言文件 -->
-    <Content Include="LanguageSet.cfg">
+    <Content Include="config\LanguageSet.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
+  <!--  .NET Framework 基础库引用 -->
   <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
   </ItemGroup>
+
+  <!--  【核心】编译文件 (C# 源代码)  -->
   <ItemGroup>
+  
+    <!-- 程序入口 -->
+    <Compile Include="src\Controls\CustomButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Controls\CustomButton.Designer.cs">
+      <DependentUpon>CustomButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Controls\UserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="src\Controls\UserControl1.Designer.cs">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Core\ApplicationManager.cs" />
+    <Compile Include="src\Core\ModuleLoader.cs" />
     <Compile Include="src\MainForm\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\MainForm\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="src\MainForm\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\MainForm\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Program.cs" />
+    <!-- 主窗体 -->
+    <!-- 子窗体/控件 -->
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Services\DataService.cs" />
+    <Compile Include="src\Services\logService.cs" />
+    <Compile Include="src\SubForm\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\SubForm\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\SubForm\TCPConnect.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\SubForm\TCPConnect.Designer.cs">
       <DependentUpon>TCPConnect.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="src\MainForm\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="src\Utilities\FileHelper.cs" />
+    <Content Include="assets\lang\en-US.txt" />
+    <Content Include="assets\lang\zh-CN.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -690,9 +713,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="src\MainForm\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\SubForm\TCPConnect.resx">
       <DependentUpon>TCPConnect.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="assets\docs\API.md" />
+    <None Include="assets\docs\Architecture.md" />
+    <None Include="config\App.Template.config" />
+    <None Include="config\ConnectionStrings.config" />
+    <None Include="config\Logging.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -704,15 +735,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config\App.config" />
+    <None Include="Properties\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="images\" />
-    <Folder Include="logs\" />
-    <Folder Include="packages\" />
-    <Folder Include="src\Core\Models\" />
-    <Folder Include="src\Core\Services\" />
-    <Folder Include="src\Core\Utilities\" />
+    <Folder Include="assets\fonts\" />
+    <Folder Include="assets\images\backgrounds\" />
+    <Folder Include="assets\images\buttons\" />
+    <Folder Include="assets\images\icons\" />
+    <Folder Include="src\Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

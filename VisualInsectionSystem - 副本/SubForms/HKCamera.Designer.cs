@@ -92,9 +92,9 @@ namespace VisualInsectionSystem.SubForms
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBox3.Location = new System.Drawing.Point(534, 259);
+            this.groupBox3.Location = new System.Drawing.Point(525, 259);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(187, 213);
+            this.groupBox3.Size = new System.Drawing.Size(196, 213);
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
@@ -206,9 +206,9 @@ namespace VisualInsectionSystem.SubForms
             this.groupBox2.Controls.Add(this.button5);
             this.groupBox2.Controls.Add(this.radioButton2);
             this.groupBox2.Controls.Add(this.radioButton1);
-            this.groupBox2.Location = new System.Drawing.Point(534, 97);
+            this.groupBox2.Location = new System.Drawing.Point(525, 97);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(187, 156);
+            this.groupBox2.Size = new System.Drawing.Size(196, 156);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
@@ -218,7 +218,7 @@ namespace VisualInsectionSystem.SubForms
             this.button8.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button8.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button8.Location = new System.Drawing.Point(95, 106);
+            this.button8.Location = new System.Drawing.Point(109, 116);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(81, 20);
             this.button8.TabIndex = 5;
@@ -231,7 +231,7 @@ namespace VisualInsectionSystem.SubForms
             this.button7.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button7.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button7.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button7.Location = new System.Drawing.Point(9, 72);
+            this.button7.Location = new System.Drawing.Point(12, 82);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(167, 28);
             this.button7.TabIndex = 3;
@@ -244,7 +244,7 @@ namespace VisualInsectionSystem.SubForms
             this.button6.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button6.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button6.Location = new System.Drawing.Point(95, 46);
+            this.button6.Location = new System.Drawing.Point(109, 56);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(81, 20);
             this.button6.TabIndex = 2;
@@ -257,7 +257,7 @@ namespace VisualInsectionSystem.SubForms
             this.checkBox1.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.checkBox1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.checkBox1.Location = new System.Drawing.Point(9, 106);
+            this.checkBox1.Location = new System.Drawing.Point(9, 116);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(81, 20);
             this.checkBox1.TabIndex = 4;
@@ -270,7 +270,7 @@ namespace VisualInsectionSystem.SubForms
             this.button5.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button5.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button5.Location = new System.Drawing.Point(9, 46);
+            this.button5.Location = new System.Drawing.Point(9, 56);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(81, 20);
             this.button5.TabIndex = 0;
@@ -283,7 +283,7 @@ namespace VisualInsectionSystem.SubForms
             this.radioButton2.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.radioButton2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.radioButton2.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.radioButton2.Location = new System.Drawing.Point(95, 20);
+            this.radioButton2.Location = new System.Drawing.Point(109, 20);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(81, 20);
             this.radioButton2.TabIndex = 1;
@@ -314,9 +314,9 @@ namespace VisualInsectionSystem.SubForms
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Location = new System.Drawing.Point(534, 12);
+            this.groupBox1.Location = new System.Drawing.Point(525, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(187, 79);
+            this.groupBox1.Size = new System.Drawing.Size(196, 79);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -326,7 +326,7 @@ namespace VisualInsectionSystem.SubForms
             this.button1.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button1.Location = new System.Drawing.Point(9, 19);
+            this.button1.Location = new System.Drawing.Point(9, 18);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(81, 20);
@@ -340,7 +340,7 @@ namespace VisualInsectionSystem.SubForms
             this.button4.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.button4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button4.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button4.Location = new System.Drawing.Point(95, 44);
+            this.button4.Location = new System.Drawing.Point(109, 44);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(81, 20);
             this.button4.TabIndex = 5;
@@ -354,7 +354,7 @@ namespace VisualInsectionSystem.SubForms
             this.button2.Enabled = false;
             this.button2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button2.Location = new System.Drawing.Point(95, 18);
+            this.button2.Location = new System.Drawing.Point(109, 18);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 20);
             this.button2.TabIndex = 3;
@@ -385,7 +385,7 @@ namespace VisualInsectionSystem.SubForms
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.IntegralHeight = false;
             this.comboBox1.ItemHeight = 12;
-            this.comboBox1.Location = new System.Drawing.Point(12, 12);
+            this.comboBox1.Location = new System.Drawing.Point(3, 12);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(517, 20);
             this.comboBox1.TabIndex = 15;
@@ -395,10 +395,10 @@ namespace VisualInsectionSystem.SubForms
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pictureBox1.Location = new System.Drawing.Point(11, 37);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 37);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(517, 436);
+            this.pictureBox1.Size = new System.Drawing.Size(517, 457);
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
@@ -408,6 +408,7 @@ namespace VisualInsectionSystem.SubForms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 496);
             this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "HKCamera";
             this.ShowIcon = false;

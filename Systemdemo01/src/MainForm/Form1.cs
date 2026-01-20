@@ -1,3 +1,5 @@
+using IMVSCircleFindModuCs;
+using IMVSGroupCs;
 using System;
 using System.Windows.Forms;
 using VM.Core;
@@ -14,15 +16,15 @@ namespace Systemdemo01
     {
         /// <summary>
         /// The control for display picture
+        /// private VmRenderControl vmRenderControl;
         /// </summary>
-        //private VmRenderControl vmRenderControl;
+        
         public Form1()
         {
             //VM 资源管理1.5__2:00
             KillProcess("visionmasterserverapp");
             KillProcess("visionmaster");
             KillProcess("vmmoduleproxy.exe");
-
             InitializeComponent();
         }
         /// <summary>
@@ -40,7 +42,7 @@ namespace Systemdemo01
                     string ocrResult = vmProcess1.ModuResult.GetOutputString("out").astStringVal[0].strValue;   //模块中获取识别结果  
                     this.BeginInvoke(new Action(() =>  //在回调中对控件操作，需要使用委托
                     {
-                        vmRenderControl1.ModuleSource = vmProcess1; //渲染结果
+                        vmRenderControl1.ModuleSource = vmProcess1; //渲染结果                      
 
                         listBox1.Items.Add("字符识别结果:" + ocrResult);
                         listBox1.TopIndex = listBox1.Items.Count - 1;
@@ -49,9 +51,7 @@ namespace Systemdemo01
                     //通过模块获取：IMVS获取，实例化模块对象，获取结果
                     //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];
                     IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"];
-
                     IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
-
                 }
             }
             catch (VmException ex)
@@ -64,7 +64,7 @@ namespace Systemdemo01
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  // 注册回调函数，推荐回调函数获取结果
+            VmSolution.OnWorkStatusEvent += VmSolution_OnWorkStatusEvent;  // 注册回调函数，推荐回调函数获取结果          
         }
 
         /// <summary>
@@ -80,9 +80,8 @@ namespace Systemdemo01
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
                     //InitialDirectory = "E:\\VisualSoftware\\ABVisualSystem\\",
-                    InitialDirectory = "D:\\AutoBox Camera\\ABVisualSystem\\",
-                    //openFileDialog.Title = "选择VM Sol文件";
-                    //openFileDialog.Filter = "All files (*.*)|*.*";
+                    InitialDirectory = "D:\\AutoBox Camera\\ABVisualSystem\\",                    
+                    //openFileDialog.Filter = "All files (*.*)|*.*",
                     Filter = "VM Sol File|*.sol"
                 };
                 DialogResult openFileRes = openFileDialog.ShowDialog();     //显示打开文件对话框
@@ -108,7 +107,7 @@ namespace Systemdemo01
         /// <summary>
         /// 方案加载按钮
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender"></param>f
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
@@ -118,6 +117,9 @@ namespace Systemdemo01
                 listBox1.Items.Add("方案加载成功" + textBox1.Text);
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 comboBox1.Enabled = true;
+                //方案加载完成后，关闭所有模块的结果回调，提高运行效率
+                //After the solution is loaded, disable the callback of all modules to improve efficiency.
+                VmSolution.Instance.DisableModulesCallback();                
             }
             catch (VmException ex)
             {
@@ -141,33 +143,12 @@ namespace Systemdemo01
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
-        {
+        {        
             try
             {
-                //1.4模块的参数配置
-                //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];  //获取方案中的模块对象1.4_1:20  
-                IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"];
-                IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
-
-
-
-                vmParamsConfigWithRenderControl1.ModuleSource = ocrTool;  //带渲染的参数控件与模块绑定1.4_1:24
-                vmParamsConfigControl1.ModuleSource = ocrTool;  //参数控件与模块绑定1.4_2:39
-
-                vmParamsConfigWithRenderControl1.ModuleSource = cfdTool;
-                vmParamsConfigControl1.ModuleSource = cfdTool;
-
-            }
-            catch (VmException ex)
-            {
-                string message = "参数配置页面失败." + ex.errorCode;
-                listBox1.Items.Add(message);
-                listBox1.TopIndex = listBox1.Items.Count - 1;
-            }
-
-            try
-            {
-                VmSolution.Instance.SyncRun();   //同步执行一次方案中所有流程1.2_2:07                
+                VmSolution.Instance.SyncRun();   //同步执行一次方案中所有流程1.2_2:07
+                listBox1.Items.Add("单次执行成功");
+                listBox1.TopIndex = listBox1.Items.Count - 1;                           
             }
             catch (VmException ex)
             {
@@ -176,38 +157,90 @@ namespace Systemdemo01
                 listBox1.TopIndex = listBox1.Items.Count - 1;
                 //MessageBox.Show("VM SDK ERROR." + Convert.ToString(ex.errorCode, 16));
             }
-            listBox1.Items.Add("单次执行成功");
-            listBox1.TopIndex = listBox1.Items.Count - 1;
+            
+            try
+            {
+                //1.4模块的参数配置
+                //IMVSOcrDlModuCCs.IMVSOcrDlModuCTool ocrTool = (IMVSOcrDlModuCCs.IMVSOcrDlModuCTool)VmSolution.Instance["OCRDemo.DL字符识别C1"];  //获取方案中的模块对象1.4_1:20  
+                IMVSOcrModuCs.IMVSOcrModuTool ocrTool = (IMVSOcrModuCs.IMVSOcrModuTool)VmSolution.Instance["OCRDemo.字符识别"];
+                IMVSCircleFindModuCs.IMVSCircleFindModuTool cfdTool = (IMVSCircleFindModuCs.IMVSCircleFindModuTool)VmSolution.Instance["Flow1.Circle Search1"];
+
+                #region 
+                //流程配置控件
+                vmProcedureConfigControl1.BindMultiProcedure();
+                //设置控件自适应属性
+                vmProcedureConfigControl1.AutoSize = true;
+
+                // 参数配置控件
+                vmParamsConfigControl1.ModuleSource = ocrTool;  //参数控件与模块绑定1.4_2:39
+                vmParamsConfigControl1.ModuleSource = cfdTool;
+                // 带渲染的参数配置控件
+                vmParamsConfigWithRenderControl1.ModuleSource = ocrTool;  //带渲染的参数控件与模块绑定1.4_1:24
+                vmParamsConfigWithRenderControl1.ModuleSource = cfdTool;
 
 
-            #region 
+                //渲染控件：显示图像 1.3获取结果,分为渲染结果以及数据结果               
+                //VmRenderControl vmRenderControl1 = new /*VMControls.Winform.Release.*/VmRenderControl();
 
-            // 1.3获取结果,分为渲染结果以及数据结果
-            /*VMControls.Winform.Release.*/
-            VmRenderControl vmRenderControl = new /*VMControls.Winform.Release.*/VmRenderControl();
-            //VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["OCRDemo"];   //从方案中绑定流程对象
-            VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["Flow1"];
+                //1.绑定流程对象，执行后自动显示其图形图像
+                VmProcedure vmProcedure = (VmProcedure)VmSolution.Instance["Flow1"];
+                VmProcedure renderCtrlProcess = (VmProcedure)VmSolution.Instance["流程1"];
+                vmRenderControl1.ModuleSource = vmProcedure;    //设置全局渲染控件的显示源与流程绑定
+                vmRenderControl1.ModuleSource = renderCtrlProcess;
 
-            vmRenderControl1.ModuleSource = vmProcedure;  //设置全局渲染控件的显示源与流程绑定
-            vmRenderControl1.Show();  //显示渲染控件
+                //2.绑定Group对象，执行后自动显示其图形图像
+                IMVSGroupTool imvsGroup = (IMVSGroupTool)VmSolution.Instance["Flow1.组合模块1"];
+                IMVSGroupTool renderCtrlGroup = (IMVSGroupTool)VmSolution.Instance["流程1.组合模块1"];
+                vmRenderControl1.ModuleSource = imvsGroup;
+                vmRenderControl1.ModuleSource = renderCtrlGroup;
+
+                //3.绑定模块对象，执行后自动显示其图形图像
+                IMVSCircleFindModuTool imsvCct = (IMVSCircleFindModuTool)VmSolution.Instance["Flow1.圆查找1"];
+                IMVSCircleFindModuTool renderCtrlCircleTool = (IMVSCircleFindModuTool)VmSolution.Instance["流程1.圆查找1"];
+                vmRenderControl1.ModuleSource = imsvCct;
+                vmRenderControl1.ModuleSource = renderCtrlCircleTool;
+
+                //清空当前显示的图形图像
+                vmRenderControl1.ClearDisplayView();
+                //使用文件路径设置控件显示区背景图
+                //注意该图片的尺寸需小于100*100
+                //vmRenderControl1.SetBackground("..\\images\\backgrounds\\renderImage.bmp");
+
+                // 全局模块控件     
+                vmGlobalToolControl1.OpenGlobalVariable();          //全局变量
+                vmGlobalToolControl1.OpenGlobalScript();            //全局脚本
+                vmGlobalToolControl1.OpenGlobalCamera();            //全局相机
+                vmGlobalToolControl1.OpenGlobalTrigger();           //全局触发
+                vmGlobalToolControl1.OpenCommunicationManager();    //通信管理
+
+                //前端运行界面
+                vmFrontendControl1.LoadFrontendSource();    //加载控件
+                vmFrontendControl1.AutoChangeSize();
 
 
-            string ocrResult = vmProcedure.ModuResult.GetOutputString("out").astStringVal[0].strValue;  //   获取识别结果
-            string ocrConfidence = vmProcedure.ModuResult.GetOutputString("out0").astStringVal[0].strValue;  //  获取置信度
-            string ocrNum = vmProcedure.ModuResult.GetOutputInt("out1").pIntVal[0].ToString();  //  数量
-            listBox1.Items.Add("字符识别结果:" + ocrResult);
-            listBox1.TopIndex = listBox1.Items.Count - 1;
-            listBox1.Items.Add("字符置信度:" + ocrConfidence);
-            listBox1.TopIndex = listBox1.Items.Count - 1;
-            listBox1.Items.Add("字符数量:" + ocrNum);
-            listBox1.TopIndex = listBox1.Items.Count - 1;
 
-            //string cfdImgPath = cfdTool.ModuleFilePath.ToString();
-            //string cfdImgName = cfdTool.StrModuleName.ToString();
-            //int cfdPointNum = cfdTool.
+                string ocrResult = vmProcedure.ModuResult.GetOutputString("out").astStringVal[0].strValue;       //  获取识别结果
+                string ocrConfidence = vmProcedure.ModuResult.GetOutputString("out0").astStringVal[0].strValue;  //  获取置信度
+                string ocrNum = vmProcedure.ModuResult.GetOutputInt("out1").pIntVal[0].ToString();               //  数量
+                listBox1.Items.Add("字符识别结果:" + ocrResult);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                listBox1.Items.Add("字符置信度:" + ocrConfidence);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                listBox1.Items.Add("字符数量:" + ocrNum);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                #endregion
+            }
 
 
-            #endregion
+
+            catch (VmException ex)
+            {
+                string message = "参数配置页面失败." + ex.errorCode;
+                listBox1.Items.Add(message);
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+            }
+
+         
 
         }
         /// <summary>
@@ -287,6 +320,7 @@ namespace Systemdemo01
         }
         private void vmRenderControl1_Load(object sender, EventArgs e)
         {
+            // 单纯的图像显示区域
             //VMControls.Winform.Release.VmRenderControl vmRenderControl = new VMControls.Winform.Release.VmRenderControl();
         }
 
