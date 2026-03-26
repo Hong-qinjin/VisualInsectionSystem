@@ -604,16 +604,28 @@ namespace VisualInsectionSystem.SubForms
                     switch (command)
                     {
                         case "A":
-                            AddMessage($"收到指令(receive command) ‘{command}’，执行流程一(ex 1)");
-                            result = _mainForm.ExecuteProcedure("Flow1");
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 1)");
+                            result = _mainForm.ExecuteProcedure("位置1");
                             break;
                         case "B":
-                            AddMessage($"收到指令(receive command) ‘{command}’，执行流程二(ex 2)");
-                            result = _mainForm.ExecuteProcedure("Flow2");
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 2)");
+                            result = _mainForm.ExecuteProcedure("位置2");
                             break;
                         case "C":
-                            AddMessage($"收到指令(receive command) ‘{command}’，执行流程三(ex 3)");
-                            result = _mainForm.ExecuteProcedure("Flow3");
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 3)");
+                            result = _mainForm.ExecuteProcedure("位置3");
+                            break;
+                        case "D":
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 5)");
+                            result = _mainForm.ExecuteProcedure("位置5");
+                            break;
+                        case "E":
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 6)");
+                            result = _mainForm.ExecuteProcedure("位置6");
+                            break;
+                        case "F":
+                            AddMessage($"收到指令(receive command) ‘{command}’，执行Flow(flow 7)");
+                            result = _mainForm.ExecuteProcedure("位置7");
                             break;
                         case "START_CONTINUOUS":
                             AddMessage($"收到指令(receive command) ‘{command}’，启动连续执行(contious run)");

@@ -41,7 +41,6 @@
             this.vmGlobalToolControl1.Name = "vmGlobalToolControl1";
             this.vmGlobalToolControl1.Size = new System.Drawing.Size(754, 39);
             this.vmGlobalToolControl1.TabIndex = 0;
-            this.vmGlobalToolControl1.Load += new System.EventHandler(this.vmGlobalToolControl1_Load);
             // 
             // vmMainViewConfigControl1
             // 
@@ -52,9 +51,8 @@
             this.vmMainViewConfigControl1.Size = new System.Drawing.Size(754, 501);
             this.vmMainViewConfigControl1.TabIndex = 1;
 // TODO: “”的代码生成失败，原因是出现异常“无效的基元类型: System.IntPtr。请考虑使用 CodeObjectCreateExpression。”。
-            this.vmMainViewConfigControl1.Load += new System.EventHandler(this.vmMainViewConfigControl1_Load);
             // 
-            // MainViewControl
+            // DebugFormControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -62,9 +60,8 @@
             this.Controls.Add(this.vmMainViewConfigControl1);
             this.Controls.Add(this.vmGlobalToolControl1);
             this.Cursor = System.Windows.Forms.Cursors.SizeNESW;
-            this.Name = "MainViewControl";
+            this.Name = "DebugFormControl";
             this.Size = new System.Drawing.Size(754, 540);
-            this.Load += new System.EventHandler(this.MainViewControl_Load);
             this.ResumeLayout(false);
 
         }

@@ -429,7 +429,7 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>打开相机</summary>
         private void button3_Click(object sender, EventArgs e)
         {
-            button3 = new StyledButton { Text = "打开相机", NormalColor = Color.FromArgb(74, 144, 226) };
+            button3 = new StyleButtons { Text = "打开相机", NormalColor = Color.FromArgb(74, 144, 226) };
             if (m_stDeviceList.nDeviceNum == 0 || comboBox1.SelectedIndex == -1)
             {
                 ShowErrorMsg("No Device Found!", -1);
@@ -598,7 +598,7 @@ namespace VisualInsectionSystem.SubForms
         ///<summary>关闭相机</summary>
         private void button4_Click(object sender, EventArgs e)
         {
-            button4 = new StyledButton { Text = "关闭相机", NormalColor = Color.FromArgb(74, 144, 226) };
+            button4 = new StyleButtons { Text = "关闭相机", NormalColor = Color.FromArgb(74, 144, 226) };
             if (m_bGrabbing == true)            //清除取流标志
             {
                 m_bGrabbing = false;
@@ -1020,7 +1020,7 @@ namespace VisualInsectionSystem.SubForms
         // ch:停止预览取流 | en:Stop Grab
         private void button6_Click(object sender, EventArgs e)
         {
-            button3 = new StyledButton { Text = "停止预览", NormalColor = Color.FromArgb(200, 50, 50) };
+            button3 = new StyleButtons { Text = "停止预览", NormalColor = Color.FromArgb(200, 50, 50) };
             m_bGrabbing = false;
             if (m_hReceiveThread != null && m_hReceiveThread.IsAlive)
             {
@@ -1405,7 +1405,7 @@ namespace VisualInsectionSystem.SubForms
         //保存图像
         private void button11_Click(object sender, EventArgs e)
         {
-            button11 = new StyledButton { Text = "保存图片", NormalColor = Color.FromArgb(150, 100, 200) };
+            button11 = new StyleButtons { Text = "保存图片", NormalColor = Color.FromArgb(150, 100, 200) };
             // 检查是否正在采集
             if (!m_bGrabbing)
             {

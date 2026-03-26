@@ -13,8 +13,7 @@ using System.Windows.Forms;
 using VM.Core;
 using VM.PlatformSDKCS;
 using VMControls.Interface;
-using VMControls.Winform.Release;
-using VMControls.WPF.Release;
+
 
 namespace VisualInsectionSystem
 {
@@ -390,15 +389,16 @@ namespace VisualInsectionSystem
                 DialogResult oFresult = openFileDialog.ShowDialog();
 
                 //System.Diagnostics.Debug.WriteLine($"对话框结果: {oFresult}");   // 调试输出对话框结果
-                if (oFresult == DialogResult.OK)
+                if (DialogResult.OK==oFresult)
                 {                    
                     currentSolutionPath = openFileDialog.FileName;
                     //System.Diagnostics.Debug.WriteLine($"选中的文件路径: {currentSolutionPath}");  // 调试输出获取的路径
                     LoadSolutionIndicateTimer.Enabled = true;
                     AppendLog("The solution path is: " + currentSolutionPath);
-                  
-                    listBoxResult.Items.Add("The solution loaded");
-                    listBoxResult.TopIndex = listBoxResult.Items.Count - 1;
+
+                    MessageBox.Show("The solution path is： " +  currentSolutionPath 
+                        + "\nNext click the Load solution button!","Information", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SolutionIsLoaded = true;
                 }
                 else

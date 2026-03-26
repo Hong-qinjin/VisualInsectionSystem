@@ -260,9 +260,6 @@
     <Reference Include="VMControls.BaseInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14444b8df74b6e6a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="VMControls.WPF.Release, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fdd2c8be7291c30c, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="VMControls.Interface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cb41614600cf774b, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -594,6 +591,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\LogHelper.cs" />
+    <Compile Include="Core\StyleButtons.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SubControls\DebugFormControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -609,9 +609,6 @@
     <Compile Include="Core\AsyncTcpServer.cs" />
     <Compile Include="Core\ImageProcessor.cs" />
     <Compile Include="Core\PLCCommunicator.cs" />
-    <Compile Include="Core\StyledButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MainForm\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

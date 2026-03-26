@@ -29,10 +29,10 @@ namespace VisualInsectionSystem
         }
         private void RenderControl_Load(object sender, EventArgs e)
         {
-
+           // DbgRenderControl.
         }
 
-        private void vmRenderControl1_Load(object sender, EventArgs e)
+        private void vmMainViewConfigControl1_Load(object sender, EventArgs e)
         {
 
         }

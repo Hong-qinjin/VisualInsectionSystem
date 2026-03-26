@@ -27,14 +27,5 @@ namespace VisualInsectionSystem
                 vmRenderControl1.ModuleSource = _moduleSoure;
             }
         }
-        private void RenderControl_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void vmRenderControl1_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

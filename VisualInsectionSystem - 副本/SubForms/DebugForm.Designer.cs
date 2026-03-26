@@ -59,6 +59,8 @@
             // 
             // groupBoxResult
             // 
+            this.groupBoxResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxResult.Controls.Add(this.listBoxResult);
             this.groupBoxResult.Controls.Add(this.labelResultState);
             this.groupBoxResult.ForeColor = System.Drawing.Color.White;
@@ -71,15 +73,14 @@
             // 
             // listBoxResult
             // 
-            this.listBoxResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listBoxResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.listBoxResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listBoxResult.ForeColor = System.Drawing.Color.White;
             this.listBoxResult.FormattingEnabled = true;
             this.listBoxResult.ItemHeight = 12;
-            this.listBoxResult.Location = new System.Drawing.Point(6, 20);
+            this.listBoxResult.Location = new System.Drawing.Point(0, 20);
             this.listBoxResult.Name = "listBoxResult";
             this.listBoxResult.Size = new System.Drawing.Size(706, 96);
             this.listBoxResult.TabIndex = 8;
@@ -111,13 +112,13 @@
             // buttonConfig
             // 
             this.buttonConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonConfig.BackColor = System.Drawing.Color.White;
+            this.buttonConfig.BackColor = System.Drawing.SystemColors.Control;
             this.buttonConfig.FlatAppearance.BorderSize = 0;
             this.buttonConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonConfig.ForeColor = System.Drawing.Color.Black;
-            this.buttonConfig.Location = new System.Drawing.Point(973, 7);
+            this.buttonConfig.Location = new System.Drawing.Point(1019, 12);
             this.buttonConfig.Name = "buttonConfig";
-            this.buttonConfig.Size = new System.Drawing.Size(85, 25);
+            this.buttonConfig.Size = new System.Drawing.Size(110, 41);
             this.buttonConfig.TabIndex = 6;
             this.buttonConfig.Text = "参数配置";
             this.buttonConfig.UseVisualStyleBackColor = false;
@@ -126,13 +127,13 @@
             // buttonRender
             // 
             this.buttonRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRender.BackColor = System.Drawing.Color.White;
+            this.buttonRender.BackColor = System.Drawing.SystemColors.Control;
             this.buttonRender.FlatAppearance.BorderSize = 0;
             this.buttonRender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRender.ForeColor = System.Drawing.Color.Black;
-            this.buttonRender.Location = new System.Drawing.Point(884, 7);
+            this.buttonRender.Location = new System.Drawing.Point(901, 12);
             this.buttonRender.Name = "buttonRender";
-            this.buttonRender.Size = new System.Drawing.Size(82, 25);
+            this.buttonRender.Size = new System.Drawing.Size(110, 41);
             this.buttonRender.TabIndex = 5;
             this.buttonRender.Text = "图像显示";
             this.buttonRender.UseVisualStyleBackColor = false;
@@ -141,7 +142,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 31);
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
+            this.label1.Location = new System.Drawing.Point(24, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 1;
@@ -155,9 +157,9 @@
             this.comboProcedure.Font = new System.Drawing.Font("宋体", 9F);
             this.comboProcedure.ForeColor = System.Drawing.Color.Black;
             this.comboProcedure.FormattingEnabled = true;
-            this.comboProcedure.Location = new System.Drawing.Point(6, 49);
+            this.comboProcedure.Location = new System.Drawing.Point(135, 20);
             this.comboProcedure.Name = "comboProcedure";
-            this.comboProcedure.Size = new System.Drawing.Size(121, 20);
+            this.comboProcedure.Size = new System.Drawing.Size(237, 20);
             this.comboProcedure.TabIndex = 0;
             this.comboProcedure.SelectedIndexChanged += new System.EventHandler(this.comboProcedure_SelectedIndexChanged);
             // 
@@ -169,22 +171,22 @@
             this.groupBoxProcedure.Controls.Add(this.comboProcedure);
             this.groupBoxProcedure.Controls.Add(this.buttonRunOnce);
             this.groupBoxProcedure.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxProcedure.Location = new System.Drawing.Point(884, 208);
+            this.groupBoxProcedure.Location = new System.Drawing.Point(884, 188);
             this.groupBoxProcedure.Name = "groupBoxProcedure";
-            this.groupBoxProcedure.Size = new System.Drawing.Size(392, 96);
+            this.groupBoxProcedure.Size = new System.Drawing.Size(392, 116);
             this.groupBoxProcedure.TabIndex = 4;
             this.groupBoxProcedure.TabStop = false;
             this.groupBoxProcedure.Text = "流程操作";
             // 
             // buttonContiRun
             // 
-            this.buttonContiRun.BackColor = System.Drawing.Color.White;
+            this.buttonContiRun.BackColor = System.Drawing.SystemColors.Control;
             this.buttonContiRun.FlatAppearance.BorderSize = 0;
             this.buttonContiRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonContiRun.ForeColor = System.Drawing.Color.Black;
-            this.buttonContiRun.Location = new System.Drawing.Point(262, 31);
+            this.buttonContiRun.Location = new System.Drawing.Point(262, 57);
             this.buttonContiRun.Name = "buttonContiRun";
-            this.buttonContiRun.Size = new System.Drawing.Size(110, 42);
+            this.buttonContiRun.Size = new System.Drawing.Size(110, 41);
             this.buttonContiRun.TabIndex = 1;
             this.buttonContiRun.Text = "连续运行";
             this.buttonContiRun.UseVisualStyleBackColor = false;
@@ -192,13 +194,13 @@
             // 
             // buttonRunOnce
             // 
-            this.buttonRunOnce.BackColor = System.Drawing.Color.White;
+            this.buttonRunOnce.BackColor = System.Drawing.SystemColors.Control;
             this.buttonRunOnce.FlatAppearance.BorderSize = 0;
             this.buttonRunOnce.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRunOnce.ForeColor = System.Drawing.Color.Black;
-            this.buttonRunOnce.Location = new System.Drawing.Point(135, 31);
+            this.buttonRunOnce.Location = new System.Drawing.Point(17, 57);
             this.buttonRunOnce.Name = "buttonRunOnce";
-            this.buttonRunOnce.Size = new System.Drawing.Size(110, 42);
+            this.buttonRunOnce.Size = new System.Drawing.Size(110, 41);
             this.buttonRunOnce.TabIndex = 0;
             this.buttonRunOnce.Text = "运行一次";
             this.buttonRunOnce.UseVisualStyleBackColor = false;
@@ -225,7 +227,7 @@
             this.infoHeader});
             this.listViewLog.ForeColor = System.Drawing.Color.Black;
             this.listViewLog.HideSelection = false;
-            this.listViewLog.Location = new System.Drawing.Point(17, 20);
+            this.listViewLog.Location = new System.Drawing.Point(16, 20);
             this.listViewLog.Name = "listViewLog";
             this.listViewLog.ShowItemToolTips = true;
             this.listViewLog.Size = new System.Drawing.Size(366, 413);
@@ -248,7 +250,7 @@
             // 
             // buttonSaveSolu
             // 
-            this.buttonSaveSolu.BackColor = System.Drawing.Color.White;
+            this.buttonSaveSolu.BackColor = System.Drawing.SystemColors.Control;
             this.buttonSaveSolu.FlatAppearance.BorderSize = 0;
             this.buttonSaveSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSaveSolu.ForeColor = System.Drawing.Color.Black;
@@ -262,7 +264,7 @@
             // 
             // buttonLoadSolu
             // 
-            this.buttonLoadSolu.BackColor = System.Drawing.Color.White;
+            this.buttonLoadSolu.BackColor = System.Drawing.SystemColors.Control;
             this.buttonLoadSolu.FlatAppearance.BorderSize = 0;
             this.buttonLoadSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLoadSolu.ForeColor = System.Drawing.Color.Black;
@@ -276,7 +278,7 @@
             // 
             // buttonSelectSolu
             // 
-            this.buttonSelectSolu.BackColor = System.Drawing.Color.White;
+            this.buttonSelectSolu.BackColor = System.Drawing.SystemColors.Control;
             this.buttonSelectSolu.FlatAppearance.BorderSize = 0;
             this.buttonSelectSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSelectSolu.ForeColor = System.Drawing.Color.Black;
@@ -291,14 +293,14 @@
             // groupBoxSolution
             // 
             this.groupBoxSolution.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxSolution.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBoxSolution.BackColor = System.Drawing.SystemColors.Window;
             this.groupBoxSolution.Controls.Add(this.buttonSaveSolu);
             this.groupBoxSolution.Controls.Add(this.buttonLoadSolu);
             this.groupBoxSolution.Controls.Add(this.buttonSelectSolu);
             this.groupBoxSolution.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxSolution.Location = new System.Drawing.Point(884, 115);
+            this.groupBoxSolution.Location = new System.Drawing.Point(884, 100);
             this.groupBoxSolution.Name = "groupBoxSolution";
-            this.groupBoxSolution.Size = new System.Drawing.Size(392, 87);
+            this.groupBoxSolution.Size = new System.Drawing.Size(392, 82);
             this.groupBoxSolution.TabIndex = 2;
             this.groupBoxSolution.TabStop = false;
             this.groupBoxSolution.Text = "方案操作";
@@ -316,11 +318,12 @@
             // 
             // buttonChineseOREnglish
             // 
-            this.buttonChineseOREnglish.BackColor = System.Drawing.Color.White;
+            this.buttonChineseOREnglish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonChineseOREnglish.BackColor = System.Drawing.SystemColors.Control;
             this.buttonChineseOREnglish.ForeColor = System.Drawing.Color.Black;
-            this.buttonChineseOREnglish.Location = new System.Drawing.Point(1064, 7);
+            this.buttonChineseOREnglish.Location = new System.Drawing.Point(1146, 12);
             this.buttonChineseOREnglish.Name = "buttonChineseOREnglish";
-            this.buttonChineseOREnglish.Size = new System.Drawing.Size(85, 25);
+            this.buttonChineseOREnglish.Size = new System.Drawing.Size(110, 41);
             this.buttonChineseOREnglish.TabIndex = 9;
             this.buttonChineseOREnglish.Text = "中/英";
             this.buttonChineseOREnglish.UseVisualStyleBackColor = false;
@@ -330,7 +333,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1278, 762);
             this.Controls.Add(this.buttonChineseOREnglish);
             this.Controls.Add(this.groupBoxSolution);

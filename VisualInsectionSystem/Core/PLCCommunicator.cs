@@ -1,5 +1,4 @@
-﻿using S7.Net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -7,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using VisualInsectionSystem.SubForms;
 
 public enum PLCDataType
 {
@@ -31,11 +29,11 @@ public class PLCAddress
 public class PLCCommunicator
 {
 
-    private Plc     _plc;                   // 通信实例
-    private CpuType _cpuType;               // CPU类型 CpuType.S71200,1515
-    private string  _ipAddress;             // PLC的IP地址
-    private int     rack;                   // PLC的机架号
-    private int     _slot;                  // PLC的插槽号
+    //private Plc     _plc;                   // 通信实例
+    //private CpuType _cpuType;               // CPU类型 CpuType.S71200,1515
+    //private string  _ipAddress;             // PLC的IP地址
+    //private int     rack;                   // PLC的机架号
+    //private int     _slot;                  // PLC的插槽号
     private List<PLCAddress> addressList;
         
     private bool    isConnected;            // 连接状态
@@ -60,56 +58,56 @@ public class PLCCommunicator
 
     private int _rack;
 
-    public PLCCommunicator(CpuType cpuType,string ipAddress,int rack=0,int slot=1 )
-    {
-        // 参数校验（避免非硬件错误）
-        if (!System.Net.IPAddress.TryParse(ipAddress, out _))
-            throw new ArgumentException("无效的地址", nameof(ipAddress));             
-        if (rack < 0)
-            throw new ArgumentException("机架号不能为负数", nameof(rack));
-        if (slot < 0)
-            throw new ArgumentException("插槽号不能为负数", nameof(slot));
+    //public PLCCommunicator(CpuType cpuType,string ipAddress,int rack=0,int slot=1 )
+    //{
+    //    // 参数校验（避免非硬件错误）
+    //    if (!System.Net.IPAddress.TryParse(ipAddress, out _))
+    //        throw new ArgumentException("无效的地址", nameof(ipAddress));             
+    //    if (rack < 0)
+    //        throw new ArgumentException("机架号不能为负数", nameof(rack));
+    //    if (slot < 0)
+    //        throw new ArgumentException("插槽号不能为负数", nameof(slot));
 
-        _cpuType = cpuType;
-        _ipAddress = ipAddress;
-        _rack = rack;
-        _slot = slot;
-        addressList = new List<PLCAddress>();
-        //if (_plc == null)
-        //{
-        //    _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
-        //}
-        _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
-        InitializePLC();                // 初始化PLC连接
-        BuildDefaultAddresses();        // 构建默认地址列表
-    }
+    //    _cpuType = cpuType;
+    //    _ipAddress = ipAddress;
+    //    _rack = rack;
+    //    _slot = slot;
+    //    addressList = new List<PLCAddress>();
+    //    //if (_plc == null)
+    //    //{
+    //    //    _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
+    //    //}
+    //    _plc = new Plc(_cpuType, _ipAddress, (short)_rack, (short)_slot);
+    //    InitializePLC();                // 初始化PLC连接
+    //    BuildDefaultAddresses();        // 构建默认地址列表
+    //}
 
-    // init()
-    private void InitializePLC()
-    {
-        _plc.ReadTimeout = 5000;
-        _plc.WriteTimeout = 5000;
-    }
+    //// init()
+    //private void InitializePLC()
+    //{
+    //    _plc.ReadTimeout = 5000;
+    //    _plc.WriteTimeout = 5000;
+    //}
 
-    // 从app.config读取IP
-    private void LoadConfiguration()
-    {
-        try
-        {
-            // 从app.config读取配置
-            PlcIPAddress = ConfigurationManager.AppSettings["PLCIPAddress"];
-            _rack = int.TryParse(ConfigurationManager.AppSettings["PLCRack"], out int r) ? r : 0;
-            _slot = int.TryParse(ConfigurationManager.AppSettings["PLCSlot"], out int s) ? s : 1;
+    //// 从app.config读取IP
+    //private void LoadConfiguration()
+    //{
+    //    try
+    //    {
+    //        // 从app.config读取配置
+    //        PlcIPAddress = ConfigurationManager.AppSettings["PLCIPAddress"];
+    //        _rack = int.TryParse(ConfigurationManager.AppSettings["PLCRack"], out int r) ? r : 0;
+    //        _slot = int.TryParse(ConfigurationManager.AppSettings["PLCSlot"], out int s) ? s : 1;
 
-            _ipAddress = string.IsNullOrWhiteSpace(PlcIPAddress)
-                ? "172.52.51.2"  // 默认IP地址
-                : PlcIPAddress;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"配置加载错误: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
+    //        _ipAddress = string.IsNullOrWhiteSpace(PlcIPAddress)
+    //            ? "172.52.51.2"  // 默认IP地址
+    //            : PlcIPAddress;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MessageBox.Show($"配置加载错误: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //    }
+    //}
 
     // 构建默认地址列表
     private void BuildDefaultAddresses()
@@ -149,8 +147,8 @@ public class PLCCommunicator
             if (isConnected) return true;  // 已连接则直接返回            
 
             // 执行连接（S7NetPlus的Open方法返回连接状态）
-            _plc.Open();
-            isConnected = _plc.IsConnected;
+            //_plc.Open();
+            //isConnected = _plc.IsConnected;
             // 通知连接成功,（修改为DB块来检测通讯）
             ConnectionStatusChanged?.Invoke(isConnected); 
             if (isConnected)
@@ -173,11 +171,11 @@ public class PLCCommunicator
         try
         {
             StopMonitoring();
-            if (!isConnected && _plc != null)
-            {
-                _plc.Close();
-                return;
-            }
+            //if (!isConnected && _plc != null)
+            //{
+            //    _plc.Close();
+            //    return;
+            //}
             isConnected = false;
             CameraStatusChanged?.Invoke(false);     // 断开连接时通知相机状态为假
         }
@@ -243,12 +241,12 @@ public class PLCCommunicator
         {
             DisconnectPLC();
 
-            _ipAddress = ip;
-            _rack = rack;
-            _slot = slot;
-            this.PlcIPAddress = ip;
+            //_ipAddress = ip;
+            //_rack = rack;
+            //_slot = slot;
+            //this.PlcIPAddress = ip;
 
-            InitializePLC();
+            //InitializePLC();
             ConnectPLC();
 
             // 主窗口连接状态更新
@@ -310,50 +308,50 @@ public class PLCCommunicator
             switch (address.DataType)
             {
                 case PLCDataType.DWord:
-                    var dwordResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.DWord, 1);
-                    if (dwordResult != null)
-                    {
-                        value = Convert.ToUInt32(dwordResult);
-                        return true;
-                    }
+                    ////var dwordResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.DWord, 1);
+                    //if (dwordResult != null)
+                    //{
+                    //    value = Convert.ToUInt32(dwordResult);
+                    //    return true;
+                    //}
                     break;
 
                 case PLCDataType.Bit:
-                    var bitResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Bit, 1);
-                    if (bitResult != null)
-                    {
-                        // 对于位操作，使用Index作为位索引
-                        byte byteValue = Convert.ToByte(bitResult);
-                        value = (byteValue & (1 << address.Index)) != 0;
-                        return true;
-                    }
+                    //var bitResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Bit, 1);
+                    //if (bitResult != null)
+                    //{
+                    //    // 对于位操作，使用Index作为位索引
+                    //    byte byteValue = Convert.ToByte(bitResult);
+                    //    value = (byteValue & (1 << address.Index)) != 0;
+                    //    return true;
+                    //}
                     break;
 
                 case PLCDataType.Word:
-                    var wordResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Word, 1);
-                    if (wordResult != null)
-                    {
-                        value = Convert.ToUInt16(wordResult);
-                        return true;
-                    }
+                    //var wordResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Word, 1);
+                    //if (wordResult != null)
+                    //{
+                    //    value = Convert.ToUInt16(wordResult);
+                    //    return true;
+                    //}
                     break;
 
                 case PLCDataType.Byte:
-                    var byteResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Byte, 1);
-                    if (byteResult != null)
-                    {
-                        value = Convert.ToByte(byteResult);
-                        return true;
-                    }
+                    //var byteResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Byte, 1);
+                    //if (byteResult != null)
+                    //{
+                    //    value = Convert.ToByte(byteResult);
+                    //    return true;
+                    //}
                     break;
 
                 case PLCDataType.Real:
-                    var realResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Real, 1);
-                    if (realResult != null)
-                    {
-                        value = Convert.ToSingle(realResult);
-                        return true;
-                    }
+                    //var realResult = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Real, 1);
+                    //if (realResult != null)
+                    //{
+                    //    value = Convert.ToSingle(realResult);
+                    //    return true;
+                    //}
                     break;
             }
         }
@@ -389,12 +387,12 @@ public class PLCCommunicator
         try
         {
             // 字符串读取 - Index作为字符串长度
-            var result = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.String, address.Index + 2); // +2 for header
-            if (result != null)
-            {
-                value = result.ToString();
-                return true;
-            }
+            //var result = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.String, address.Index + 2); // +2 for header
+            //if (result != null)
+            //{
+            //    value = result.ToString();
+            //    return true;
+            //}
         }
         catch (Exception ex)
         {
@@ -433,37 +431,37 @@ public class PLCCommunicator
             {
                 case PLCDataType.DWord:
                     // 先调用Write（void），再返回true表示成功
-                    _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToUInt32(value));
+                    //_plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToUInt32(value));
                     return true;
 
                 case PLCDataType.Bit:
-                    // 对于位操作，需要先读取字节，修改特定位，然后写回
-                    var currentByte = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Byte, 1);
-                    if (currentByte != null)
-                    {
-                        byte byteValue = Convert.ToByte(currentByte);
-                        bool bitValue = Convert.ToBoolean(value);
+                    //// 对于位操作，需要先读取字节，修改特定位，然后写回
+                    //var currentByte = _plc.Read(DataType.DataBlock, address.DBNumber, address.Start, VarType.Byte, 1);
+                    //if (currentByte != null)
+                    //{
+                    //    byte byteValue = Convert.ToByte(currentByte);
+                    //    bool bitValue = Convert.ToBoolean(value);
 
-                        if (bitValue)
-                            byteValue |= (byte)(1 << address.Index);
-                        else
-                            byteValue &= (byte)~(1 << address.Index);
+                    //    if (bitValue)
+                    //        byteValue |= (byte)(1 << address.Index);
+                    //    else
+                    //        byteValue &= (byte)~(1 << address.Index);
 
-                        _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, byteValue);
-                        return true;
-                    }
+                    //    _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, byteValue);
+                    //    return true;
+                    //}
                     break;
 
                 case PLCDataType.Word:
-                    _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToUInt16(value));
+                    //_plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToUInt16(value));
                     return true;
 
                 case PLCDataType.Byte:
-                    _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToByte(value));
+                    //_plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToByte(value));
                     return true;
 
                 case PLCDataType.Real:
-                    _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToSingle(value));
+                    //_plc.Write(DataType.DataBlock, address.DBNumber, address.Start, Convert.ToSingle(value));
                     return true;
 
                 default:
@@ -501,7 +499,7 @@ public class PLCCommunicator
             // 确保字符串不超过最大长度
             if (value.Length > address.Index)
                 value = value.Substring(0, address.Index);
-            _plc.Write(DataType.DataBlock, address.DBNumber, address.Start, value);
+            //_plc.Write(DataType.DataBlock, address.DBNumber, address.Start, value);
             return true;
         }
         catch (Exception ex)

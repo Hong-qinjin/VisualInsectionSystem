@@ -33,26 +33,25 @@
             // 
             // vmRenderControl1
             // 
+            this.vmRenderControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.vmRenderControl1.BackColor = System.Drawing.Color.Black;
             this.vmRenderControl1.CoordinateInfoVisible = true;
-            this.vmRenderControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.vmRenderControl1.ImageSource = null;
             this.vmRenderControl1.Location = new System.Drawing.Point(0, 0);
             this.vmRenderControl1.ModuleSource = null;
             this.vmRenderControl1.Name = "vmRenderControl1";
-            this.vmRenderControl1.Size = new System.Drawing.Size(716, 524);
-            this.vmRenderControl1.TabIndex = 0;
-            this.vmRenderControl1.Load += new System.EventHandler(this.vmRenderControl1_Load);
+            this.vmRenderControl1.Size = new System.Drawing.Size(868, 598);
+            this.vmRenderControl1.TabIndex = 0;            
             // 
-            // RenderControl
+            // DbgRenderControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.vmRenderControl1);
             this.Font = new System.Drawing.Font("宋体", 9F);
-            this.Location = new System.Drawing.Point(403, 7);
-            this.Name = "RenderControl";
-            this.Size = new System.Drawing.Size(716, 524);
+            this.Name = "DbgRenderControl";
+            this.Size = new System.Drawing.Size(868, 598);
             this.Load += new System.EventHandler(this.RenderControl_Load);
             this.ResumeLayout(false);
 

@@ -1,0 +1,18 @@
+﻿// AutoboxSystem.idl: AutoboxSystem 的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 生成类型库(AutoboxSystem.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(0f741792-f5ac-466b-8f09-4cb659f9a639),
+	version(1.0),
+]
+library AutoboxSystemLib
+{
+	importlib("stdole2.tlb");
+};
+

@@ -1,5 +1,4 @@
 ﻿using FrontendUI.Design.Controls;
-using Sharp7;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

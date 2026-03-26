@@ -1,0 +1,297 @@
+// 定义一个部分类 Form2，继承自 Form 类，用于创建一个 Windows 窗体应用程序的窗口
+public partial class Form2 : Form
+{
+    // 修改成员变量
+    // 声明一个 volatile 修饰的 Bitmap 类型变量，用于存储最新的视频帧图像
+    // volatile 关键字确保该变量在多线程环境下的可见性，避免线程缓存导致的数据不一致问题
+    private volatile Bitmap _latestFrameBitmap;
+    // 声明一个用于线程同步的对象，用于对 _latestFrameBitmap 的访问进行加锁操作
+    private readonly object _bitmapLock = new object();
+    // 声明一个 VideoCapture 类型的变量，用于捕获摄像头的视频流
+    private VideoCapture _capture;
+    // 声明一个 CancellationTokenSource 类型的变量，用于取消异步操作
+    private CancellationTokenSource _cts;
+
+    // 窗体的构造函数，在创建 Form2 实例时自动调用
+    public Form2()
+    {
+        // 调用 Windows 窗体设计器生成的初始化方法，初始化窗体的控件和布局
+        InitializeComponent();
+    }
+
+    // 窗体加载事件处理方法，当窗体加载完成后自动触发
+    private async void Form2_Load(object sender, EventArgs e)
+    {
+        // 创建一个 VideoCapture 实例，参数 0 表示使用默认的摄像头设备
+        _capture = new VideoCapture(0);
+        // 检查摄像头是否成功打开
+        if (!_capture.IsOpened())
+        {
+            // 如果摄像头无法打开，弹出消息框提示用户
+            MessageBox.Show("无法打开摄像头！");
+            // 直接返回，不再执行后续的摄像头捕获操作
+            return;
+        }
+
+        // 创建一个 CancellationTokenSource 实例，用于取消异步操作
+        _cts = new CancellationTokenSource();
+        try
+        {
+            // 调用异步方法 StartCapturingAsync 开始捕获摄像头的视频流，并传入取消令牌
+            await StartCapturingAsync(_cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // 捕获 OperationCanceledException 异常，表示操作被正常取消，不做额外处理
+        }
+        catch (Exception ex)
+        {
+            // 捕获其他异常，弹出消息框显示异常信息
+            MessageBox.Show($"捕获出错: {ex.Message}");
+        }
+    }
+
+    // 异步方法，用于开始捕获摄像头的视频流
+    private async Task StartCapturingAsync(CancellationToken token)
+    {
+        // 使用 using 语句创建一个 Mat 对象，用于存储从摄像头读取的视频帧
+        // Mat 是 OpenCvSharp 库中用于表示图像矩阵的类，using 语句确保在使用完后自动释放资源
+        using (var frame = new Mat())
+        {
+            // 进入一个循环，只要取消令牌未被触发，就持续捕获视频帧
+            while (!token.IsCancellationRequested)
+            {
+                // 从摄像头读取一帧视频数据，并存储到 frame 对象中
+                _capture.Read(frame);
+                // 检查读取的帧是否为空，如果为空则跳过本次循环，继续读取下一帧
+                if (frame.Empty()) continue;
+
+                // 将 OpenCvSharp 的 Mat 对象转换为 .NET 的 Bitmap 对象，以便在 Windows 窗体中显示
+                var newBitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(frame);
+
+                // 更新最新帧
+                // 使用 lock 语句对 _bitmapLock 对象加锁，确保在多线程环境下对 _latestFrameBitmap 的访问是线程安全的
+                lock (_bitmapLock)
+                {
+                    // 保存旧的 _latestFrameBitmap 对象
+                    var old = _latestFrameBitmap;
+                    // 将新的 Bitmap 对象赋值给 _latestFrameBitmap
+                    _latestFrameBitmap = newBitmap;
+                    // 如果旧的 _latestFrameBitmap 对象不为空，则释放其资源
+                    old?.Dispose();
+                }
+
+                // 调用异步方法 UpdateCameraPreviewAsync 更新摄像头预览界面
+                await UpdateCameraPreviewAsync(newBitmap);
+                // 异步延迟 30 毫秒，控制视频帧的捕获频率
+                await Task.Delay(30, token);
+            }
+        }
+    }
+
+    // 异步方法，用于更新摄像头预览界面
+    private async Task UpdateCameraPreviewAsync(Bitmap bitmap)
+    {
+        // 检查 picCamera 控件是否已经被释放，如果已经释放则释放传入的 Bitmap 对象并返回
+        if (picCamera.IsDisposed)
+        {
+            bitmap.Dispose();
+            return;
+        }
+
+        try
+        {
+            // 检查当前线程是否需要通过 Invoke 方法在 UI 线程上执行操作
+            if (picCamera.InvokeRequired)
+            {
+                // 如果需要，则使用 BeginInvoke 方法在 UI 线程上调用 UpdateCamera 方法
+                picCamera.BeginInvoke(new Action(() => UpdateCamera(bitmap)));
+            }
+            else
+            {
+                // 如果不需要，则直接调用 UpdateCamera 方法
+                UpdateCamera(bitmap);
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // 捕获 ObjectDisposedException 异常，释放传入的 Bitmap 对象
+            bitmap.Dispose();
+        }
+    }
+
+    // 方法，用于更新摄像头预览界面
+    private void UpdateCamera(Bitmap newBitmap)
+    {
+        // 检查 picCamera 控件是否已经被释放，如果已经释放则释放传入的 Bitmap 对象并返回
+        if (picCamera.IsDisposed)
+        {
+            newBitmap.Dispose();
+            return;
+        }
+
+        // 保存 picCamera 控件当前显示的图像
+        var old = picCamera.Image;
+        // 将新的 Bitmap 对象赋值给 picCamera 控件的 Image 属性，更新显示的图像
+        picCamera.Image = newBitmap;
+        // 如果旧的图像不为空，则释放其资源
+        old?.Dispose();
+    }
+
+    // 优化后的抓拍方法，当点击抓拍按钮时触发
+    private async void catchBtn_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            // 声明一个 Bitmap 类型的变量，用于存储抓拍的图像
+            Bitmap snapshot = null;
+
+            // 安全获取当前帧
+            // 使用 lock 语句对 _bitmapLock 对象加锁，确保在多线程环境下对 _latestFrameBitmap 的访问是线程安全的
+            lock (_bitmapLock)
+            {
+                // 检查 _latestFrameBitmap 是否不为空
+                if (_latestFrameBitmap != null)
+                {
+                    // 如果不为空，则克隆一份 _latestFrameBitmap 对象赋值给 snapshot 变量
+                    snapshot = (Bitmap)_latestFrameBitmap.Clone();
+                }
+            }
+
+            // 检查 snapshot 是否为空，如果为空则弹出消息框提示用户当前没有可用的视频帧
+            if (snapshot == null)
+            {
+                MessageBox.Show("当前没有可用的视频帧");
+                return;
+            }
+
+            // 异步保存防止界面卡顿
+            // 调用 Task.Run 方法在后台线程中执行 SaveSnapshot 方法，保存抓拍的图像
+            await Task.Run(() => SaveSnapshot(snapshot));
+        }
+        catch (Exception ex)
+        {
+            // 捕获其他异常，弹出消息框显示异常信息
+            MessageBox.Show($"抓拍失败: {ex.Message}");
+        }
+    }
+
+    // 方法，用于保存抓拍的图像
+    private void SaveSnapshot(Bitmap bitmap)
+    {
+        try
+        {
+            // 调用 GenerateUniqueFileName 方法生成一个唯一的文件名
+            var fileName = GenerateUniqueFileName();
+            // 使用 using 语句确保在使用完 bitmap 对象后自动释放资源
+            using (bitmap)
+            {
+                // 将 bitmap 对象保存为 JPEG 格式的文件
+                bitmap.Save(fileName, ImageFormat.Jpeg);
+
+                // 显示预览（需要克隆新实例）
+                // 克隆一份 bitmap 对象用于在界面上显示预览
+                var previewBitmap = (Bitmap)bitmap.Clone();
+
+                // 使用 BeginInvoke 方法在 UI 线程上执行更新预览界面和显示保存成功消息框的操作
+                BeginInvoke(new Action(() =>
+                {
+                    // 调用 UpdateSnapshotPreview 方法更新抓拍图像的预览界面
+                    UpdateSnapshotPreview(previewBitmap);
+                    // 弹出消息框显示图像保存的路径
+                    MessageBox.Show($"图片已保存到:\n{fileName}");
+                }));
+            }
+        }
+        catch (Exception ex)
+        {
+            // 捕获其他异常，使用 BeginInvoke 方法在 UI 线程上弹出消息框显示异常信息
+            BeginInvoke(new Action(() =>
+            {
+                MessageBox.Show($"保存失败: {ex.Message}");
+            }));
+        }
+    }
+
+    // 新增预览更新方法，用于更新抓拍图像的预览界面
+    private void UpdateSnapshotPreview(Bitmap newBitmap)
+    {
+        // 检查 pictureBoxSnapshot 控件是否已经被释放，如果已经释放则释放传入的 Bitmap 对象并返回
+        if (pictureBoxSnapshot.IsDisposed)
+        {
+            newBitmap.Dispose();
+            return;
+        }
+
+        // 处理跨线程访问
+        // 检查当前线程是否需要通过 Invoke 方法在 UI 线程上执行操作
+        if (pictureBoxSnapshot.InvokeRequired)
+        {
+            // 如果需要，则使用 BeginInvoke 方法在 UI 线程上递归调用 UpdateSnapshotPreview 方法
+            pictureBoxSnapshot.BeginInvoke(new Action(() => UpdateSnapshotPreview(newBitmap)));
+            return;
+        }
+
+        // 更新控件并释放旧资源
+        // 保存 pictureBoxSnapshot 控件当前显示的图像
+        var old = pictureBoxSnapshot.Image;
+        // 将新的 Bitmap 对象赋值给 pictureBoxSnapshot 控件的 Image 属性，更新显示的图像
+        pictureBoxSnapshot.Image = newBitmap;
+        // 如果旧的图像不为空，则释放其资源
+        old?.Dispose();
+    }
+
+    // 方法，用于生成一个唯一的文件名
+    private string GenerateUniqueFileName()
+    {
+        // 获取用户的图片文件夹路径
+        var docs = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        // 获取当前时间并格式化为指定的字符串格式
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmssfff");
+        // 组合图片文件夹路径、文件名前缀和时间戳，生成一个唯一的文件名
+        return Path.Combine(docs, $"Snapshot_{timestamp}.jpg");
+    }
+
+    // 窗体关闭事件处理方法，当窗体关闭时自动触发
+    private void Form2_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        // 取消异步操作
+        _cts?.Cancel();
+        // 释放 CancellationTokenSource 对象的资源
+        _cts?.Dispose();
+
+        // 释放所有资源
+        // 释放 VideoCapture 对象的资源
+        _capture?.Dispose();
+        // 使用 lock 语句对 _bitmapLock 对象加锁，确保在多线程环境下对 _latestFrameBitmap 的访问是线程安全的
+        lock (_bitmapLock)
+        {
+            // 释放 _latestFrameBitmap 对象的资源
+            _latestFrameBitmap?.Dispose();
+        }
+
+        // 清理预览图
+        // 检查 picCamera 控件的 Image 属性是否不为空
+        if (picCamera.Image != null)
+        {
+            // 保存 picCamera 控件当前显示的图像
+            var img = picCamera.Image;
+            // 将 picCamera 控件的 Image 属性设置为 null
+            picCamera.Image = null;
+            // 释放旧的图像资源
+            img.Dispose();
+        }
+
+        // 新增快照预览清理
+        // 检查 pictureBoxSnapshot 控件的 Image 属性是否不为空
+        if (pictureBoxSnapshot.Image != null)
+        {
+            // 保存 pictureBoxSnapshot 控件当前显示的图像
+            var img = pictureBoxSnapshot.Image;
+            // 将 pictureBoxSnapshot 控件的 Image 属性设置为 null
+            pictureBoxSnapshot.Image = null;
+            // 释放旧的图像资源
+            img.Dispose();
+        }
+    }
+}
