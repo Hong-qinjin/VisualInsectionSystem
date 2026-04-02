@@ -12,12 +12,12 @@ using VisualInsectionSystem;
 
 public enum PLCDataType
 {
-    DWord   = 0,
-    Bit     = 1,
-    Word    = 2,
-    Byte    = 3,
-    Real    = 4,
-    String  = 5
+    DWord = 0,
+    Bit = 1,
+    Word = 2,
+    Byte = 3,
+    Real = 4,
+    String = 5
 }
 
 public class PLCAddress
@@ -32,18 +32,18 @@ public class PLCAddress
 public class PLCCommunicator
 {
 
-    private Plc     _plc;                   // 通信实例
+    private Plc _plc;                   // 通信实例
     private CpuType _cpuType;               // CPU类型 CpuType.S71200,1515
-    private string  _ipAddress;             // PLC的IP地址
-    private int     _rack;                   // PLC的机架号
-    private int     _slot;                  // PLC的插槽号
+    private string _ipAddress;             // PLC的IP地址
+    private int _rack;                   // PLC的机架号
+    private int _slot;                  // PLC的插槽号
     private List<PLCAddress> addressList;
-        
-    private bool    isConnected;            // 连接状态
-    private Thread  _monitorThread;
-    private bool    _isMonitoring;
-    private bool    _lastCameraReadyState;  // 上升沿检测
-    
+
+    private bool isConnected;            // 连接状态
+    private Thread _monitorThread;
+    private bool _isMonitoring;
+    private bool _lastCameraReadyState;  // 上升沿检测
+
 
     public event Action<bool> ConnectionStatusChanged;  // 连接状态变更事件（供UI层订阅）
     public event Action<string> HardwareErrorOccurred;  // 数据读写异常事件（仅传递硬件相关错误）
@@ -54,14 +54,14 @@ public class PLCCommunicator
     {
         get { return isConnected; } // 不允许外部修改，供外部访问连接状态
     }
-    public string PlcIPAddress { get; private set; }    
+    public string PlcIPAddress { get; private set; }
     private bool _disposed;
 
-    public PLCCommunicator(CpuType cpuType,string ipAddress,int rack=0,int slot=1 )
+    public PLCCommunicator(CpuType cpuType, string ipAddress, int rack = 0, int slot = 1)
     {
         // 参数校验（避免非硬件错误）
         if (!System.Net.IPAddress.TryParse(ipAddress, out _))
-            throw new ArgumentException("无效的地址", nameof(ipAddress));             
+            throw new ArgumentException("无效的地址", nameof(ipAddress));
         if (rack < 0)
             throw new ArgumentException("机架号不能为负数", nameof(rack));
         if (slot < 0)
@@ -72,7 +72,7 @@ public class PLCCommunicator
         _rack = rack;
         _slot = slot;
         addressList = new List<PLCAddress>();
-        
+
         InitializePLC();                // 初始化PLC连接
         BuildDefaultAddresses();        // 构建默认地址列表
     }
@@ -87,7 +87,7 @@ public class PLCCommunicator
             _plc.WriteTimeout = 5000;
             LogHelper.Info($"PLC初始化完成: {_ipAddress}, 机架: {_rack}, 插槽: {_slot}");
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             LogHelper.Error("PLC初始化失败", ex);
             throw;
@@ -211,7 +211,7 @@ public class PLCCommunicator
     // 停止
     private void StopMonitoring()
     {
-        _isMonitoring= false;
+        _isMonitoring = false;
         if (_monitorThread != null && _monitorThread.IsAlive)
         {
             if (!_monitorThread.Join(1000))
@@ -220,7 +220,7 @@ public class PLCCommunicator
             }
             _monitorThread = null;
         }
-        LogHelper.Info("PLC监控线程已停止");       
+        LogHelper.Info("PLC监控线程已停止");
     }
 
     // 监控CameraReady信号（上升沿触发）
@@ -230,7 +230,7 @@ public class PLCCommunicator
         {
             try
             {
-                if(Read("CameraReady", out object value) && value is bool currrentState)
+                if (Read("CameraReady", out object value) && value is bool currrentState)
                 {
                     //检测上升沿（false->true）
                     if (currrentState && !_lastCameraReadyState)
@@ -239,17 +239,17 @@ public class PLCCommunicator
                     }
                     _lastCameraReadyState = currrentState;
                 }
-                
+
                 // 监控相机状态
-                if(Read("CameraAlive", out object aliveValue) && aliveValue is bool isAlive)
+                if (Read("CameraAlive", out object aliveValue) && aliveValue is bool isAlive)
                 {
                     CameraStatusChanged?.Invoke(isAlive);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogHelper.Error("PLC监控线程异常", ex);
-                HardwareErrorOccurred?.Invoke($"监控异常: {ex.Message}");                
+                HardwareErrorOccurred?.Invoke($"监控异常: {ex.Message}");
             }
             Thread.Sleep(500);
         }
@@ -277,12 +277,12 @@ public class PLCCommunicator
             MessageBox.Show($"连接更新错误: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             LogHelper.Error("PLC连接更新失败", ex);
         }
-    }   
+    }
 
     // 检查相机状态
     private void CheckCameraStatus()
     {
-        
+
         if (!isConnected) return;
         if (Read("CameraAlive", out object cameraAlive))
         {

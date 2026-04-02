@@ -1,5 +1,4 @@
-﻿using FrontendUI.Design.Controls;
-using Sharp7;
+﻿using Sharp7;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -150,7 +149,7 @@ public class AsyncTcpServer
                 {
                     Log($"接收连接异常：{ex.Message}");
                     await Task.Delay(1000);  // 避免占用CPU
-                }                
+                }
             }
         }
     }
@@ -291,11 +290,11 @@ public class AsyncTcpServer
                 Log($"客户端心跳检测失败（已断开）：{clientId}");
                 RemoveClient(clientId);
                 continue;
-                
+
             }
             await SendToClientAsync(clientId, "PING").ConfigureAwait(false);
         }
-        
+
     }
 
     /// <summary>
@@ -391,6 +390,6 @@ public class AsyncTcpServer
         string log = $"[{DateTime.Now:HH:mm:ss.fff}] {text}";
         // 通过同步上下文在UI线程触发事件
         syncContext.Post(_ => OnLog?.Invoke(log), null);
-    } 
+    }
 }
 

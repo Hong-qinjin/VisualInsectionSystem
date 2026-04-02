@@ -50,11 +50,15 @@
             this.groupBoxSolution = new System.Windows.Forms.GroupBox();
             this.renderPanel = new System.Windows.Forms.Panel();
             this.buttonChineseOREnglish = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBoxResult.SuspendLayout();
             this.resultPanel.SuspendLayout();
             this.groupBoxProcedure.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxSolution.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxResult
@@ -112,13 +116,14 @@
             // buttonConfig
             // 
             this.buttonConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonConfig.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonConfig.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonConfig.FlatAppearance.BorderSize = 0;
             this.buttonConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonConfig.ForeColor = System.Drawing.Color.Black;
-            this.buttonConfig.Location = new System.Drawing.Point(1019, 12);
+            this.buttonConfig.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonConfig.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.buttonConfig.Location = new System.Drawing.Point(133, 20);
             this.buttonConfig.Name = "buttonConfig";
-            this.buttonConfig.Size = new System.Drawing.Size(110, 41);
+            this.buttonConfig.Size = new System.Drawing.Size(100, 40);
             this.buttonConfig.TabIndex = 6;
             this.buttonConfig.Text = "参数配置";
             this.buttonConfig.UseVisualStyleBackColor = false;
@@ -127,13 +132,14 @@
             // buttonRender
             // 
             this.buttonRender.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRender.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonRender.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonRender.FlatAppearance.BorderSize = 0;
             this.buttonRender.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRender.ForeColor = System.Drawing.Color.Black;
-            this.buttonRender.Location = new System.Drawing.Point(901, 12);
+            this.buttonRender.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonRender.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.buttonRender.Location = new System.Drawing.Point(15, 20);
             this.buttonRender.Name = "buttonRender";
-            this.buttonRender.Size = new System.Drawing.Size(110, 41);
+            this.buttonRender.Size = new System.Drawing.Size(100, 40);
             this.buttonRender.TabIndex = 5;
             this.buttonRender.Text = "图像显示";
             this.buttonRender.UseVisualStyleBackColor = false;
@@ -141,13 +147,14 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.Location = new System.Drawing.Point(24, 23);
+            this.label1.Font = new System.Drawing.Font("宋体", 10F);
+            this.label1.Location = new System.Drawing.Point(17, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.Size = new System.Drawing.Size(100, 40);
             this.label1.TabIndex = 1;
             this.label1.Text = "选择流程";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboProcedure
             // 
@@ -157,7 +164,7 @@
             this.comboProcedure.Font = new System.Drawing.Font("宋体", 9F);
             this.comboProcedure.ForeColor = System.Drawing.Color.Black;
             this.comboProcedure.FormattingEnabled = true;
-            this.comboProcedure.Location = new System.Drawing.Point(135, 20);
+            this.comboProcedure.Location = new System.Drawing.Point(135, 29);
             this.comboProcedure.Name = "comboProcedure";
             this.comboProcedure.Size = new System.Drawing.Size(237, 20);
             this.comboProcedure.TabIndex = 0;
@@ -171,7 +178,7 @@
             this.groupBoxProcedure.Controls.Add(this.comboProcedure);
             this.groupBoxProcedure.Controls.Add(this.buttonRunOnce);
             this.groupBoxProcedure.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxProcedure.Location = new System.Drawing.Point(884, 188);
+            this.groupBoxProcedure.Location = new System.Drawing.Point(884, 242);
             this.groupBoxProcedure.Name = "groupBoxProcedure";
             this.groupBoxProcedure.Size = new System.Drawing.Size(392, 116);
             this.groupBoxProcedure.TabIndex = 4;
@@ -180,13 +187,14 @@
             // 
             // buttonContiRun
             // 
-            this.buttonContiRun.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonContiRun.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonContiRun.FlatAppearance.BorderSize = 0;
             this.buttonContiRun.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonContiRun.ForeColor = System.Drawing.Color.Black;
-            this.buttonContiRun.Location = new System.Drawing.Point(262, 57);
+            this.buttonContiRun.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonContiRun.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.buttonContiRun.Location = new System.Drawing.Point(135, 70);
             this.buttonContiRun.Name = "buttonContiRun";
-            this.buttonContiRun.Size = new System.Drawing.Size(110, 41);
+            this.buttonContiRun.Size = new System.Drawing.Size(100, 40);
             this.buttonContiRun.TabIndex = 1;
             this.buttonContiRun.Text = "连续运行";
             this.buttonContiRun.UseVisualStyleBackColor = false;
@@ -194,13 +202,14 @@
             // 
             // buttonRunOnce
             // 
-            this.buttonRunOnce.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonRunOnce.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonRunOnce.FlatAppearance.BorderSize = 0;
             this.buttonRunOnce.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRunOnce.ForeColor = System.Drawing.Color.Black;
-            this.buttonRunOnce.Location = new System.Drawing.Point(17, 57);
+            this.buttonRunOnce.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonRunOnce.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.buttonRunOnce.Location = new System.Drawing.Point(17, 70);
             this.buttonRunOnce.Name = "buttonRunOnce";
-            this.buttonRunOnce.Size = new System.Drawing.Size(110, 41);
+            this.buttonRunOnce.Size = new System.Drawing.Size(100, 40);
             this.buttonRunOnce.TabIndex = 0;
             this.buttonRunOnce.Text = "运行一次";
             this.buttonRunOnce.UseVisualStyleBackColor = false;
@@ -209,7 +218,7 @@
             // infoHeader
             // 
             this.infoHeader.Text = "消息";
-            this.infoHeader.Width = 120;
+            this.infoHeader.Width = 267;
             // 
             // timeStampHeader
             // 
@@ -230,7 +239,7 @@
             this.listViewLog.Location = new System.Drawing.Point(16, 20);
             this.listViewLog.Name = "listViewLog";
             this.listViewLog.ShowItemToolTips = true;
-            this.listViewLog.Size = new System.Drawing.Size(366, 413);
+            this.listViewLog.Size = new System.Drawing.Size(366, 359);
             this.listViewLog.TabIndex = 0;
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;
@@ -241,22 +250,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.listViewLog);
             this.groupBox2.ForeColor = System.Drawing.Color.Black;
-            this.groupBox2.Location = new System.Drawing.Point(884, 310);
+            this.groupBox2.Location = new System.Drawing.Point(884, 364);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(392, 440);
+            this.groupBox2.Size = new System.Drawing.Size(392, 386);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "日志消息";
             // 
             // buttonSaveSolu
             // 
-            this.buttonSaveSolu.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonSaveSolu.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonSaveSolu.FlatAppearance.BorderSize = 0;
             this.buttonSaveSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveSolu.ForeColor = System.Drawing.Color.Black;
+            this.buttonSaveSolu.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonSaveSolu.ForeColor = System.Drawing.SystemColors.Desktop;
             this.buttonSaveSolu.Location = new System.Drawing.Point(262, 20);
             this.buttonSaveSolu.Name = "buttonSaveSolu";
-            this.buttonSaveSolu.Size = new System.Drawing.Size(110, 41);
+            this.buttonSaveSolu.Size = new System.Drawing.Size(100, 40);
             this.buttonSaveSolu.TabIndex = 2;
             this.buttonSaveSolu.Text = "保存方案";
             this.buttonSaveSolu.UseVisualStyleBackColor = false;
@@ -264,13 +274,14 @@
             // 
             // buttonLoadSolu
             // 
-            this.buttonLoadSolu.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonLoadSolu.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonLoadSolu.FlatAppearance.BorderSize = 0;
             this.buttonLoadSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLoadSolu.ForeColor = System.Drawing.Color.Black;
+            this.buttonLoadSolu.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonLoadSolu.ForeColor = System.Drawing.SystemColors.Desktop;
             this.buttonLoadSolu.Location = new System.Drawing.Point(135, 20);
             this.buttonLoadSolu.Name = "buttonLoadSolu";
-            this.buttonLoadSolu.Size = new System.Drawing.Size(110, 41);
+            this.buttonLoadSolu.Size = new System.Drawing.Size(100, 40);
             this.buttonLoadSolu.TabIndex = 1;
             this.buttonLoadSolu.Text = "加载方案";
             this.buttonLoadSolu.UseVisualStyleBackColor = false;
@@ -278,13 +289,14 @@
             // 
             // buttonSelectSolu
             // 
-            this.buttonSelectSolu.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonSelectSolu.BackColor = System.Drawing.SystemColors.Menu;
             this.buttonSelectSolu.FlatAppearance.BorderSize = 0;
             this.buttonSelectSolu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSelectSolu.ForeColor = System.Drawing.Color.Black;
+            this.buttonSelectSolu.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonSelectSolu.ForeColor = System.Drawing.SystemColors.Desktop;
             this.buttonSelectSolu.Location = new System.Drawing.Point(17, 20);
             this.buttonSelectSolu.Name = "buttonSelectSolu";
-            this.buttonSelectSolu.Size = new System.Drawing.Size(110, 41);
+            this.buttonSelectSolu.Size = new System.Drawing.Size(100, 40);
             this.buttonSelectSolu.TabIndex = 0;
             this.buttonSelectSolu.Text = "选择方案";
             this.buttonSelectSolu.UseVisualStyleBackColor = false;
@@ -298,7 +310,7 @@
             this.groupBoxSolution.Controls.Add(this.buttonLoadSolu);
             this.groupBoxSolution.Controls.Add(this.buttonSelectSolu);
             this.groupBoxSolution.ForeColor = System.Drawing.Color.Black;
-            this.groupBoxSolution.Location = new System.Drawing.Point(884, 100);
+            this.groupBoxSolution.Location = new System.Drawing.Point(884, 154);
             this.groupBoxSolution.Name = "groupBoxSolution";
             this.groupBoxSolution.Size = new System.Drawing.Size(392, 82);
             this.groupBoxSolution.TabIndex = 2;
@@ -319,15 +331,63 @@
             // buttonChineseOREnglish
             // 
             this.buttonChineseOREnglish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonChineseOREnglish.BackColor = System.Drawing.SystemColors.Control;
-            this.buttonChineseOREnglish.ForeColor = System.Drawing.Color.Black;
-            this.buttonChineseOREnglish.Location = new System.Drawing.Point(1146, 12);
+            this.buttonChineseOREnglish.BackColor = System.Drawing.SystemColors.Menu;
+            this.buttonChineseOREnglish.Font = new System.Drawing.Font("宋体", 10F);
+            this.buttonChineseOREnglish.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.buttonChineseOREnglish.Location = new System.Drawing.Point(260, 20);
             this.buttonChineseOREnglish.Name = "buttonChineseOREnglish";
-            this.buttonChineseOREnglish.Size = new System.Drawing.Size(110, 41);
+            this.buttonChineseOREnglish.Size = new System.Drawing.Size(100, 40);
             this.buttonChineseOREnglish.TabIndex = 9;
             this.buttonChineseOREnglish.Text = "中/英";
             this.buttonChineseOREnglish.UseVisualStyleBackColor = false;
             this.buttonChineseOREnglish.Click += new System.EventHandler(this.buttonChineseOREnglish_Click);
+            // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.SystemColors.Menu;
+            this.button4.Font = new System.Drawing.Font("宋体", 10F);
+            this.button4.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.button4.Location = new System.Drawing.Point(14, 82);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(100, 40);
+            this.button4.TabIndex = 20;
+            this.button4.Text = "锁  定";
+            this.button4.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Visible = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.SystemColors.Menu;
+            this.button5.Font = new System.Drawing.Font("宋体", 10F);
+            this.button5.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.button5.Location = new System.Drawing.Point(133, 82);
+            this.button5.Margin = new System.Windows.Forms.Padding(4);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(100, 40);
+            this.button5.TabIndex = 25;
+            this.button5.Text = "解  锁";
+            this.button5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.button5.UseVisualStyleBackColor = false;
+            this.button5.Visible = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.button4);
+            this.groupBox1.Controls.Add(this.buttonChineseOREnglish);
+            this.groupBox1.Controls.Add(this.button5);
+            this.groupBox1.Controls.Add(this.buttonRender);
+            this.groupBox1.Controls.Add(this.buttonConfig);
+            this.groupBox1.Location = new System.Drawing.Point(886, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(390, 141);
+            this.groupBox1.TabIndex = 26;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "页面控制";
             // 
             // DebugForm
             // 
@@ -335,14 +395,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1278, 762);
-            this.Controls.Add(this.buttonChineseOREnglish);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxSolution);
             this.Controls.Add(this.resultPanel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.renderPanel);
-            this.Controls.Add(this.buttonConfig);
             this.Controls.Add(this.groupBoxProcedure);
-            this.Controls.Add(this.buttonRender);
             this.Font = new System.Drawing.Font("宋体", 9F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -356,9 +414,9 @@
             this.groupBoxResult.ResumeLayout(false);
             this.resultPanel.ResumeLayout(false);
             this.groupBoxProcedure.ResumeLayout(false);
-            this.groupBoxProcedure.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBoxSolution.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -385,5 +443,8 @@
         private System.Windows.Forms.GroupBox groupBoxSolution;
         private System.Windows.Forms.Panel renderPanel;
         private System.Windows.Forms.Button buttonChineseOREnglish;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

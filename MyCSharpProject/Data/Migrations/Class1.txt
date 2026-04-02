@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Systemdemo01.Data.Migrations
+{
+    /// 数据库迁移文件
+
+    class Class1
+    {
+    }
+}

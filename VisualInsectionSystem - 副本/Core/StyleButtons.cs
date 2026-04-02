@@ -11,7 +11,7 @@ using VMControls.RenderInterface;
 
 //namespace YourProjectsystem
 namespace VisualInsectionSystem
-{      
+{
     public class StyleButtons : Button
     {
         /// <summary>
@@ -30,21 +30,21 @@ namespace VisualInsectionSystem
         /// 设置默认按钮样式
         /// </summary>
         /// <param name="button">目标按钮</param>      
-        private     Color   _backgroundColor = Color.WhiteSmoke;
-        private     Color   _foregroundColor = Color.Black;
-        private     Color   _normalColor = Color.FromArgb(74, 144, 226);  // 主色   
-        private     Color   _hoverBackgroundColor = Color.LightGray;    // Color.FromArgb(58, 120, 194);  // 悬停色
-        private     Color   _pressedBackgroundColor = Color.DimGray;    // Color.FromArgb(42, 96, 162); // 点击色
-        private     Color   _disabledColor = Color.FromArgb(150, 150, 150); // 禁用色
-        private     int     _borderRadius = 4;
-        private     Padding _padding = new Padding(4, 2, 4, 2);        
-        private     Font    _font = new Font("微软雅黑", 9F, FontStyle.Regular);
-        private     bool    _showBorder = true;
-        private     Color   _borderColor = Color.Gray;
-        private     int     _borderWidth = 1;        
-        private     bool    _isHovered;
-        private     bool    _isPressed;
-        private     bool    _isFocused;
+        private Color _backgroundColor = Color.WhiteSmoke;
+        private Color _foregroundColor = Color.Black;
+        private Color _normalColor = Color.FromArgb(74, 144, 226);  // 主色   
+        private Color _hoverBackgroundColor = Color.LightGray;    // Color.FromArgb(58, 120, 194);  // 悬停色
+        private Color _pressedBackgroundColor = Color.DimGray;    // Color.FromArgb(42, 96, 162); // 点击色
+        private Color _disabledColor = Color.FromArgb(150, 150, 150); // 禁用色
+        private int _borderRadius = 4;
+        private Padding _padding = new Padding(4, 2, 4, 2);
+        private Font _font = new Font("微软雅黑", 9F, FontStyle.Regular);
+        private bool _showBorder = true;
+        private Color _borderColor = Color.Gray;
+        private int _borderWidth = 1;
+        private bool _isHovered;
+        private bool _isPressed;
+        private bool _isFocused;
 
         private IconType _iconType;
         private int _iconSize = 21;
@@ -52,11 +52,11 @@ namespace VisualInsectionSystem
         // 构造函数
         public StyleButtons()
         {
-            SetStyle( ControlStyles.AllPaintingInWmPaint |
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
                       ControlStyles.UserPaint |
                       ControlStyles.OptimizedDoubleBuffer |
-                      ControlStyles.SupportsTransparentBackColor, 
-                      true );
+                      ControlStyles.SupportsTransparentBackColor,
+                      true);
             BackColor = _backgroundColor;
             ForeColor = _foregroundColor;
             FlatStyle = FlatStyle.Flat;
@@ -80,7 +80,7 @@ namespace VisualInsectionSystem
             get => _backgroundColor;
             set
             {
-               if ( _backgroundColor != value )
+                if (_backgroundColor != value)
                 {
                     _backgroundColor = value;
                     Invalidate();
@@ -93,7 +93,7 @@ namespace VisualInsectionSystem
             get => _foregroundColor;
             set
             {
-                if ( _foregroundColor != value )
+                if (_foregroundColor != value)
                 {
                     _foregroundColor = value;
                     Invalidate();
@@ -199,7 +199,7 @@ namespace VisualInsectionSystem
             base.OnPaint(e);
 
             // 绘制背景
-            using (GraphicsPath path =new GraphicsPath())
+            using (GraphicsPath path = new GraphicsPath())
             {
                 int radius = _borderRadius;
                 Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
@@ -209,13 +209,13 @@ namespace VisualInsectionSystem
                 path.AddArc(rect.Left, rect.Bottom - radius * 2, radius * 2, radius * 2, 90, 90);
                 path.CloseFigure();
 
-                using(SolidBrush brush = new SolidBrush(GetBackgroundColor()))
+                using (SolidBrush brush = new SolidBrush(GetBackgroundColor()))
                 {
                     e.Graphics.FillPath(brush, path);
                 }
 
                 // 绘制边框
-                if(_showBorder)
+                if (_showBorder)
                 {
                     using (Pen pen = new Pen(_borderColor, _borderWidth))
                     {
@@ -232,14 +232,14 @@ namespace VisualInsectionSystem
                                               Width - _padding.Horizontal,
                                               Height - _padding.Vertical);
             TextRenderer.DrawText(e.Graphics, Text, _font, textRect, _foregroundColor,
-                                  TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);            
+                                  TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
-        
+
         private Color GetBackgroundColor()
         {
             if (!Enabled)
                 return _backgroundColor;
-            if(_isHovered ||  _isPressed)
+            if (_isHovered || _isPressed)
                 return _hoverBackgroundColor;
             if (_isPressed)
                 return _pressedBackgroundColor;

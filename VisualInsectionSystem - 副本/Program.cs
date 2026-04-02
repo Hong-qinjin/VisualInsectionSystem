@@ -15,9 +15,25 @@ namespace VisualInsectionSystem
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm());
+            }
+            catch (Exception ex)
+            {
+                VM.PlatformSDKCS.VmException vmEx = VM.Core.VmSolution.GetVmException(ex);
+                if (null != vmEx)
+                {
+                    string strMsg = "InitControl failed. Error Code: " + Convert.ToString(vmEx.errorCode, 16);
+                    MessageBox.Show(strMsg);
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             // 全局异常处理
             Application.ThreadException += (s, e) =>
@@ -28,12 +44,12 @@ namespace VisualInsectionSystem
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 HandleException(e.ExceptionObject as Exception, "Unhandled Exception");
-            };            
+            };
         }
 
         //
         private static void HandleException(Exception ex, string exceptionType)
-        {        
+        {
             try
             {
                 string errorMessage = $"异常类型: {exceptionType}\n" + $"错误消息: {ex.Message}\n" +

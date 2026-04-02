@@ -24,11 +24,11 @@ namespace VisualInsectionSystem.SubForms
         private readonly MainForm _mainForm;
         private readonly object _lockObj = new object(); // 线程安全锁
         // 网络通信相关变量
-        private TcpListener     _tcpServer;             // TCP服务端
-        private TcpClient       _tcpClient;             // TCP客户端
-        private UdpClient       _udpServer;
-        private UdpClient       _udpClient;
-        private IPEndPoint      _udpRemoteEndPoint;     // UDP服务端保存的远端端点
+        private TcpListener _tcpServer;             // TCP服务端
+        private TcpClient _tcpClient;             // TCP客户端
+        private UdpClient _udpServer;
+        private UdpClient _udpClient;
+        private IPEndPoint _udpRemoteEndPoint;     // UDP服务端保存的远端端点
 
         // 线程与取消令牌（替代Abort()）
         private Thread _listenThread;            // 监听线程
@@ -38,7 +38,7 @@ namespace VisualInsectionSystem.SubForms
         private bool _isListening = false;
         private bool _isConnected = false;
         private bool _isHexSend = false;     // 是否16进制发送
-        private bool _isHexReceive = false;        
+        private bool _isHexReceive = false;
         // 新增：RadioButton自定义选中状态（用于实现取消选中功能，解耦原生Checked属性）
         private bool _isRadioHexReceiveChecked = false;     // radioButton1（16进制接收）
         private bool _isRadioHexSendChecked = false;        // radioButton2（16进制发送）
@@ -55,7 +55,7 @@ namespace VisualInsectionSystem.SubForms
             _mainForm = form;    //
             InitializeComponent();
             InitControls();
-            BindEvents();           
+            BindEvents();
             UpdateControlStates();
         }
 
@@ -78,7 +78,7 @@ namespace VisualInsectionSystem.SubForms
 
             // 设置单选按钮文本
             radioButton1.Text = "16进制接收";
-            radioButton2.Text = "16进制发送";        
+            radioButton2.Text = "16进制发送";
 
             // 添加右键菜单用于保存消息
             var contextMenu = new ContextMenuStrip();
@@ -101,7 +101,7 @@ namespace VisualInsectionSystem.SubForms
         #endregion
         #region 控件管理
         private void TCPConnect_Load(object sender, EventArgs e)
-        {            
+        {
         }
 
         // 窗体关闭时确保断开连接
@@ -113,8 +113,8 @@ namespace VisualInsectionSystem.SubForms
         }
         // 更新控件状态
         private void UpdateControlStates()
-        {            
-            if (string.IsNullOrEmpty(_currentProtocol)) return;             
+        {
+            if (string.IsNullOrEmpty(_currentProtocol)) return;
             bool isServerMode = _currentProtocol == "TCP服务端" || _currentProtocol == "UDP服务端";
             bool isClientMode = _currentProtocol == "TCP客户端" || _currentProtocol == "UDP客户端";
 
@@ -183,7 +183,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 ((Button)sender).Enabled = true;
             }
-        }        
+        }
 
         // 启动服务端(TCP/UDP)
         private void StartServer()
@@ -197,7 +197,7 @@ namespace VisualInsectionSystem.SubForms
             try
             {
                 _cts = new CancellationTokenSource();
-                if (_currentProtocol=="TCP服务端")
+                if (_currentProtocol == "TCP服务端")
                 {
                     //获取到的本机IP，作为服务器
                     if (!ValidateIPAddress(comboBox2.Text))
@@ -232,7 +232,7 @@ namespace VisualInsectionSystem.SubForms
                     _listenThread.Start();
                 }
                 UpdateControlStates();
-            }                 
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"启动服务端失败: {ex.Message}");
@@ -250,10 +250,10 @@ namespace VisualInsectionSystem.SubForms
             try
             {
                 //清理TCP
-                if( _tcpServer != null )
+                if (_tcpServer != null)
                 {
                     _tcpServer.Stop();
-                    lock(_lockObj)
+                    lock (_lockObj)
                     {
                         foreach (var client in _connectedTcpClients.Values) client.Close();
                         _connectedTcpClients.Clear();
@@ -265,7 +265,7 @@ namespace VisualInsectionSystem.SubForms
                 {
                     _udpServer.Close();
                     _udpRemoteEndPoint = null;
-                }                           
+                }
                 //
                 if (_listenThread != null && _listenThread.IsAlive)
                 {
@@ -273,9 +273,9 @@ namespace VisualInsectionSystem.SubForms
                     _listenThread.Join(1000);
                 }
                 //
-                if(_receiveThread != null && _receiveThread.IsAlive)
+                if (_receiveThread != null && _receiveThread.IsAlive)
                 {
-                  //  _receiveThread.Abort();
+                    //  _receiveThread.Abort();
                     _receiveThread.Join(1000);
                 }
                 AddMessage($"{_currentProtocol}已停止");
@@ -301,7 +301,7 @@ namespace VisualInsectionSystem.SubForms
             try
             {
                 _cts = new CancellationTokenSource();
-                
+
                 if (_currentProtocol == "TCP客户端")
                 {
                     _tcpClient = new TcpClient();
@@ -318,7 +318,7 @@ namespace VisualInsectionSystem.SubForms
                     };
                     _receiveThread.Start();
                 }
-                else if(_currentProtocol =="UDP客户端")
+                else if (_currentProtocol == "UDP客户端")
                 {
                     _udpClient = new UdpClient();
                     _udpClient.Connect(remoteIP, remotePort);
@@ -332,7 +332,7 @@ namespace VisualInsectionSystem.SubForms
                     };
                     _receiveThread.Start();
                 }
-                UpdateControlStates();                
+                UpdateControlStates();
             }
             catch (Exception ex)
             {
@@ -402,7 +402,7 @@ namespace VisualInsectionSystem.SubForms
                         {
                             _connectedTcpClients[clientKey] = client;
                             _activeTcpClient = client;
-                        }                        
+                        }
                         Invoke(new Action(() =>
                         {
                             AddMessage($"客户端已连接: {clientKey}");
@@ -424,14 +424,14 @@ namespace VisualInsectionSystem.SubForms
                 catch (Exception ex)
                 {
                     if (_isListening && !token.IsCancellationRequested)
-                    {                       
+                    {
                         Invoke(new Action(() => AddMessage($"TCP监听异常: {ex.Message}，继续监听...")));
                         Thread.Sleep(1000); // 异常后延迟，避免高频报错
                     }
                 }
             }
         }
-        
+
         // UDP服务端监听数据,add 持续监听
         private void ListenForUdpData(CancellationToken token)
         {
@@ -492,19 +492,19 @@ namespace VisualInsectionSystem.SubForms
                         IPEndPoint clientEndPoint = (IPEndPoint)_activeTcpClient.Client.RemoteEndPoint;
                         string clientInfo = $"{clientEndPoint.Address}:{clientEndPoint.Port}";
 
-                        string clientKey = GetClientKey(_activeTcpClient);                                              
+                        string clientKey = GetClientKey(_activeTcpClient);
                         string receivedStr = GetDisplayText(data);
 
                         //显示接收的数据在listBox1内，
                         Invoke(new Action(() =>
                         {
-                            if(_currentProtocol=="TCP客户端")
+                            if (_currentProtocol == "TCP客户端")
                             {
                                 AddMessage($"从 {clientKey} 收到server数据: {receivedStr}");
                             }
 
                             // 处理接收指令函数
-                            if (_currentProtocol == "TCP服务端")                                
+                            if (_currentProtocol == "TCP服务端")
                             {
                                 AddMessage($"从 {clientKey} 收到client数据: {receivedStr}");
                                 ProcessCommand(Encoding.UTF8.GetString(data).Trim(), clientEndPoint);
@@ -516,7 +516,7 @@ namespace VisualInsectionSystem.SubForms
                         // 如果客户端断开连接                        
                         Invoke(new Action(() =>
                         {
-                            if(_currentProtocol == "TCP客户端")
+                            if (_currentProtocol == "TCP客户端")
                             {
                                 AddMessage($"客户端 {GetClientKey(_activeTcpClient)} 已断开");
                                 _isConnected = false;
@@ -536,10 +536,10 @@ namespace VisualInsectionSystem.SubForms
                 catch (Exception ex)
                 {
                     if (_isConnected && !token.IsCancellationRequested)
-                    {                        
+                    {
                         Invoke(new Action(() =>
                         {
-                            if(_currentProtocol == "TCP客户端")
+                            if (_currentProtocol == "TCP客户端")
                             {
                                 AddMessage($"TCP客户端接收异常: {ex.Message}");
                                 _isConnected = false;
@@ -567,7 +567,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 try
                 {
-                    if(_udpClient.Available > 0)
+                    if (_udpClient.Available > 0)
                     {
                         byte[] data = _udpClient.Receive(ref remoteEndPoint);
                         string receivedStr = GetDisplayText(data);
@@ -576,7 +576,7 @@ namespace VisualInsectionSystem.SubForms
                             AddMessage($"从 {remoteEndPoint.Address}:{remoteEndPoint.Port} 收到UDP数据: {receivedStr}");
                         }));
                         Thread.Sleep(100);
-                    }                    
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -656,21 +656,21 @@ namespace VisualInsectionSystem.SubForms
                     }
                 }));
                 //// 回复指令执行结果
-                SendResultToClient(result, clientInfo);                                
+                SendResultToClient(result, clientInfo);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Invoke(new Action(() =>
                 {
                     AddMessage($"处理指令错误: {ex.Message}");
                 }));
-                SendResultToClient($"处理指令错误: {ex.Message}", clientInfo);               
+                SendResultToClient($"处理指令错误: {ex.Message}", clientInfo);
             }
         }
 
         // 发送数据（适配TCP/UDP）
         private void SendData()
-        {            
+        {
             try
             {
                 byte[] data = GetSendDataBytes(textBox.Text);
@@ -678,15 +678,15 @@ namespace VisualInsectionSystem.SubForms
                 {
                     AddMessage("发送数据为空");
                     return;
-                }                          
+                }
 
                 // 发送数据到当前连接到的客户端,防止中文乱码
                 if (_currentProtocol.Contains("TCP"))
                 {
                     //if (_activeTcpClient?.Connected == true)
-                    if (_currentProtocol=="TCP客户端")
+                    if (_currentProtocol == "TCP客户端")
                     {
-                        if(_tcpClient?.Connected==true)
+                        if (_tcpClient?.Connected == true)
                         {
                             NetworkStream stream = _tcpClient.GetStream();
                             stream.Write(data, 0, data.Length);
@@ -698,11 +698,11 @@ namespace VisualInsectionSystem.SubForms
                             AddMessage("Client端已断开连接，无法发送数据");
                             _isConnected = false;
                             UpdateControlStates();
-                        }                          
+                        }
                     }
                     else  //TCP server
                     {
-                        if( _activeTcpClient?.Connected==true)
+                        if (_activeTcpClient?.Connected == true)
                         {
                             NetworkStream stream = _activeTcpClient.GetStream();
                             stream.Write(data, 0, data.Length);
@@ -715,9 +715,9 @@ namespace VisualInsectionSystem.SubForms
                             _isConnected = false;
                             SwitchToNextClient();
                         }
-                    }                 
+                    }
                 }
-                else if(_currentProtocol.Contains("UDP"))
+                else if (_currentProtocol.Contains("UDP"))
                 {
                     if (_currentProtocol == "UDP客户端" && _udpClient != null)
                     {
@@ -770,7 +770,7 @@ namespace VisualInsectionSystem.SubForms
             }
         }
         #endregion
-        
+
         // 清理断开连接的客户端缓存，方便客户端重新连接
         private void CleanupClientConnection(TcpClient client)
         {
@@ -788,7 +788,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 client.Close();
             }
-            catch (Exception ex) { }           
+            catch (Exception ex) { }
         }
 
         // 切换到下一个可用的TCP客户端       
@@ -837,7 +837,7 @@ namespace VisualInsectionSystem.SubForms
         }
         // 发送按钮点击事件
         private void Button3_Click(object sender, EventArgs e)
-        {          
+        {
             try
             {
                 if (string.IsNullOrEmpty(textBox.Text))
@@ -856,7 +856,7 @@ namespace VisualInsectionSystem.SubForms
             {
                 // 显示错误信息
                 MessageBox.Show($"操作失败: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }    
+            }
         }
 
         #region  辅助函数

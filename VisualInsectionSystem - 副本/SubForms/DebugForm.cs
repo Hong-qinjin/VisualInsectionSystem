@@ -44,7 +44,7 @@ namespace VisualInsectionSystem
         /// isSolutionLoad = false, indicates that the solution is not loaded
         /// 默认方案不加载
         /// </summary>
-        private bool SolutionIsLoaded = false;        
+        private bool SolutionIsLoaded = false;
 
         private readonly string logPath = Application.StartupPath + "/Log/Message";
 
@@ -61,13 +61,13 @@ namespace VisualInsectionSystem
 
             LoadSolutionIndicateTimer.Interval = 300;                           //设置定时器
             LoadSolutionIndicateTimer.Tick += LoadSolutionIndicateTimer_Tick;   //指示方案是否加载
-            
+
             //VmSolution.OnProcessStatusStartEvent += VmSolution_OnProcessStatusStartEvent;   // Registration callback for the start of the procedure continuous run
             //VmSolution.OnProcessStatusStopEvent += VmSolution_OnProcessStatusStopEvent;     // Registration callback for the stop of the procedure continuous run
 
             cultureName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
         }
-    
+
 
         /// <summary>
         /// 开始the start of the procedure continuous run
@@ -113,7 +113,7 @@ namespace VisualInsectionSystem
             else
             {
                 UpdateStopStatusUI(statusInfo);
-            }          
+            }
         }
 
         // 拆分UI更新逻辑为独立方法（提高可读性）
@@ -195,7 +195,7 @@ namespace VisualInsectionSystem
                 renderPanel.Controls.Clear();
                 renderPanel.Controls.Add(mainViewControl);
                 renderPanel.Controls.Add(renderControl);
-                renderPanel.Controls.Remove(mainViewControl);               
+                renderPanel.Controls.Remove(mainViewControl);
 
                 // 句柄创建后注册事件（关键修复）
                 VmSolution.OnProcessStatusStartEvent += VmSolution_OnProcessStatusStartEvent;
@@ -282,7 +282,7 @@ namespace VisualInsectionSystem
             else
             {
                 System.Diagnostics.Debug.WriteLine($"UpdateResultListBox: listBoxResult句柄未就绪，结果：{result}");
-            }            
+            }
         }
         /// <summary>
         /// 更新结果标签ok
@@ -389,15 +389,15 @@ namespace VisualInsectionSystem
                 DialogResult oFresult = openFileDialog.ShowDialog();
 
                 //System.Diagnostics.Debug.WriteLine($"对话框结果: {oFresult}");   // 调试输出对话框结果
-                if (DialogResult.OK==oFresult)
-                {                    
+                if (DialogResult.OK == oFresult)
+                {
                     currentSolutionPath = openFileDialog.FileName;
                     //System.Diagnostics.Debug.WriteLine($"选中的文件路径: {currentSolutionPath}");  // 调试输出获取的路径
                     LoadSolutionIndicateTimer.Enabled = true;
                     AppendLog("The solution path is: " + currentSolutionPath);
 
-                    MessageBox.Show("The solution path is： " +  currentSolutionPath 
-                        + "\nNext click the Load solution button!","Information", 
+                    MessageBox.Show("The solution path is： " + currentSolutionPath
+                        + "\nNext click the Load solution button!", "Information",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SolutionIsLoaded = true;
                 }
@@ -686,7 +686,7 @@ namespace VisualInsectionSystem
                     try
                     {
                         if (currentSolutionPath != String.Empty)
-                        {                          
+                        {
                             VmSolution.Save();
                         }
                     }
@@ -757,5 +757,24 @@ namespace VisualInsectionSystem
             }
         }
 
+        /// <summary>
+        /// 锁定按钮
+        /// </summary>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //mainViewControl.vmMainViewConfigControl1.LockWorkArea();
+            ////锁定参数配置页，不允许编辑流程/Group/模块的参数配置页
+            //vmMainViewConfigControl1.SetParamTabEditable(false);
+        }
+
+        /// <summary>
+        /// 解锁按钮
+        /// </summary>  
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //vmMainViewConfigControl1.UnlockWorkArea();
+            ////解锁参数配置页，允许编辑流程/Group/模块的参数配置页
+            //vmMainViewConfigControl1.SetParamTabEditable(true);
+        }
     }
 }
