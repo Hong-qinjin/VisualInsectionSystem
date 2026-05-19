@@ -1,3 +1,9 @@
+
+
+
+
+
+
 // 定义一个部分类 Form2，继承自 Form 类，用于创建一个 Windows 窗体应用程序的窗口
 public partial class Form2 : Form
 {
